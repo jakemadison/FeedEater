@@ -7,7 +7,7 @@ from app.config import SQLALCHEMY_MIGRATE_REPO
 from app import Model, engine
 
 import os.path
-
+from app import models
 Model.metadata.create_all(bind=engine)
 
 

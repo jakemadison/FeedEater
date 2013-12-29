@@ -39,26 +39,25 @@ def feed_request(url):
     res = None
 
     try:
-        res = feedparser.parse(url,configs.get('User-Agent'))
+        res = feedparser.parse(url, configs.get('User-Agent'))
     except Exception, e:
         print str(e)
 
-    posts = []
-
-    # print len(res['entries'])
-    # print res['entries'][0]['link']
-
     if res:
+        posts = []
+        print 'length of entries: {0}'.format(len(res['entries']))
 
-        for entry in res.entries:
+        for entry in res['entries']:
             post = None
+
+            print 'receiving post: {0}'.format(entry.get("title"))
 
             try:
                 post = {
                     "title": entry.get("title", "No title"),
                     "link": entry.get("link", "#"),
                     "id": entry.get("id", "No Id"),
-                    "published": entry.get("published_parsed"),
+                    "published": time_parser(entry.get("published_parsed")),
                     "updated": time_parser(entry.get("updated_parsed"), update_time=True),
                     "description": entry.get("description", ""),
                     "content": entry.get("content", [{}])[0].get("value", entry.get("description", "")),
@@ -69,10 +68,10 @@ def feed_request(url):
 
             posts.append(post)
 
-            feed_data = {"parse_obj": res, "posts": posts}
-            return feed_data
+        feed_data = {"parse_obj": res, "posts": posts}
+        return feed_data
 
-r = feed_request(test2)
-
-for each in r['posts']:
-    print each
+# r = feed_request(test2)
+#
+# for each in r['posts']:
+#     print each
