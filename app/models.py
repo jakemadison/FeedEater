@@ -1,5 +1,5 @@
 from app import Model
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, SmallInteger, DateTime, ForeignKey
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
@@ -49,3 +49,38 @@ class Feed(Model):
         self.update_frequency = update_frequency
         self.favicon = favicon
         self.metadata_update = metadata_update
+
+
+class User(Model):
+    __tablename__ = "user"
+    id = Column(Integer, primary_key = True)
+    nickname = Column(String(64), unique = True)
+    email = Column(String(120), unique = True)
+    role = Column(SmallInteger, default = ROLE_USER)
+    #posts = relationship('Post', backref = 'author', lazy = 'dynamic')
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)
+
+    def __repr__(self):
+        return '<User %r>' % (self.nickname)
+
+
+class Post(Model):
+    __tablename__ = "post"
+    id = Column(Integer, primary_key = True)
+    body = Column(String(140))
+    timestamp = Column(DateTime)
+    user_id = Column(Integer, ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '<Post %r>' % (self.body)
