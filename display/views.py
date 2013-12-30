@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from display import app, db, lm, oid
 from forms import LoginForm
-from app.models import User, ROLE_USER, ROLE_ADMIN
+from app.models import User, ROLE_USER, ROLE_ADMIN, Entry
 
 
 @lm.user_loader
@@ -18,20 +18,21 @@ def before_request():
 @login_required
 def index():
     user = g.user
-    posts = [ # fake array of posts
-        {
-            'author': { 'nickname': 'John' },
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': { 'nickname': 'Susan' },
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
+    # posts = [ # fake array of posts
+    #     {
+    #         'author': { 'nickname': 'John' },
+    #         'body': 'Beautiful day in Portland!'
+    #     },
+    #     {
+    #         'author': { 'nickname': 'Susan' },
+    #         'body': 'The Avengers movie was so cool!'
+    #     }
+    # ]
+    entries = Entry.query.all()
     return render_template("index.html",
         title = 'Home',
         user = user,
-        posts = posts)
+        entries = entries)
 
 @app.route('/login', methods = ['GET', 'POST'])
 @oid.loginhandler
