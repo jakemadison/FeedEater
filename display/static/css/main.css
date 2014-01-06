@@ -1,0 +1,13 @@
+#menucolumn {
+    float: left;
+    width: 15%;
+    height: 100%;
+    border-right: 1px solid #d1d1d1;
+}
+
+#contentcolumn {
+    float: right;
+    width: 84%;
+    height: 100%;
+    word-wrap: break-word;
+}

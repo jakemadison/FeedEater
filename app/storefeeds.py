@@ -52,11 +52,11 @@ def add_entry(entry, feed_id=0):
         db_session.commit()
 
 
-res = feed_request('http://www.reddit.com/r/python/.rss')
-
-
-for each in res['posts']:
-    print 'storing post....', each.get("title"), each.get("published")
-    add_entry(each)
-
-print 'done!'
+# res = feed_request('http://www.reddit.com/r/python/.rss')
+#
+#
+# for each in res['posts']:
+#     print 'storing post....', each.get("title"), each.get("published")
+#     add_entry(each)
+#
+# print 'done!'
