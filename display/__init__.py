@@ -16,4 +16,3 @@ lm.login_view = 'login'
 oid = OpenID(app, os.path.join(basedir, 'tmp'))
 
 from display import views
-from app import models

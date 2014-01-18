@@ -3,7 +3,7 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from flask import Markup
 from display import app, db, lm, oid
 from forms import LoginForm
-from app.models import User, ROLE_USER, ROLE_ADMIN, Entry
+from db.models import User, ROLE_USER, Entry
 from app.config import configs as c
 
 

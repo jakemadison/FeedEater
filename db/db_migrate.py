@@ -3,8 +3,7 @@ import imp
 from migrate.versioning import api
 from app.config import SQLALCHEMY_DATABASE_URI
 from app.config import SQLALCHEMY_MIGRATE_REPO
-from app import Model, engine
-from app import models
+from app import Model  # TODO: change all of these model references.
 
 migration = SQLALCHEMY_MIGRATE_REPO + '/versions/%03d_migration.py' % (api.db_version(SQLALCHEMY_DATABASE_URI,
                                                                                       SQLALCHEMY_MIGRATE_REPO) + 1)

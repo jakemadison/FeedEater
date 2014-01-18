@@ -1,13 +1,12 @@
 #!feedgetter/bin/python
 
-from migrate.versioning import api
+import os.path
 
+from migrate.versioning import api
 from app.config import SQLALCHEMY_DATABASE_URI
 from app.config import SQLALCHEMY_MIGRATE_REPO
-from app import Model, engine
+from app import Model, engine  # TODO model reference here
 
-import os.path
-from app import models
 Model.metadata.create_all(bind=engine)
 
 

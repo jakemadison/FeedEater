@@ -2,13 +2,13 @@
 #store entries..
 #from models import Entry, Feed
 #from app import db_session
-from display import db
-from app import models
-from getfeeds import feed_request
+from db import models
+from display import db  # TODO this is pretty confusing db the module vs display.db attribute
 
 db_session = db.session
 
 # TODO: incorporate some damn exception catching already
+
 
 def add_entry(entry, feed_id=0):
 
