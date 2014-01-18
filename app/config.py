@@ -12,6 +12,7 @@ configs = {
     # "SQLALCHEMY_DATABASE_URI" : 'sqlite:///' + os.path.join(basedir, 'app.db'),
     # "SQLALCHEMY_MIGRATE_REPO" : os.path.join(basedir, 'db_repository')
     "db_connector" : SQLALCHEMY_DATABASE_URI,
-    "reader_threads" : 2
+    "reader_threads" : 2,
+    "POSTS_PER_PAGE" : 10
 
 }

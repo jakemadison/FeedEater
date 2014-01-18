@@ -3,7 +3,6 @@ import feedparser
 import time
 from config import configs
 
-
 test_url = 'http://dir.yahoo.com/rss/dir/getrss.php?rec_games_video'
 test2 = 'http://www.reddit.com/r/python/.rss'
 
@@ -48,22 +47,24 @@ def feed_request(url):
         print 'length of entries: {0}'.format(len(res['entries']))
 
         for entry in res['entries']:
+
             post = None
 
-            print 'receiving post: {0}'.format(entry.get("title"))
-
             try:
+                # print 'receiving post: {0}'.format(entry.get("title"))
+                print 'getting post....{0}'.format(entry.get("title", "No title").encode('utf-8')).strip("\n")[:70]
                 post = {
-                    "title": entry.get("title", "No title"),
+                    "title": entry.get("title", "No title").encode('utf-8'),
                     "link": entry.get("link", "#"),
                     "id": entry.get("id", "No Id"),
                     "published": time_parser(entry.get("published_parsed")),
                     "updated": time_parser(entry.get("updated_parsed"), update_time=True),
-                    "description": entry.get("description", ""),
-                    "content": entry.get("content", [{}])[0].get("value", entry.get("description", "")),
+                    "description": entry.get("description", "").encode('utf-8'),
+                    "content": entry.get("content", [{}])[0].get("value", entry.get("description", "").encode('utf-8')),
                 }
             except Exception, e:
                 print str(e)
+                print '!!!!!!'
                 continue
 
             posts.append(post)
@@ -71,7 +72,4 @@ def feed_request(url):
         feed_data = {"parse_obj": res, "posts": posts}
         return feed_data
 
-# r = feed_request(test2)
-#
-# for each in r['posts']:
-#     print each
+

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      {% block head %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
+
+    <title>Feed_Eater</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.css" rel="stylesheet">
+    <link href="../static/css/main.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="../static/css/jumbotron.css" rel="stylesheet">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+      {% endblock %}
+  </head>
+
+  <body>
+
+    {% include 'header.html' %}
+
+    {% include 'messagebar.html' %}
+
+    <!--main content: -->
+    <div class="container">
+
+        <!--subscription list:-->
+        <div class="sublist">
+            {% include 'sublist.html' %}
+        </div>
+
+        <!--entries list: -->
+        <div class="row">
+            <div id="contentcolumn">
+                {% block content %}
+                {% for entry in entries %}
+                <div class="col-md-8">
+
+                    <h3><b><a href="{{entry.link}}">{{entry.title}}</a></b></h3>
+                    <div class="well"><p>{{entry.id}}: {{entry.published}}<b></b><h6>({{entry.link}})</h6></p>
+                        <p>{{entry.content|safe}}</p></div>
+                </div>
+                {% endfor %}
+                {% endblock %}
+            </div>
+        </div>
+        <hr>
+    </div> <!-- /container -->
+
+    {% include 'footer.html' %}
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+  <script>$(document).ready(function () {
+  var top = $('#menucolumn').offset().top - parseFloat($('#menucolumn').css('marginTop').replace(/auto/, 0));
+  $(window).scroll(function (event) {
+    // what the y position of the scroll is
+    var y = $(this).scrollTop();
+
+    // whether that's below the form
+    if (y >= top) {
+      // if so, ad the fixed class
+      $('#menucolumn').addClass('fixed');
+    } else {
+      // otherwise remove it
+      $('#menucolumn').removeClass('fixed');
+    }
+  });
+});</script>
+
+
+  </body>
+</html>

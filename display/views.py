@@ -4,7 +4,7 @@ from flask import Markup
 from display import app, db, lm, oid
 from forms import LoginForm
 from app.models import User, ROLE_USER, ROLE_ADMIN, Entry
-
+from app.config import configs as c
 
 
 
@@ -17,53 +17,57 @@ def before_request():
     g.user = current_user
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/index', methods=['GET', 'POST'])
+@app.route('/index/', methods=['GET', 'POST'])
+@app.route('/index/<int:page>', methods=['GET', 'POST'])
+@oid.loginhandler
 #@login_required
-def index():
+def index(page=1):
     user = g.user
     form = LoginForm(request.form)
-    entries = Entry.query.order_by(Entry.published.desc()).limit(10)
+    login_form = LoginForm()
+    #get_entries = Entry.query.order_by(Entry.published.desc())  # move this to a function w/in models.
+    # entries = get_entries[:30]
 
+    if g.user.is_authenticated():
+        entries = user.get_entries().paginate(page, c['POSTS_PER_PAGE'], False)
+    else:
+        entries = Entry.query.order_by(Entry.published.desc())[:10]
+
+    if request.method == 'POST':
+
+        if not form.validate():
+            print 'maaaade it here:'
+            user = User(nickname="Guest", email="guest@guest.com", role=0)
+            return render_template("index.html", form=form, title='Home',
+                                   user=user, entries=entries, providers=app.config['OPENID_PROVIDERS'],
+                                   login_form=login_form)
+
+        # user = form.valid_login(form, form.username.data)  # , form.password.data
+        if not user:
+            print 'made it here...'
+            form.errors = True
+            form.error_messages = ["The login details provided are not correct."]
+            return render_template("index.html", form=form, title='Home', user=user,
+                                   entries=entries, providers=app.config['OPENID_PROVIDERS'],
+                                   login_form=login_form)
+
+        print '!!!!yesssssssssssss!!!!'
+        login_user(user)
+        session['logged_in'] = True
+        flash("Logged in successfully.")
 
     if user is None or not g.user.is_authenticated():
         print 'user is none!'
         user = User(nickname="Guest", email="guest@guest.com", role=0)
 
-    if request.method == 'POST':
+    if login_form.validate_on_submit():
+        session['remember_me'] = login_form.remember_me.data
+        return oid.try_login(login_form.openid.data, ask_for=['nickname', 'email'])
 
-        if not form.validate():
-            user = User(nickname="Guest", email="guest@guest.com", role=0)
-            return render_template("index.html", form=form, title='Home',
-                            user=user,
-                            entries=entries)
-
-        user = form.valid_login(form, form.username.data) #, form.password.data
-        if not user:
-                form.errors = True
-                form.error_messages = ["The login details provided are not correct."]
-                return render_template("index.html", form=form, title='Home',
-                            user=user,
-                            entries=entries)
-        login_user(user)
-        flash("Logged in successfully.")
-
-        # log_form = LoginForm()
-        #
-        # if log_form.validate_on_submit():
-        #     flash(u'Successfully logged in as %s' % log_form.user.username)
-        #     session['user_id'] = log_form.user.id
-
-
-    entries = Entry.query.order_by(Entry.published.desc()).limit(10)
-
-    print entries[0].content
-
-
-    return render_template("index.html",
-                            title='Home',
-                            user=user,
-                            entries=entries,
-                            form=form)
+    return render_template("index.html", title='Home',
+                           user=user, entries=entries, form=form,
+                           providers=app.config['OPENID_PROVIDERS'],
+                           login_form=login_form)
 
 
 
@@ -89,19 +93,19 @@ def after_login(resp):
     if resp.email is None or resp.email == "":
         flash('Invalid login. Please try again.')
         return redirect(url_for('index'))
-    user = User.query.filter_by(email = resp.email).first()
+    user = User.query.filter_by(email=resp.email).first()
     if user is None:
         nickname = resp.nickname
         if nickname is None or nickname == "":
             nickname = resp.email.split('@')[0]
-        user = User(nickname = nickname, email = resp.email, role = ROLE_USER)
+        user = User(nickname=nickname, email=resp.email, role=ROLE_USER)
         db.session.add(user)
         db.session.commit()
     remember_me = False
     if 'remember_me' in session:
         remember_me = session['remember_me']
         session.pop('remember_me', None)
-    login_user(user, remember = remember_me)
+    login_user(user, remember=remember_me)
     return redirect(request.args.get('next') or url_for('index'))
 
 
