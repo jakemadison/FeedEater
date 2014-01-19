@@ -1441,7 +1441,7 @@ def install_python(home_dir, lib_dir, inc_dir, bin_dir, site_packages, clear):
             # See http://groups.google.com/group/python-virtualenv/
             #                              browse_thread/thread/17cab2f85da75951
             original_python = os.path.join(
-                prefix, 'Resources/Python.app/Contents/MacOS/Python')
+                prefix, 'Resources/Python.controller/Contents/MacOS/Python')
         if 'EPD' in prefix:
             logger.debug('EPD framework detected')
             original_python = os.path.join(prefix, 'bin/python')

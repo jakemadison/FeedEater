@@ -1,20 +1,28 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask import Markup
-from display import app, db, lm, oid
-from forms import LoginForm
-from db.models import User, ROLE_USER, Entry
-from app.config import configs as c
 
+# from FeedEater import flaskapp, lm, oid
+# random comment.
+
+from FeedEater import flaskapp
+
+from forms import LoginForm
+
+from controller.config_old import configs as c
+from database.models import User, ROLE_USER, Entry
+import sys
 
 
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
 
+
 @app.before_request
 def before_request():
     g.user = current_user
+
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index/', methods=['GET', 'POST'])
@@ -22,16 +30,24 @@ def before_request():
 @oid.loginhandler
 #@login_required
 def index(page=1):
+
+    for each in sys.path:
+        print each
+
     user = g.user
     form = LoginForm(request.form)
     login_form = LoginForm()
-    #get_entries = Entry.query.order_by(Entry.published.desc())  # move this to a function w/in models.
+
+    # using this to test DB connection...
+    get_entries = Entry.query.order_by(Entry.published.desc())  # move this to a function w/in models.
+    print get_entries.all()
     # entries = get_entries[:30]
 
     if g.user.is_authenticated():
         entries = user.get_entries().paginate(page, c['POSTS_PER_PAGE'], False)
     else:
-        entries = Entry.query.order_by(Entry.published.desc())[:10]
+        # entries = Entry.query.order_by(Entry.published.desc())[:10]
+        pass
 
     if request.method == 'POST':
 
@@ -64,6 +80,7 @@ def index(page=1):
         session['remember_me'] = login_form.remember_me.data
         return oid.try_login(login_form.openid.data, ask_for=['nickname', 'email'])
 
+    entries = None
     return render_template("index.html", title='Home',
                            user=user, entries=entries, form=form,
                            providers=app.config['OPENID_PROVIDERS'],
@@ -82,18 +99,21 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         session['remember_me'] = form.remember_me.data
-        return oid.try_login(form.openid.data, ask_for = ['nickname', 'email'])
+        return oid.try_login(form.openid.data, ask_for=['nickname', 'email'])
     return render_template('login.html',
-        title = 'Sign In',
-        form = form,
-        providers = app.config['OPENID_PROVIDERS'])
+                           title='Sign In',
+                           form=form,
+                           providers=app.config['OPENID_PROVIDERS'])
+
 
 @oid.after_login
 def after_login(resp):
     if resp.email is None or resp.email == "":
         flash('Invalid login. Please try again.')
         return redirect(url_for('index'))
+
     user = User.query.filter_by(email=resp.email).first()
+
     if user is None:
         nickname = resp.nickname
         if nickname is None or nickname == "":
