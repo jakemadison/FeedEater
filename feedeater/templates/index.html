@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      {% include 'head.html' %}
+  </head>
+{% if form.errors.openid %}
+    <body onload="show_login()">
+{% else %}
+    <body>
+{% endif %}
+
+
+    {% include 'header.html' %}
+
+    <div class="navbar-collapse collapse">
+
+    {% include 'messagebar.html' %}
+</div>
+
+    <!--main content: -->
+<!--<div id="contentcolumn">-->
+
+    <div class="sidebar">
+        {% include 'sublist.html' %}
+     </div>
+
+    <div class="container"> <!--was class="container"-->
+        <div class="row">
+            <!--<div id="contentcolumn">-->
+                {% block content %}
+                    {% for entry in entries.items %}
+                        {% include 'entry.html' %}
+                    {% endfor %}
+                {% endblock %}
+
+
+            <div class="col-md-8-2">
+                <hr>
+                    {% include 'pager.html' %}
+            </div>
+        </div>
+
+    </div>
+
+
+<!--</div>-->
+
+<div class="foot">
+    {% include 'footer.html' %}
+</div>
+
+
+
+
+
+
+
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,15 @@
+<ul class="pager">
+        {% if entries.has_prev %}
+
+            <li class="previous"><a href="{{ url_for('index', page = entries.prev_num) }}"><b>&laquo; Previous page</b></a></li>
+                <!--class="btn btn-primary btn-sm previous"-->
+                <!--role="button"-->
+
+        {% endif %}
+            <!--&nbsp;-->
+        {% if entries.has_next %}
+            <li class="next"><a href="{{ url_for('index', page = entries.next_num) }}"><b>Next page &raquo;</b></a></li>
+                    <!--class="btn btn-primary btn-sm next"-->
+                <!--role="button"-->
+        {% endif %}
+                </ul>
