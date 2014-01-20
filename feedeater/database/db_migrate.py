@@ -1,11 +1,10 @@
-#!../feedgetter/bin/python
+#!../feedgetter_env/bin/python
 import imp
 from migrate.versioning import api
-from feedeater.config import configs, Model
+from feedeater import config
 
-
-REPO = configs.get('SQLALCHEMY_MIGRATE_REPO')
-URI = configs.get('SQLALCHEMY_DATABASE_URI')
+REPO = config.configs.get('SQLALCHEMY_MIGRATE_REPO')
+URI = config.configs.get('SQLALCHEMY_DATABASE_URI')
 
 
 migration = REPO + '/versions/%03d_migration.py' % (api.db_version(URI, REPO) + 1)
@@ -14,7 +13,7 @@ old_model = api.create_model(URI, REPO)
 
 exec old_model in tmp_module.__dict__
 
-script = api.make_update_script_for_model(URI, REPO, tmp_module.meta, Model.metadata)
+script = api.make_update_script_for_model(URI, REPO, tmp_module.meta, config.Model.metadata)
 open(migration, "wt").write(script)
 api.upgrade(URI, REPO)
 

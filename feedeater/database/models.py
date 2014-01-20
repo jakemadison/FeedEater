@@ -116,7 +116,7 @@ class UserFeeds(Model):
     userid = Column(Integer)
     feedid = Column(Integer)
 
-        # called when user adds a feed
+    # called when user adds a feed
     def add_feed(self, user, url):
 
         # check if feed already in feeds, if so, associate this user
@@ -162,17 +162,18 @@ class User(Model):
         return '<User %r>' % (self.nickname)
 
 
-# # for every user+entry combination, these are tags to apply:
-# class EntryTags(Model):
-#     __tablename__ = "entrytags"
-#
-#     userentryid = Column(Integer)
-#     topic = Column(String(64))
-#
-#
-# # associate users with feed entries to do things like tagging, starring, read/unread
-# class UserEntries(Model):
-#     __tablename__ = "userentries"
+# for every user+entry combination, these are tags to apply:
+class EntryTags(Model):
+    __tablename__ = "entrytags"
 
+    id = Column(Integer, primary_key=True)
+    userentryid = Column(Integer)
+    topic = Column(String(64))
+
+
+# associate users with feed entries to do things like tagging, starring, read/unread
+class UserEntries(Model):
+    __tablename__ = "userentries"
+    id = Column(Integer, primary_key=True)
 
 print "done!"

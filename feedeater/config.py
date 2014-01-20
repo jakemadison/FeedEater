@@ -49,4 +49,4 @@ Model.query = db_session.query_property()
 
 
 # this needs to be done to properly register metadata!!!
-# import database.models
+# import database.models  # this is breaking on import db name... circ imports?

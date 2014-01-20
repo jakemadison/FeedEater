@@ -16,15 +16,20 @@ from feedeater.config import configs
 basedir = configs.get('basedir')
 
 print 'naaaaam!:::::::', __name__
-flaskapp = Flask(__name__)
+print basedir
+
+flaskapp = Flask('feedeater', static_folder=basedir+'/display/static', template_folder=basedir+'/display/templates')
 flaskapp.config.from_object('feedeater.config')
+
 db = SQLAlchemy(flaskapp)
+import database.models
 
 lm = LoginManager()
 lm.init_app(flaskapp)
 lm.login_view = 'login'
 oid = OpenID(flaskapp, os.path.join(basedir, 'tmp'))
 import feedeater.display.views
+
 
 
 
