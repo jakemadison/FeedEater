@@ -57,7 +57,7 @@ def main():
     kill = True
 
     # wait for consumers to wrap up pending jobs: (if we want to block, that is)
-    concurrent.futures.wait(c_futures)
+    #concurrent.futures.wait(c_futures)
 
 
 if __name__ == "__main__":

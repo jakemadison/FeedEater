@@ -1,3 +1,6 @@
 #ignore our virtualenv stuff because it breaks on move to new computer:
 /feedeater/feed_env
-/feedeater.virtualenv.py
+/feedeater/virtualenv.py
+
+#ignore tmp stuff
+/feedeater/tmp

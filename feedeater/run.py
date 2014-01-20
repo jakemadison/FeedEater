@@ -1,4 +1,5 @@
-#!feedgetter_env/bin/python
+#!feed_env/bin/python
+
 
 import sys
 for e in sys.path:
