@@ -1,5 +1,6 @@
 __author__ = 'jmadison'
 
+#add project root to PYTHONPATH:
 from os.path import dirname
 from sys import path
 path.append(dirname(dirname(__file__)))
@@ -13,6 +14,7 @@ from flask.ext.login import LoginManager
 from flask.ext.openid import OpenID
 from feedeater.config import configs
 
+
 basedir = configs.get('basedir')
 
 print 'naaaaam!:::::::', __name__
@@ -20,6 +22,7 @@ print basedir
 
 flaskapp = Flask('feedeater', static_folder=basedir+'/display/static', template_folder=basedir+'/display/templates')
 flaskapp.config.from_object('feedeater.config')
+
 
 db = SQLAlchemy(flaskapp)
 import database.models

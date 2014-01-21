@@ -1,4 +1,4 @@
-#!../feedgetter_env/bin/python
+#!../feed_env/bin/python
 import imp
 from migrate.versioning import api
 from feedeater import config

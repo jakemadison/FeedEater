@@ -107,8 +107,6 @@ class Feed(Model):
 
 # associate users with feeds they are subscribed to:
 # also put in here, feed-related tags
-
-
 class UserFeeds(Model):
     __tablename__ = "userfeeds"
 
@@ -175,5 +173,7 @@ class EntryTags(Model):
 class UserEntries(Model):
     __tablename__ = "userentries"
     id = Column(Integer, primary_key=True)
+
+
 
 print "done!"
