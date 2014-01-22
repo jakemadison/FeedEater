@@ -1,5 +1,6 @@
 from getfeeds import feed_request
 from storefeeds import add_entry
+from handlefeedstore import get_stored_feeds
 import concurrent.futures
 import Queue
 
@@ -8,11 +9,8 @@ import Queue
 # also need a function (DB proc?) to remove feeds when there are zero subs
 # that will all be handled by display object though
 def get_subscribed_feeds():
-    # feeds = (['http://tanacetum-vulgare.tumblr.com/rss','http://www.reddit.com/r/python/.rss',
-    # 'http://xkcd.com/rss.xml', 'i am a malformed feed url', 'http://feeds.feedburner.com/dearcoquette#_=_'])
-    feeds = ['http://ancientpeoples.tumblr.com/rss', 'http://www.reddit.com/r/pystats/.rss',
-             'http://www.reddit.com/r/pygame/.rss', 'http://www.reddit.com/r/flask/.rss',
-             'http://xkcd.com/rss.xml', 'http://www.reddit.com/r/python/.rss']
+    # might refactor out this wrapper.  it's not really doing much right now...
+    feeds = get_stored_feeds()
     return feeds
 
 
