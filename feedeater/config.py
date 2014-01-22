@@ -1,7 +1,7 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -38,6 +38,8 @@ engine = create_engine(configs["db_connector"],
                        convert_unicode=True)
                        # sqllite does not do pool size
                        # pool_size=configs.get("reader_threads"))
+
+metadata = MetaData(bind=engine)
 
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,

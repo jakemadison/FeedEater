@@ -1,4 +1,4 @@
-#!../feedgetter_env/bin/python
+#!../../../feed_env/bin/python
 
 import os.path
 from migrate.versioning import api
