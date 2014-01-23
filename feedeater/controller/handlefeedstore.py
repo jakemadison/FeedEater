@@ -8,12 +8,22 @@ def get_stored_feeds():
 
     feeds = []
     for each in get_feeds:
-
         print 'retrieving feed: ', each.feed_url
         feeds.append(each.feed_url)
 
     return feeds
 
+
+# okay, so I don't need to get feed title every time, just on feed add.
+# even still, this covers a lot of similar ground to "get feeds"
+def add_new_feed(user, url):
+    # check if feed exists in feed table, if not exists, add then pull entries and feed desc. store properly in
+    # entries, associate with user.
+    pass
+
+
+def remove_feed(user, url):
+    pass
 
 
 

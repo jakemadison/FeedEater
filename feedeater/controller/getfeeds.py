@@ -1,15 +1,9 @@
 import time
-
 import feedparser
-
 from feedeater.config import configs
 
 
-test_url = 'http://dir.yahoo.com/rss/dir/getrss.php?rec_games_video'
-test2 = 'http://www.reddit.com/r/python/.rss'
-
-
-def feed_request(url):
+def feed_request(url, get_meta=True):
 
     def time_parser(time_str, update_time=False):
         """
@@ -71,7 +65,24 @@ def feed_request(url):
 
             posts.append(post)
 
-        feed_data = {"parse_obj": res, "posts": posts}
+        meta = None
+        if get_meta:
+            try:
+                meta = {
+                    "feed_title": res['channel'].get('title', "no feed title"),
+                    "feed_link": res['channel']['link']
+                }
+            except Exception, e:
+                print str(e)
+                print '!!!!!!!!!!'
+
+        feed_data = {"parse_obj": res, "posts": posts, "meta": meta}
         return feed_data
 
 
+test_url = 'http://dir.yahoo.com/rss/dir/getrss.php?rec_games_video'
+test2 = 'http://www.reddit.com/r/python/.rss'
+test3 = 'http://xkcd.com/rss.xml'
+
+if __name__ == "__main__":
+    feed_request(test3, get_meta=True)

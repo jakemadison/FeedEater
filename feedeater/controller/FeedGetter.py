@@ -1,5 +1,5 @@
 from getfeeds import feed_request
-from storefeeds import add_entry
+from storefeeds import add_entry, store_meta
 from handlefeedstore import get_stored_feeds
 import concurrent.futures
 import Queue
@@ -28,6 +28,10 @@ def main():
             except Queue.Empty:
                 pass
             else:
+
+                if item['meta']:
+                    store_meta(item['meta'])
+
                 for post in item['posts']:
                     print 'storing post....', post.get("title"), post.get("published")
                     add_entry(post)

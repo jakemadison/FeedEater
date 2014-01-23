@@ -53,6 +53,8 @@ def add_entry(entry, feed_id=0):
                 feed_id=feed_id
             )
 
+
+
             # logger.debug(u"Adding new entry with id: {0}".format(entry.get("id")))
 
             db_session.add(new_entry)
@@ -62,6 +64,11 @@ def add_entry(entry, feed_id=0):
         db_session.rollback()
         print 'ERROR!!'
         print str(e)
+
+
+def store_meta(meta):
+    print '.....................................storing meta_data in feed table', meta["feed_title"], meta["feed_link"]
+
 
 # res = feed_request('http://www.reddit.com/r/python/.rss')
 #
