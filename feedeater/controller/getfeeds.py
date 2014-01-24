@@ -70,7 +70,8 @@ def feed_request(url, get_meta=True):
             try:
                 meta = {
                     "feed_title": res['channel'].get('title', "no feed title"),
-                    "feed_link": res['channel']['link'],
+                    "feed_url": url,
+                    "feed_original_site": res['channel']['link'],
                     "feed_description": res['channel'].get('description', "no description available")
                 }
             except Exception, e:
@@ -86,8 +87,6 @@ test2 = 'http://www.reddit.com/r/python/.rss'
 test3 = 'http://xkcd.com/rss.xml'
 
 if __name__ == "__main__":
-
     import storefeeds
-
     feed_result = feed_request(test3, get_meta=True)
     storefeeds.store_meta(feed_result["meta"])

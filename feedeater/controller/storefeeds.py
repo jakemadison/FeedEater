@@ -70,19 +70,21 @@ def store_meta(meta):
     print 'beginning store_meta.....'
 
     title = meta["feed_title"]
-    link = meta["feed_link"]
+    feed_url = meta["feed_url"]
+    site = meta["feed_original_site"]
     description = meta["feed_description"]
-    print '===================> storing meta_data in feed table', title, link
+    print '===================> storing meta_data in feed table', title, site
 
     # check for existing in feed table:
-    existing = db_session.query(models.Feed).filter(models.Feed.feed_url == link).all()
+    existing = db_session.query(models.Feed).filter(models.Feed.feed_url == feed_url).all()
     print '\n>>>>>>>>>>>>>>>>>>>>>>>', existing
 
     if not existing:
-        print "------------>>>no record found for ", link
+        print "------------>>>no record found for ", feed_url, site
 
-        new_feed = models.Feed(feed_url=link,
+        new_feed = models.Feed(feed_url=feed_url,
                                title=title,
+                               feed_site=site,
                                subscribers=1,
                                description=description)
 
@@ -90,7 +92,7 @@ def store_meta(meta):
         db_session.commit()
 
     else:
-        print "------------>>>record found for ", existing, link
+        print "------------>>>record found for ", existing, feed_url, site
 
             # could add extra code here to update name if changed.
 
