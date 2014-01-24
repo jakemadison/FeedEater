@@ -15,6 +15,7 @@ def add_entry(entry, feed_id=0):
     try:
         print '..................storing.........................'
         stored_ent = db_session.query(models.Entry).filter_by(link=entry.get("link")).first()
+        print '\n\n>>>>>> @@@@@@@@@', stored_ent, '\n'
 
         # Even if it is in db it might be updated since last time.
         if stored_ent is not None and stored_ent.updated is entry.get("updated"):
@@ -54,7 +55,6 @@ def add_entry(entry, feed_id=0):
             )
 
 
-
             # logger.debug(u"Adding new entry with id: {0}".format(entry.get("id")))
 
             db_session.add(new_entry)
@@ -67,7 +67,42 @@ def add_entry(entry, feed_id=0):
 
 
 def store_meta(meta):
-    print '.....................................storing meta_data in feed table', meta["feed_title"], meta["feed_link"]
+
+    title = meta["feed_title"]
+    link = meta["feed_link"]
+    print '===================> storing meta_data in feed table', title, link
+
+    # check for existing in feed table:
+    existing = db_session.query(models.Feed).filter(models.Feed.feed_url == link).all()
+    print '\n>>>>>>>>>>>>>>>>>>>>>>>', existing
+
+    if not existing:
+        print "------------>>>no record found for ", link
+
+        new_feed = models.Feed(feed_url=link,
+                               title=title,
+                               subscribers=1)
+
+        db_session.add(new_feed)
+        db_session.commit()
+
+    else:
+        print "------------>>>record found for ", existing
+
+            # could add extra code here to update name if changed.
+
+    # if not exists, add to feed table
+
+
+
+            # logger.debug(u"Adding new entry with id: {0}".format(entry.get("id")))
+
+
+
+    # either way, add association to userfeed table if doesn't exist on userfeed table already, that is..
+
+
+
 
 
 # res = feed_request('http://www.reddit.com/r/python/.rss')
