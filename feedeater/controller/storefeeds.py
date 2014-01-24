@@ -68,8 +68,11 @@ def add_entry(entry, feed_id=0):
 
 def store_meta(meta):
 
+    print 'beginning store_meta.....'
+
     title = meta["feed_title"]
     link = meta["feed_link"]
+    description = meta["feed_description"]
     print '===================> storing meta_data in feed table', title, link
 
     # check for existing in feed table:
@@ -81,13 +84,14 @@ def store_meta(meta):
 
         new_feed = models.Feed(feed_url=link,
                                title=title,
-                               subscribers=1)
+                               subscribers=1,
+                               description=description)
 
         db_session.add(new_feed)
         db_session.commit()
 
     else:
-        print "------------>>>record found for ", existing
+        print "------------>>>record found for ", existing, link
 
             # could add extra code here to update name if changed.
 

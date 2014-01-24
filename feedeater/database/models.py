@@ -87,6 +87,7 @@ class Feed(Model):
 
     id = Column('id', Integer, primary_key=True)
     feed_url = Column(String(1024))
+    description = Column(String(1024))
     last_checked = Column(Integer)
     subscribers = Column(Integer)
     title = Column(String(128))
@@ -94,9 +95,12 @@ class Feed(Model):
     favicon = Column(String(1024))
     metadata_update = Column(Integer)
 
-    def __init__(self, update_frequency, favicon, feed_url=None, last_checked=1, subscribers=1, title=u"Some feed",
-                 metadata_update=1):
+    def __init__(self, update_frequency='0', favicon=None, feed_url=None, last_checked=1,
+                 subscribers=1, title=u"Some feed",
+                 metadata_update=1, description=None):
+
         self.feed_url = feed_url
+        self.description = description
         self.last_checked = last_checked
         self.subscribers = subscribers
         self.title = title

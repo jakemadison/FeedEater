@@ -43,7 +43,7 @@ def main():
             res_q.put(res)
 
     # optimize network-bound producer pool here
-    p_pool = 5  # 5
+    p_pool = 1  # 5
     p_exec = concurrent.futures.ThreadPoolExecutor(max_workers=p_pool)
     p_futures = [p_exec.submit(p_call, feed) for feed in get_subscribed_feeds()]
 
