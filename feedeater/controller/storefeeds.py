@@ -15,7 +15,6 @@ def add_entry(entry, feed_id=0):
     try:
         print '..................storing.........................'
         stored_ent = db_session.query(models.Entry).filter_by(link=entry.get("link")).first()
-        print '\n\n>>>>>> @@@@@@@@@', stored_ent, '\n'
 
         # Even if it is in db it might be updated since last time.
         if stored_ent is not None and stored_ent.updated is entry.get("updated"):
