@@ -77,9 +77,20 @@ def store_meta(meta):
 
     # check for existing in feed table:
     existing = db_session.query(models.Feed).filter(models.Feed.feed_url == feed_url).all()
+
+    #TODO: check here against existing, and only update if there are differences: db operations are expensive..
     print '\n>>>>>>>>>>>>>>>>>>>>>>>', existing
 
-    if not existing:
+    if existing:
+        print ')))))))updating existing records...'
+        db_session.query(models.Feed).filter_by(id=existing.id).update(
+                    {
+                        "title": title,
+                        "feed_site": site,
+                        "description": description
+                    })
+
+    else:
         print "------------>>>no record found for ", feed_url, site
 
         new_feed = models.Feed(feed_url=feed_url,
@@ -91,10 +102,7 @@ def store_meta(meta):
         db_session.add(new_feed)
         db_session.commit()
 
-    else:
-        print "------------>>>record found for ", existing, feed_url, site
-
-            # could add extra code here to update name if changed.
+        # could add extra code here to update name if changed.
 
     # if not exists, add to feed table
 
