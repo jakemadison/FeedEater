@@ -82,13 +82,26 @@ def store_meta(meta):
     print '\n>>>>>>>>>>>>>>>>>>>>>>>', existing
 
     if existing:
-        print ')))))))updating existing records...'
-        db_session.query(models.Feed).filter_by(id=existing.id).update(
-                    {
-                        "title": title,
-                        "feed_site": site,
-                        "description": description
-                    })
+
+        print "\n>>>>>>>>>>>>>>>>>>>>>>> existing is true."''
+
+        # TODO: the following line is killing app process.  and because of the beauty of futures frames
+        # there's no way to actually debug this shit.
+        # run this one as __main__
+
+        if existing.feed_site != site or existing.description != description or existing.title != title:
+            print "\n>>>>>>>>>>>>>>>>>>>>>>>update information.. updating DB"
+            db_session.query(models.Feed).filter_by(id=existing.id).update(
+                        {
+                            "title": title,
+                            "feed_site": site,
+                            "description": description
+                        })
+            db_session.commit()
+
+        else:
+            print "why?????"
+            print "\n>>>>>>>>>>>>>>>>>>>>>>>no changes in feed detected.. don't even worry about it."
 
     else:
         print "------------>>>no record found for ", feed_url, site

@@ -11,8 +11,8 @@ def get_stored_feeds():
         print 'retrieving feed: ', each.feed_url
         feeds.append(each.feed_url)
 
-    feeds = ['http://ancientpeoples.tumblr.com/rss',
-             'http://xkcd.com/rss.xml', 'http://www.reddit.com/r/python/.rss']
+    feeds = ['http://ancientpeoples.tumblr.com/rss']
+             #'http://xkcd.com/rss.xml', 'http://www.reddit.com/r/python/.rss']
 
     return feeds
 
