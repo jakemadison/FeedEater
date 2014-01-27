@@ -1,8 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, SmallInteger, DateTime, ForeignKey
+from sqlalchemy.orm import backref, relationship
 from datetime import datetime, timedelta
 import urlparse
-# from feedeater.config import Model
-
 from feedeater import db
 
 Model = db.Model
@@ -16,10 +15,11 @@ print "models imported as", __name__
 
 # all entries for all subscribed feeds
 class Entry(Model):
+
     __tablename__ = "entry"
 
     id = Column('id', Integer, primary_key=True)
-    feed_id = Column(Integer)
+    feed_id = Column(Integer, ForeignKey("feed.id"))
     published = Column(Integer)
     updated = Column(Integer)
     title = Column(String(1024))
@@ -71,9 +71,11 @@ class Entry(Model):
             temp_t = title[0:50]
             k = temp_t.rfind(" ")
             if k:
-                title = temp_t[:k]+"..."
+                short_title = temp_t[:k]+"..."
+                return short_title
             else:
-                title = temp_t[:47]+"..."
+                short_title = temp_t[:47]+"..."
+                return short_title
 
         return title
 
@@ -95,6 +97,8 @@ class Feed(Model):
     update_frequency = Column(Integer)
     favicon = Column(String(1024))
     metadata_update = Column(Integer)
+    ufeeds = relationship("UserFeeds", backref="source")
+    entries = relationship("Entry")
 
     def __init__(self, update_frequency='0', favicon=None, feed_url=None, feed_site=None,
                  last_checked=1,
@@ -115,29 +119,17 @@ class Feed(Model):
 # associate users with feeds they are subscribed to:
 # also put in here, feed-related tags
 class UserFeeds(Model):
+
     __tablename__ = "userfeeds"
 
     id = Column('id', Integer, primary_key=True)
-    userid = Column(Integer)
-    feedid = Column(Integer)
-
-    # called when user adds a feed
-    def add_feed(self, user, url):
-
-        # check if feed already in feeds, if so, associate this user
-        # else, add new feed to set, add this user to that feed
-        pass
-
-    def remove_feed(self, user, url):
-        # check if feed exists
-        # remove association with feeds
-        # if number of subscribers is zero, remove all entries, remove from feed list
-
-        pass
+    userid = Column(Integer, ForeignKey("user.id"))
+    feedid = Column(Integer, ForeignKey("feed.id"))
 
 
 # all user accounts registered with the controller
 class User(Model):
+
     __tablename__ = "user"
 
     id = Column('id', Integer, primary_key=True)
@@ -146,6 +138,7 @@ class User(Model):
     email = Column(String(120), unique=True)
     role = Column(SmallInteger, default=ROLE_USER)
     password = Column(String(64), unique=True)
+    ufeeds = relationship("UserFeeds")
     # posts = relationship('Post', backref = 'author', lazy = 'dynamic')
 
     def get_entries(self):
@@ -169,6 +162,7 @@ class User(Model):
 
 # for every user+entry combination, these are tags to apply:
 class EntryTags(Model):
+
     __tablename__ = "entrytags"
 
     id = Column(Integer, primary_key=True)
@@ -178,6 +172,7 @@ class EntryTags(Model):
 
 # associate users with feed entries to do things like tagging, starring, read/unread
 class UserEntries(Model):
+
     __tablename__ = "userentries"
     id = Column(Integer, primary_key=True)
 

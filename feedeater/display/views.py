@@ -40,6 +40,7 @@ def index(page=1):
     print get_entries.all()
     # entries = get_entries[:30]
 
+    # this needs to change to get user feeds and only return those entries...
     if g.user.is_authenticated():
         entries = user.get_entries().paginate(page, c['POSTS_PER_PAGE'], False)
     else:

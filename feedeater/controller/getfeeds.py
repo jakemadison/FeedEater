@@ -3,7 +3,7 @@ import feedparser
 from feedeater.config import configs
 
 
-def feed_request(url, get_meta=True):
+def feed_request(url, get_meta=False):
 
     def time_parser(time_str, update_time=False):
         """
@@ -41,6 +41,7 @@ def feed_request(url, get_meta=True):
     if res:
         posts = []
         print 'length of entries: {0}'.format(len(res['entries']))
+        # there needs to be a "if length entries > 0 here
 
         for entry in res['entries']:
 
@@ -50,13 +51,13 @@ def feed_request(url, get_meta=True):
                 # print 'receiving post: {0}'.format(entry.get("title"))
                 print 'getting post....{0}'.format(entry.get("title", "No title").encode('utf-8')).strip("\n")[:70]
                 post = {
-                    "title": entry.get("title", "No title").encode('utf-8'),
+                    "title": entry.get("title", "No title"),
                     "link": entry.get("link", "#"),
                     "id": entry.get("id", "No Id"),
                     "published": time_parser(entry.get("published_parsed")),
                     "updated": time_parser(entry.get("updated_parsed"), update_time=True),
-                    "description": entry.get("description", "").encode('utf-8'),
-                    "content": entry.get("content", [{}])[0].get("value", entry.get("description", "").encode('utf-8')),
+                    "description": entry.get("description", ""),
+                    "content": entry.get("content", [{}])[0].get("value", entry.get("description", "")),
                 }
             except Exception, e:
                 print str(e)
@@ -85,8 +86,9 @@ def feed_request(url, get_meta=True):
 test_url = 'http://dir.yahoo.com/rss/dir/getrss.php?rec_games_video'
 test2 = 'http://www.reddit.com/r/python/.rss'
 test3 = 'http://xkcd.com/rss.xml'
+test4 = 'http://maruthecat.tumblr.com/rss'
 
 if __name__ == "__main__":
     import storefeeds
-    feed_result = feed_request(test3, get_meta=True)
-    storefeeds.store_meta(feed_result["meta"])
+    feed_result = feed_request(test4, get_meta=True)
+    storefeeds.store_feed_data(feed_result["meta"])
