@@ -6,6 +6,7 @@ from feedeater import lm, oid
 from feedeater.display.forms import LoginForm
 from feedeater.config import configs as c
 from feedeater.database.models import User, ROLE_USER, Entry
+from feedeater.controller import user_manage_feeds
 import sys
 from feedeater import db
 
@@ -34,6 +35,8 @@ def index(page=1):
     user = g.user
     form = LoginForm(request.form)
     login_form = LoginForm()
+
+    sub_list = user_manage_feeds.get_user_feeds(user)
 
     # using this to test DB connection...
     get_entries = Entry.query.order_by(Entry.published.desc())  # move this to a function w/in models.
@@ -78,11 +81,12 @@ def index(page=1):
         session['remember_me'] = login_form.remember_me.data
         return oid.try_login(login_form.openid.data, ask_for=['nickname', 'email'])
 
+    print sub_list
 
     return render_template("index.html", title='Home',
                            user=user, entries=entries, form=form,
                            providers=app.config['OPENID_PROVIDERS'],
-                           login_form=login_form)
+                           login_form=login_form, subs=sub_list)
 
 
 

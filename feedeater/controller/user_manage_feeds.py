@@ -21,13 +21,21 @@ def get_user_feeds(user=None):
 
     if user:
         # this needs work to retrieve properly... damn you sqlalchemy.
-        sublist = UserFeeds.query.filter(UserFeeds.id == user.id).all()
+        # sublist = UserFeeds.query.filter(UserFeeds.id == user.id).all()
+        qry = db_session.query(User, UserFeeds, Feed)
+        qry = qry.filter(Feed.id == UserFeeds.feedid, UserFeeds.userid == User.id)
+
+        for each in qry.filter(User.id == user.id).all():
+            u, uf, f = each
+            print u.id, u.nickname, ': ', f.feed_url
+            feed_list.append(f.feed_url)
+
+        return feed_list
 
     else:
         feed_list = Feed.query.all()
 
     return [q.feed_url for q in feed_list]
-
 
 
 def update_users_feeds(u):
@@ -67,7 +75,7 @@ if __name__ == "__main__":
     u = User(nickname="jmadison", email="jmadison@quotemedia.com", role=0, id=1)
     x = get_user_feeds(u)
 
-    print [e for e in x]
+    #print [e for e in x]
     FeedGetter.main(x)
 
 
