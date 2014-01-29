@@ -36,7 +36,7 @@ def index(page=1):
     form = LoginForm(request.form)
     login_form = LoginForm()
 
-    sub_list = user_manage_feeds.get_user_feeds(user)
+
 
     # using this to test DB connection...
     get_entries = Entry.query.order_by(Entry.published.desc())  # move this to a function w/in models.
@@ -47,6 +47,8 @@ def index(page=1):
     if g.user.is_authenticated():
         entries = user.get_entries().paginate(page, c['POSTS_PER_PAGE'], False)
     else:
+        print 'thiiiisssss..... is failing. move all this to user_man_feeds? ...actually, '
+        print 'sub_list returns a list of feedIds.. can just use those to get entries..'
         entries = Entry.query.order_by(Entry.published.desc())[:10]
         # pass
 
@@ -73,22 +75,27 @@ def index(page=1):
         session['logged_in'] = True
         flash("Logged in successfully.")
 
-    if user is None or not g.user.is_authenticated():
-        print 'user is none!'
-        user = User(nickname="Guest", email="guest@guest.com", role=0)
-
     if login_form.validate_on_submit():
         session['remember_me'] = login_form.remember_me.data
         return oid.try_login(login_form.openid.data, ask_for=['nickname', 'email'])
 
+    if user is None or not g.user.is_authenticated():
+        print 'user is none!'
+        user = User(nickname="Guest", email="guest@guest.com", role=0)
+        sub_list = user_manage_feeds.get_guest_feeds()
+
+    else:
+        sub_list = user_manage_feeds.get_user_feeds(user)
+
+    print user
+    print "==========="
     print sub_list
+    sl = sub_list['feed_data']
 
     return render_template("index.html", title='Home',
                            user=user, entries=entries, form=form,
                            providers=app.config['OPENID_PROVIDERS'],
-                           login_form=login_form, subs=sub_list)
-
-
+                           login_form=login_form, subs=sl)
 
 
 

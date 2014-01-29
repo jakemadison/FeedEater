@@ -3,7 +3,7 @@
     <ul class="list-group">
 
         {% for each in subs %}
-            <a href="#" class="list-group-item">{{ each }}</a>
+            <a href="#" class="list-group-item" title="{{ each['desc'] }}">{{ each['title'] }}</a>
         {% endfor %}
     </ul>
     <p><a class="btn btn-primary btn-sm" role="button">Add &raquo;</a></p>

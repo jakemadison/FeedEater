@@ -15,22 +15,51 @@ def remove_user_feed():
     pass
 
 
+
+def get_guest_feeds():
+    # qry = db_session.query(Feed)
+    # qry.filter(Feed.id < 3)
+    final_res = {'feed_data': [{'url': u'http://ancientpeoples.tumblr.com/rss',
+                                'desc': u'A blog about everything in the Ancient World, run by history students and graduates from different fields.',
+                                'title': u'Ancient Peoples'},
+                               {'url': u'http://xkcd.com/rss.xml',
+                                'desc': u'xkcd.com: A webcomic of romance and math humor.',
+                                'title': u'xkcd.com'}],
+                 'user_id': 1}
+
+    return final_res
+
+
 def get_user_feeds(user=None):
 
     feed_list = []
+    feed_data = {}
+    final_list = []
 
     if user:
-        # this needs work to retrieve properly... damn you sqlalchemy.
-        # sublist = UserFeeds.query.filter(UserFeeds.id == user.id).all()
         qry = db_session.query(User, UserFeeds, Feed)
         qry = qry.filter(Feed.id == UserFeeds.feedid, UserFeeds.userid == User.id)
 
         for each in qry.filter(User.id == user.id).all():
-            u, uf, f = each
-            print u.id, u.nickname, ': ', f.feed_url
-            feed_list.append(f.feed_url)
+            u_table, uf_table, f_table = each
 
-        return feed_list
+            # print u_table.id, u_table.nickname, ': ', f_table.feed_url, f_table.title, f_table.description
+
+            feed_data = {'title': f_table.title, 'url': f_table.feed_url, 'desc': f_table.description}
+            final_list.append(feed_data)
+
+            # add user_feed tag/category/star data here in dicitionary.
+
+            feed_list.append(f_table.feed_url)
+
+        final_res = {'user_id': u_table.id, 'feed_data': final_list}
+
+        print final_res
+
+        return final_res
+
+
+
 
     else:
         feed_list = Feed.query.all()
@@ -74,8 +103,9 @@ def remove_feed_category():
 if __name__ == "__main__":
     u = User(nickname="jmadison", email="jmadison@quotemedia.com", role=0, id=1)
     x = get_user_feeds(u)
+    send_feed = [f['url'] for f in x['feed_data']]
+    FeedGetter.main(send_feed)
 
-    #print [e for e in x]
-    FeedGetter.main(x)
+
 
 
