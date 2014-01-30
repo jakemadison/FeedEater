@@ -50,6 +50,8 @@ def index(page=1):
         print 'thiiiisssss..... is failing. move all this to user_man_feeds? ...actually, '
         print 'sub_list returns a list of feedIds.. can just use those to get entries..'
         entries = Entry.query.order_by(Entry.published.desc())[:10]
+        sub_list = user_manage_feeds.get_guest_feeds()
+        sl = sub_list['feed_data']
         # pass
 
     if request.method == 'POST':
@@ -59,7 +61,7 @@ def index(page=1):
             user = User(nickname="Guest", email="guest@guest.com", role=0)
             return render_template("index.html", form=form, title='Home',
                                    user=user, entries=entries, providers=app.config['OPENID_PROVIDERS'],
-                                   login_form=login_form)
+                                   login_form=login_form, subs=sl)
 
         # user = form.valid_login(form, form.username.data)  # , form.password.data
         if not user:
@@ -91,6 +93,10 @@ def index(page=1):
     print "==========="
     print sub_list
     sl = sub_list['feed_data']
+
+    print '------>', sl
+
+    # for guest this needs something like "get guest entries" because connection to content is failing.
 
     return render_template("index.html", title='Home',
                            user=user, entries=entries, form=form,
