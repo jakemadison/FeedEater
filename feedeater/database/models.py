@@ -39,6 +39,10 @@ class Entry(Model):
         self.link = link
         self.remote_id = remote_id
 
+
+    # TODO: These probably make more sense in a controller_util.py file.
+    # they are more application logic than model logic, no?
+
     # people don't like reading unix timestamps
     # use weekdays unless older than one week.
     def get_parsed_time(self):
@@ -141,6 +145,7 @@ class User(Model):
     ufeeds = relationship("UserFeeds")
     # posts = relationship('Post', backref = 'author', lazy = 'dynamic')
 
+    # following are required by Flask-Login:
     def get_entries(self):
         return Entry.query.order_by(Entry.published.desc())
 
