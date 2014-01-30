@@ -15,7 +15,6 @@ def remove_user_feed():
     pass
 
 
-
 def get_guest_feeds():
     # qry = db_session.query(Feed)
     # qry.filter(Feed.id < 3)

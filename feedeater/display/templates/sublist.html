@@ -1,14 +1,45 @@
+<!--it would be really nice if this was a nested list
+<!--of category, and then feed.. although then one feed cannot
+<!--have more than one category... -->
+
 <div class="col-md-12">
     <h4>Subscriptions</h4>
     <ul class="list-group">
 
-        {% for each in subs %}
-            <a href="#" class="list-group-item" title="{{ each['desc'] }}">{{ each['title'] }}</a>
-        {% endfor %}
-    </ul>
-        <ul class="list-group">
-            <a href="#" class="list-group-item">Favorite Posts</a>
+        <!--{% for each in subs %}-->
+            <!--<a href="#" class="list-group-item" title="{{ each['desc'] }}">{{ each['title'] }}</a>-->
+        <!--{% endfor %}-->
     </ul>
 
-    <p><a class="btn btn-primary btn-sm" role="button">Add &raquo;</a></p>
+
+        {% for each in subs %}
+        <div>
+          <div class="btn-group sub-btn">
+               <button type="button" class="btn btn-default sub-btn" title="{{ each['desc'] }}"><b>{{ each['title'] }}</b></button>
+
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="#">Add to Favorites</a></li>
+          <li><a href="#">Edit Feed Info...</a></li>
+          <li><a href="#">Edit Categories...</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Unsubscribe</a></li>
+        </ul>
+
+      </div><!-- /btn-group -->
+
+</div>
+    {% endfor %}
+
+
+
+<hr>
+    <!--<ul class="list-group">-->
+            <!--<a href="#" class="list-group-item">Favorite Posts</a>-->
+    <!--</ul>-->
+
+     <p><a class="btn btn-primary btn-sm" role="button">Add &raquo;</a></p>
 </div>

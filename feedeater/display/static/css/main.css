@@ -37,6 +37,7 @@ sidebar-nav {
 .container {
     width: 60%;
     padding-right: 2px;
+    margin-left: 25%;
    /* margin-right: 15%; */
 
 }
@@ -65,4 +66,10 @@ sidebar-nav {
 .brand {
     margin-left: 20px;
 
+}
+
+.sub-btn {
+
+    width: 90%;
+    text-align: left;
 }
