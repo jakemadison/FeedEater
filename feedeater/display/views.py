@@ -21,6 +21,17 @@ def before_request():
     g.user = current_user
 
 
+
+def return_a_page():
+    user = g.user
+    form = LoginForm(request.form)
+    login_form = LoginForm()
+
+
+
+
+
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index/', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
@@ -55,6 +66,7 @@ def index(page=1):
         # pass
 
     if request.method == 'POST':
+
 
         if not form.validate():
             print 'maaaade it here:'
@@ -104,6 +116,24 @@ def index(page=1):
                            login_form=login_form, subs=sl)
 
 
+
+@app.route('/favs/')
+def favs():
+    print "holy shit... it's not THAT easy.. is it??"
+
+    # I feel like this redirection business is causing page loading that
+    # it does not need to, and so overall app slowdown.
+    # except that feed changes, do need to be dealt with somehow
+
+    return redirect(url_for('index'))
+
+@app.route('/unsubscribe/')
+def unsubscribe():
+    print "remove the fuck outta this feed"
+
+    # remove feed logic here......
+
+    return redirect(url_for('index'))
 
 
 @app.route('/login', methods=['GET', 'POST'])

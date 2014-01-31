@@ -15,18 +15,20 @@
         {% for each in subs %}
         <div>
           <div class="btn-group sub-btn">
-               <button type="button" class="btn btn-default sub-btn" title="{{ each['desc'] }}"><b>{{ each['title'] }}</b></button>
+
+              <!--was type=button-->
+               <button type="submit" value="/favs/" class="btn btn-default sub-btn" title="{{ each['desc'] }}"><b>{{ each['title'] }}</b></button>
 
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
           <span class="caret"></span>
           <span class="sr-only">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li><a href="#">Add to Favorites</a></li>
+          <li><a href="/favs/">Add to Favorites</a></li>
           <li><a href="#">Edit Feed Info...</a></li>
           <li><a href="#">Edit Categories...</a></li>
           <li class="divider"></li>
-          <li><a href="#">Unsubscribe</a></li>
+          <li><a href="/unsubscribe/">Unsubscribe</a></li>
         </ul>
 
       </div><!-- /btn-group -->
