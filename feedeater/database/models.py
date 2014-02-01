@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, SmallInteger, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, SmallInteger, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import backref, relationship
 from datetime import datetime, timedelta
 import urlparse
@@ -102,7 +102,8 @@ class Feed(Model):
     favicon = Column(String(1024))
     metadata_update = Column(Integer)
     ufeeds = relationship("UserFeeds", backref="source")
-    entries = relationship("Entry")
+    entries = relationship("Entry", backref="entry_source")
+
 
     def __init__(self, update_frequency='0', favicon=None, feed_url=None, feed_site=None,
                  last_checked=1,
@@ -129,6 +130,12 @@ class UserFeeds(Model):
     id = Column('id', Integer, primary_key=True)
     userid = Column(Integer, ForeignKey("user.id"))
     feedid = Column(Integer, ForeignKey("feed.id"))
+    is_active = Column(Boolean, default=True)
+
+    def __init__(self, userid, feedid, is_active=True):
+        self.feedid = feedid
+        self.userid = userid
+        self.is_active = is_active
 
 
 # all user accounts registered with the controller
@@ -145,10 +152,23 @@ class User(Model):
     ufeeds = relationship("UserFeeds")
     # posts = relationship('Post', backref = 'author', lazy = 'dynamic')
 
-    # following are required by Flask-Login:
     def get_entries(self):
-        return Entry.query.order_by(Entry.published.desc())
 
+        # this needs to change to only get active entries
+        # probably move this to user_feeds and do a join there.
+        query_result = Entry.query.order_by(Entry.published.desc())
+        return query_result
+
+    def get_entries_new(self):
+
+        qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
+                         UserFeeds.userid == User.id,
+                         UserFeeds.is_active == 1).order_by(Entry.published.desc())
+
+        return qry
+
+
+    # following are required by Flask-Login:
     def is_authenticated(self):
         return True
 

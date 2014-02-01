@@ -16,14 +16,38 @@
         <div>
           <div class="btn-group sub-btn">
 
-              <!--was type=button-->
-               <button type="submit" value="/favs/" class="btn btn-default sub-btn" title="{{ each['desc'] }}"><b>{{ each['title'] }}</b></button>
+              {% if each['active'] %}
+
+               <button type="submit" value="/favs/" class="btn btn-success sub-btn" title="{{ each['desc'] }}"
+                       onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=0'">
+                        <b>{{ each['title'] }}</b>
+               </button>
+
+               {% else %}
+
+               <button type="submit" value="/favs/" class="btn btn-default sub-btn" title="{{ each['desc'] }}"
+                       onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=1'">
+                        {{ each['title'] }}
+               </button>
+
+               {% endif %}
+
+
 
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
           <span class="caret"></span>
           <span class="sr-only">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu" role="menu">
+
+            {% if each['active'] %}
+                <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=0">Hide</a></li>
+            {% else %}
+                <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=1">Show</a></li>
+            {% endif %}
+
+            <li class="divider"></li>
+
           <li><a href="/favs/">Add to Favorites</a></li>
           <li><a href="#">Edit Feed Info...</a></li>
           <li><a href="#">Edit Categories...</a></li>

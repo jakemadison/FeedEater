@@ -1,7 +1,30 @@
 <div class="col-md-8-2">
 
+
     <h3><b><a href="{{entry.link}}" target="_blank" title="{{entry.title}}">{{entry.get_title()}}</a></b></h3>
-    <div class="well"><p align="right"><i>{{entry.get_feed_base()}}</i> @ {{entry.get_parsed_time()}}</p>
+
+
+
+    <div class="well">
+
+
+    <div class="btn-group sub-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="/favs/">Add to Favorites</a></li>
+          <li><a href="#">Edit Entry Tags</a></li>
+          <li><a href="#">Entry Info...</a></li>
+          <li class="divider"></li>
+          <li><a href="/unsubscribe/">Unsubscribe</a></li>
+        </ul>
+      </div><!-- /btn-group -->
+
+
+        <p align="right"><i>{{entry.get_feed_base()}}</i> @ {{entry.get_parsed_time()}}
+    </p>
         <p align="center">{{entry.content|safe}}</p></div>
 </div>
 

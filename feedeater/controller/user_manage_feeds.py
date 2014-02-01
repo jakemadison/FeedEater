@@ -1,7 +1,7 @@
 # this module deals with adding, removing, updating user feeds.
 # it will be called by front end actions
 import FeedGetter
-from feedeater.database.models import User, UserFeeds, Feed
+from feedeater.database.models import User, UserFeeds, Feed, Entry
 from feedeater import db
 
 db_session = db.session
@@ -32,7 +32,7 @@ def get_guest_feeds():
 def get_user_feeds(user=None):
 
     feed_list = []
-    feed_data = {}
+    #feed_data = {}
     final_list = []
 
     if user:
@@ -42,12 +42,11 @@ def get_user_feeds(user=None):
         for each in qry.filter(User.id == user.id).all():
             u_table, uf_table, f_table = each
 
-            # print u_table.id, u_table.nickname, ': ', f_table.feed_url, f_table.title, f_table.description
-
-            feed_data = {'title': f_table.title, 'url': f_table.feed_url, 'desc': f_table.description}
+            # add user_feed tag/category/star data here in dictionary:
+            feed_data = {'title': f_table.title, 'url': f_table.feed_url,
+                         'desc': f_table.description, 'active': uf_table.is_active,
+                         'uf_id': uf_table.id}
             final_list.append(feed_data)
-
-            # add user_feed tag/category/star data here in dicitionary.
 
             feed_list.append(f_table.feed_url)
 
@@ -57,20 +56,59 @@ def get_user_feeds(user=None):
 
         return final_res
 
-
-
-
     else:
         feed_list = Feed.query.all()
 
     return [q.feed_url for q in feed_list]
 
 
+def get_user_entries(user):
+
+    #this needs to return a query object so we can paginate results
+    try:
+
+        # query_result = Entry.query.order_by(Entry.published.desc())
+
+        # qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
+        #                  UserFeeds.userid == User.id,
+        #                  UserFeeds.is_active == 1).order_by(Entry.published.desc())
+
+
+        qry = Entry.query.order_by(Entry.published.desc())
+
+        # qry = db_session.query(User, UserFeeds, Entry)
+        # qry = qry.filter(Entry.feed_id == UserFeeds.feedid,
+        #                  UserFeeds.userid == User.id,
+        #                  UserFeeds.is_active == 1).order_by(Entry.published.desc())
+
+    except Exception, e:
+        print 'errrror with getting entries..'
+        print str(e)
+
+    print qry
+
+    return qry
+
+
+def update_is_active(ufid, active):
+
+    try:
+        db_session.query(UserFeeds).filter_by(id=ufid).update(
+            {
+                "is_active": active,
+            })
+
+        db_session.commit()
+
+    except Exception, e:
+        print 'errrror with existing is_active record'
+        print str(e)
+        db_session.rollback()
+
+
 def update_users_feeds(u):
 
     # select title from feed f join userfeeds uf on f.id = uf.id
-
-
 
     try:
         user_record = db.session.query(User).filter(User.nickname == u.nickname).first()
@@ -101,9 +139,11 @@ def remove_feed_category():
 
 if __name__ == "__main__":
     u = User(nickname="jmadison", email="jmadison@quotemedia.com", role=0, id=1)
-    x = get_user_feeds(u)
-    send_feed = [f['url'] for f in x['feed_data']]
-    FeedGetter.main(send_feed)
+
+    get_user_entries(u)
+    #x = get_user_feeds(u)
+    #send_feed = [f['url'] for f in x['feed_data']]
+    #FeedGetter.main(send_feed)
 
 
 

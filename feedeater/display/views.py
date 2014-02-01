@@ -41,22 +41,22 @@ def index(page=1):
 
     print app
     print __name__
-    print dir(app)
+    #print dir(app)
 
     user = g.user
     form = LoginForm(request.form)
     login_form = LoginForm()
 
-
-
     # using this to test DB connection...
     get_entries = Entry.query.order_by(Entry.published.desc())  # move this to a function w/in models.
-    print get_entries.all()
+    #print get_entries.all()
     # entries = get_entries[:30]
 
     # this needs to change to get user feeds and only return those entries...
     if g.user.is_authenticated():
-        entries = user.get_entries().paginate(page, c['POSTS_PER_PAGE'], False)
+        entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
+        # entries = user_manage_feeds.get_user_entries(user).pagingate(page, c['POSTS_PER_PAGE'], False)
+
     else:
         print 'thiiiisssss..... is failing. move all this to user_man_feeds? ...actually, '
         print 'sub_list returns a list of feedIds.. can just use those to get entries..'
@@ -66,7 +66,6 @@ def index(page=1):
         # pass
 
     if request.method == 'POST':
-
 
         if not form.validate():
             print 'maaaade it here:'
@@ -114,6 +113,21 @@ def index(page=1):
                            user=user, entries=entries, form=form,
                            providers=app.config['OPENID_PROVIDERS'],
                            login_form=login_form, subs=sl)
+
+
+@app.route('/change_active')
+def change_active():
+
+    print "----- entering change active"
+    ufid = request.args.get('ufid')
+    active = request.args.get('a')
+    user_manage_feeds.update_is_active(ufid, active)
+    print 'finished change_active.'
+
+    # this part isn't working for remember page:
+    return redirect(request.args.get('next') or url_for('index'))
+
+
 
 
 
