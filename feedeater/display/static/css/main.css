@@ -47,6 +47,7 @@ sidebar-nav {
     float: left;
     margin-left: 20px;
 
+
 }
 
 .foot {
@@ -72,4 +73,9 @@ sidebar-nav {
 
     width: 90%;
     text-align: left;
+}
+
+.col-sm-4 {
+    width: 100%
+
 }

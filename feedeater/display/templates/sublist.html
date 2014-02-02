@@ -2,8 +2,9 @@
 <!--of category, and then feed.. although then one feed cannot
 <!--have more than one category... -->
 
-<div class="col-md-12">
+<div class="col-sm-4">
     <h4>Subscriptions</h4>
+
     <ul class="list-group">
 
         <!--{% for each in subs %}-->
@@ -12,20 +13,27 @@
     </ul>
 
 
+    <script type="text/javascript">
+        function subClick()
+        {
+            pageid = document.getElementById("url");
+        }
+    </script>
+
         {% for each in subs %}
         <div>
           <div class="btn-group sub-btn">
 
               {% if each['active'] %}
 
-               <button type="submit" value="/favs/" class="btn btn-success sub-btn" title="{{ each['desc'] }}"
+               <button type="button" value="/favs/" class="btn btn-success sub-btn" title="{{ each['desc'] }}"
                        onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=0'">
                         <b>{{ each['title'] }}</b>
                </button>
 
                {% else %}
 
-               <button type="submit" value="/favs/" class="btn btn-default sub-btn" title="{{ each['desc'] }}"
+               <button type="button" value="/favs/" class="btn btn-default sub-btn" title="{{ each['desc'] }}"
                        onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=1'">
                         {{ each['title'] }}
                </button>
@@ -56,16 +64,25 @@
         </ul>
 
       </div><!-- /btn-group -->
+        </div>
 
-</div>
     {% endfor %}
-
-
-
 <hr>
+
+       <div class="input-group">
+          <input type="text" class="form-control" placeholder="Add a new Feed why not...?">
+          <!--<span class="input-group-btn">-->
+            <!--<button class="btn btn-default" type="button">Add!</button>-->
+          <!--</span>-->
+        </div><!-- /input-group -->
+
+
+
     <!--<ul class="list-group">-->
             <!--<a href="#" class="list-group-item">Favorite Posts</a>-->
     <!--</ul>-->
 
-     <p><a class="btn btn-primary btn-sm" role="button">Add &raquo;</a></p>
+
+
+     <!--<p><a class="btn btn-primary btn-sm" role="button">Add &raquo;</a></p>-->
 </div>
