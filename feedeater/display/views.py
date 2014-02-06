@@ -8,7 +8,8 @@ from feedeater.config import configs as c
 from feedeater.database.models import User, ROLE_USER, Entry
 from feedeater.controller import user_manage_feeds
 import sys
-from feedeater import db
+from feedeater.controller import FeedGetter
+
 
 
 @lm.user_loader
@@ -113,6 +114,19 @@ def index(page=1):
                            user=user, entries=entries, form=form,
                            providers=app.config['OPENID_PROVIDERS'],
                            login_form=login_form, subs=sl)
+
+
+# temp route to refresh from front end.
+@app.route('/refresh')
+def refresh_feeds():
+
+    user = g.user
+    x = user_manage_feeds.get_user_feeds(user)
+    send_feed = [f['url'] for f in x['feed_data']]
+    FeedGetter.main(send_feed)
+
+    return redirect(request.args.get('next') or url_for('index'))
+
 
 
 @app.route('/change_active')

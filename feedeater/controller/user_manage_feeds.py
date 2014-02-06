@@ -3,6 +3,7 @@
 import FeedGetter
 from feedeater.database.models import User, UserFeeds, Feed, Entry
 from feedeater import db
+from feedeater.debugger import debugging_suite as ds
 
 db_session = db.session
 
@@ -29,6 +30,7 @@ def get_guest_feeds():
     return final_res
 
 
+# @ds.LogDebug
 def get_user_feeds(user=None):
 
     feed_list = []
@@ -62,6 +64,7 @@ def get_user_feeds(user=None):
     return [q.feed_url for q in feed_list]
 
 
+# @ds.LogDebug
 def get_user_entries(user):
 
     #this needs to return a query object so we can paginate results
@@ -140,10 +143,15 @@ def remove_feed_category():
 if __name__ == "__main__":
     u = User(nickname="jmadison", email="jmadison@quotemedia.com", role=0, id=1)
 
-    get_user_entries(u)
-    #x = get_user_feeds(u)
-    #send_feed = [f['url'] for f in x['feed_data']]
-    #FeedGetter.main(send_feed)
+    # get_user_entries(u)
+
+#TODO: actually, might just be better to check most recent update and only look at those
+# entries that are actually greater than that time, skipping the rest except for once per day
+# check... hmmm
+
+    x = get_user_feeds(u)
+    send_feed = [f['url'] for f in x['feed_data']]
+    FeedGetter.main(send_feed)
 
 
 

@@ -86,7 +86,7 @@ def feed_request(url, get_meta=False):
 test_url = 'http://dir.yahoo.com/rss/dir/getrss.php?rec_games_video'
 test2 = 'http://www.reddit.com/r/python/.rss'
 test3 = 'http://xkcd.com/rss.xml'
-test4 = 'http://maruthecat.tumblr.com/rss'
+test4 = 'http://www.shiningrocksoftware.com/?feed=rss2'
 
 if __name__ == "__main__":
     import storefeeds
