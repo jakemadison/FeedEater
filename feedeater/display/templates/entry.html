@@ -1,20 +1,11 @@
-<div class="col-md-8-2">
+<div class="col-md-8-2" id="contento">
 
 
     <h3><b><a href="{{entry.link}}" target="_blank" title="{{entry.title}}">{{entry.get_title()}}</a></b></h3>
 
 <!--there should be a hide button here to hide the div of the entry-->
-<input type='button' id='hideshow' value='hide/show'>
 
-<script>
-    jQuery(document).ready(function(){
-    jQuery('#hideshow').live('click', function(event) {
-         jQuery('#content').toggle('show');
-    });
-});
-
-</script>
-    <div class="well" id="content">
+    <div class="well">
 
 
 

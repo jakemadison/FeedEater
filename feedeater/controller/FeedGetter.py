@@ -55,8 +55,10 @@ def main(feed_list=None):
         if res:
             res_q.put(res)
 
+    #TODO: move this to configs file:
+
     # optimize network-bound producer pool here
-    p_pool = 1  # 5
+    p_pool = 5  # 5
     p_exec = concurrent.futures.ThreadPoolExecutor(max_workers=p_pool)
     p_futures = [p_exec.submit(p_call, feed) for feed in feed_list]
 

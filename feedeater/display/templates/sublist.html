@@ -2,7 +2,7 @@
 <!--of category, and then feed.. although then one feed cannot
 <!--have more than one category... -->
 
-<div class="col-sm-4">
+<div class="col-sm-4" id="subscription_list">
     <h4>Subscriptions</h4>
 
     <ul class="list-group">
@@ -85,4 +85,18 @@
 
 
      <!--<p><a class="btn btn-primary btn-sm" role="button">Add &raquo;</a></p>-->
+
+<input type='button' id='hideshow' value='hide/show'>
 </div>
+
+
+
+
+<script>
+    jQuery(document).ready(function(){
+    jQuery('#hideshow').live('click', function(event) {
+         jQuery('#subscription_list').toggle('show');
+    });
+});
+
+</script>
