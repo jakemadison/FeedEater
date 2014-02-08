@@ -3,7 +3,9 @@
 import FeedGetter
 from feedeater.database.models import User, UserFeeds, Feed, Entry
 from feedeater import db
-from feedeater.debugger import debugging_suite as ds
+# from feedeater.debugger import debugging_suite as ds
+import getfeeds
+import storefeeds
 
 db_session = db.session
 
@@ -20,7 +22,8 @@ def get_guest_feeds():
     # qry = db_session.query(Feed)
     # qry.filter(Feed.id < 3)
     final_res = {'feed_data': [{'url': u'http://ancientpeoples.tumblr.com/rss',
-                                'desc': u'A blog about everything in the Ancient World, run by history students and graduates from different fields.',
+                                'desc': u'A blog about everything in the Ancient World, run \
+                                by history students and graduates from different fields.',
                                 'title': u'Ancient Peoples'},
                                {'url': u'http://xkcd.com/rss.xml',
                                 'desc': u'xkcd.com: A webcomic of romance and math humor.',
@@ -47,10 +50,10 @@ def get_user_feeds(user=None):
             # add user_feed tag/category/star data here in dictionary:
             feed_data = {'title': f_table.title, 'url': f_table.feed_url,
                          'desc': f_table.description, 'active': uf_table.is_active,
-                         'uf_id': uf_table.id}
+                         'uf_id': uf_table.id, 'feed_id': uf_table.feedid}
             final_list.append(feed_data)
 
-            feed_list.append(f_table.feed_url)
+            feed_list.append(f_table.feed_url)  # is this actually being used at all??
 
         final_res = {'user_id': u_table.id, 'feed_data': final_list}
 
@@ -150,7 +153,28 @@ if __name__ == "__main__":
 # check... hmmm
 
     x = get_user_feeds(u)
-    send_feed = [f['url'] for f in x['feed_data']]
+    # send_feed = [f['url'] for f in x['feed_data']]  # expand to send both url and feed_id
+
+    send_feed = []
+    for f in x['feed_data']:
+        unit = {'feed_id': f['feed_id'], 'url': f['url']}
+        send_feed.append(unit)
+        # send_feed.append(f['url'])
+
+    # result = []
+    # for each in send_feed:
+    #     result = getfeeds.feed_request(each)
+    #     print result
+
+    # print send_feed
+
+    # for each in send_feed:
+    #     result = getfeeds.feed_request(each)
+
+    # for each in result['posts']:
+    #     storefeeds.add_entry(result, update_entries=True)
+
+    #print send_feed
     FeedGetter.main(send_feed)
 
 

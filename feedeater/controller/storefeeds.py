@@ -1,6 +1,7 @@
 from feedeater.database import models
 # from display import db  # TODO this is pretty confusing db the module vs display.db attribute
 from feedeater import db
+# from feedeater import sess as db_session # will this create a session every time?
 db_session = db.session
 
 # TODO: incorporate some damn exception catching already
@@ -10,6 +11,11 @@ db_session = db.session
 # every entry has a feed, every feed has a user, (via feedlist assoc. table)
 # update times are feed specific, tags are feedlist specific
 
+
+# this whole thing is (making a session?) doing a full transaction on each entry.
+# that is HUGELY slowing down overall performance.  look into flush()?
+# maybe when concurrency on the DB side is brought into the picture.
+# also, context manager, a la: http://docs.sqlalchemy.org/en/latest/orm/session.html, pretty slick.
 
 def get_feed_id(feed_url):
     pass
@@ -76,67 +82,69 @@ def store_user_feeds(feed, user=None):
     print "storing user-feed assoc. for ", feed
 
 
-def add_entry(entry, feed_id=0):
+def add_entry(entries, update_entries=False):
 
-    try:
-        stored_ent = db_session.query(models.Entry).filter_by(link=entry.get("link")).first()
+    for entry in entries['posts']:
+        try:
+            stored_ent = db_session.query(models.Entry).filter_by(link=entry.get("link")).first()
 
-        # Even if it is in db it might be updated since last time.
-        if stored_ent is not None and stored_ent.updated is entry.get("updated"):
-            return
+            # Even if it is in db it might be updated since last time.
+            if stored_ent is not None and stored_ent.updated is entry.get("updated"):
+                return
 
-        # It is not really updated if updated is set to 1.
-        if entry.get("updated") is 1:
-            return
+            # It is not really updated if updated is set to 1.
+            if entry.get("updated") is 1:
+                return
 
-        if stored_ent:
-            print 'old entry detected....', stored_ent.title, stored_ent.id
+            if stored_ent:
+                # print 'old entry detected....', stored_ent.title, stored_ent.id
 
-            try:
-                db_session.query(models.Entry).filter_by(id=stored_ent.id).update(
-                    {
-                        "published": entry.get("published"),
-                        "updated": entry.get("updated"),
-                        "title": entry.get("title"),
-                        "content": entry.get("content"),
-                        "description": entry.get("description"),
-                        "link": entry.get("link"),
-                        "remote_id": entry.get("id"),
-                        "feed_id": feed_id
-                    })
+                if update_entries:
+                    try:
+                        db_session.query(models.Entry).filter_by(id=stored_ent.id).update(
+                            {
+                                "published": entry.get("published"),
+                                "updated": entry.get("updated"),
+                                "title": entry.get("title"),
+                                "content": entry.get("content"),
+                                "description": entry.get("description"),
+                                "link": entry.get("link"),
+                                "remote_id": entry.get("id"),
+                                "feed_id": entry.get("feed_id")
+                            })
 
-                # logger.debug("Updating entry with id: {0}".format(entry.get("id")))
+                        # logger.debug("Updating entry with id: {0}".format(entry.get("id")))
 
-                db_session.commit()
-            except Exception, e:
-                print 'errrror with existing'
-                print str(e)
-                db_session.rollback()
+                    except Exception, e:
+                        print 'errrror with existing'
+                        print str(e)
+                        db_session.rollback()
 
-        else:  # why are content and description storing the same information in all feeds?
+            else:  # why are content and description storing the same information in all feeds?
 
-            print 'new entry detected...'
-            # okay, so for this one, we need to pass a full feed object to "source" instead
-            # of setting feed_id manually...
+                print 'new entry detected...'
+                # okay, so for this one, we need to pass a full feed object to "source" instead
+                # of setting feed_id manually...
 
-            new_entry = models.Entry(
-                published=entry.get("published"),
-                updated=entry.get("updated"),
-                title=entry.get("title"),
-                content=entry.get("content"),
-                description=entry.get("description"),
-                link=entry.get("link"),
-                remote_id=entry.get("id"),
-                feed_id=feed_id
-            )
+                new_entry = models.Entry(
+                    published=entry.get("published"),
+                    updated=entry.get("updated"),
+                    title=entry.get("title"),
+                    content=entry.get("content"),
+                    description=entry.get("description"),
+                    link=entry.get("link"),
+                    remote_id=entry.get("id"),
+                    feed_id=entry.get("feed_id")
+                )
 
-            # logger.debug(u"Adding new entry with id: {0}".format(entry.get("id")))
-            db_session.add(new_entry)
-            db_session.commit()
+                # logger.debug(u"Adding new entry with id: {0}".format(entry.get("id")))
+                db_session.add(new_entry)
+                # db_session.commit()
 
-    except Exception, e:
-        db_session.rollback()
-        print 'ERROR!!'
-        print str(e)
+        except Exception, e:
+            db_session.rollback()
+            print 'ERROR!!'
+            print str(e)
 
+    db_session.commit()
 

@@ -3,7 +3,12 @@ import feedparser
 from feedeater.config import configs
 
 
-def feed_request(url, get_meta=False):
+def feed_request(f, get_meta=False):
+
+    url = f['url']
+    feed_id = f['feed_id']
+    # feed_id = 0
+    # url = f
 
     def time_parser(time_str, update_time=False):
         """
@@ -40,7 +45,7 @@ def feed_request(url, get_meta=False):
 
     if res:
         posts = []
-        print 'length of entries: {0}'.format(len(res['entries']))
+        # print 'length of entries: {0}'.format(len(res['entries']))
         # there needs to be a "if length entries > 0 here
 
         for entry in res['entries']:
@@ -49,8 +54,9 @@ def feed_request(url, get_meta=False):
 
             try:
                 # print 'receiving post: {0}'.format(entry.get("title"))
-                print 'getting post....{0}'.format(entry.get("title", "No title").encode('utf-8')).strip("\n")[:70]
+                # print 'getting post....{0}'.format(entry.get("title", "No title").encode('utf-8')).strip("\n")[:70]
                 post = {
+                    "feed_id": feed_id,
                     "title": entry.get("title", "No title"),
                     "link": entry.get("link", "#"),
                     "id": entry.get("id", "No Id"),
