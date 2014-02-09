@@ -55,7 +55,12 @@ def index(page=1):
 
     # this needs to change to get user feeds and only return those entries...
     if g.user.is_authenticated():
+        print '!!!!! - retrieving entries from is_authenticated call...'
         entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
+
+        # unread count is really just an entry-based tag, the same as "stared", but
+        # should be divided by feed... so is it actually feed-based?
+
         # entries = user_manage_feeds.get_user_entries(user).pagingate(page, c['POSTS_PER_PAGE'], False)
 
     else:
@@ -99,12 +104,13 @@ def index(page=1):
         sub_list = user_manage_feeds.get_guest_feeds()
 
     else:
+        print "}}}retrieving sublist here...."
         sub_list = user_manage_feeds.get_user_feeds(user)
 
     print user
     print "==========="
     print sub_list
-    sl = sub_list['feed_data']
+    sl = sub_list['feed_data']  # sl needs to send count data as well. or send it from entries?
 
     print '------>', sl
 

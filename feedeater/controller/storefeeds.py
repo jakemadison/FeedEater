@@ -1,7 +1,6 @@
 from feedeater.database import models
 # from display import db  # TODO this is pretty confusing db the module vs display.db attribute
 from feedeater import db
-# from feedeater import sess as db_session # will this create a session every time?
 db_session = db.session
 
 # TODO: incorporate some damn exception catching already

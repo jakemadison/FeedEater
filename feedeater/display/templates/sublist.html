@@ -20,41 +20,46 @@
         }
     </script>
 
-        {% for each in subs %}
-        <div>
-          <div class="btn-group sub-btn">
+    {% for each in subs %}
+    <div>
+        <div class="btn-group sub-btn">
 
-              {% if each['active'] %}
 
-               <button type="button" value="/favs/" class="btn btn-success sub-btn" title="{{ each['desc'] }}"
+
+            {% if each['active'] %}
+
+           <button type="button" value="/favs/" class="btn btn-success sub-btn" title="{{ each['desc'] }}"
                        onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=0'">
-                        <b>{{ each['title'] }}</b>
+
+                    <span class="badge pull-right">42</span>
+                   <b>{{ each['title'] }}</b>
+
+
                </button>
 
-               {% else %}
+           {% else %}
 
-               <button type="button" value="/favs/" class="btn btn-default sub-btn" title="{{ each['desc'] }}"
-                       onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=1'">
-                        {{ each['title'] }}
-               </button>
+           <button type="button" value="/favs/" class="btn btn-default sub-btn" title="{{ each['desc'] }}"
+                   onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=1'">
+                    {{ each['title'] }}
+           </button>
 
-               {% endif %}
-
+           {% endif %}
 
 
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-          <span class="caret"></span>
-          <span class="sr-only">Toggle Dropdown</span>
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu" role="menu">
 
-            {% if each['active'] %}
-                <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=0">Hide</a></li>
-            {% else %}
-                <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=1">Show</a></li>
-            {% endif %}
+        {% if each['active'] %}
+            <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=0">Hide</a></li>
+        {% else %}
+            <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=1">Show</a></li>
+        {% endif %}
 
-            <li class="divider"></li>
+        <li class="divider"></li>
 
           <li><a href="/favs/">Add to Favorites</a></li>
           <li><a href="#">Edit Feed Info...</a></li>
@@ -63,18 +68,31 @@
           <li><a href="/unsubscribe/">Unsubscribe</a></li>
         </ul>
 
-      </div><!-- /btn-group -->
-        </div>
+
+            </div><!-- /btn-group -->
+        </div> <!--end of dropdown menu-->
+
+
 
     {% endfor %}
-<hr>
 
-       <div class="input-group">
-          <input type="text" class="form-control" placeholder="Add a new Feed why not...?">
-          <!--<span class="input-group-btn">-->
-            <!--<button class="btn btn-default" type="button">Add!</button>-->
-          <!--</span>-->
-        </div><!-- /input-group -->
+    <!--</div> &lt;!&ndash; end of enclosing well &ndash;&gt;-->
+
+<hr>
+    <form class="navbar-form navbar-left" role="search">
+  <div class="form-group">
+    <input type="text" class="form-control" placeholder="Add Feed">
+  </div>
+  <button type="submit" class="btn btn-default">Add</button>
+</form>
+
+
+       <!--<div class="input-group">-->
+          <!--<input type="text" class="form-control" placeholder="Add a new Feed why not...?">-->
+          <!--&lt;!&ndash;<span class="input-group-btn">&ndash;&gt;-->
+            <!--&lt;!&ndash;<button class="btn btn-default" type="button">Add!</button>&ndash;&gt;-->
+          <!--&lt;!&ndash;</span>&ndash;&gt;-->
+        <!--</div>&lt;!&ndash; /input-group &ndash;&gt;-->
 
 
 
@@ -86,7 +104,7 @@
 
      <!--<p><a class="btn btn-primary btn-sm" role="button">Add &raquo;</a></p>-->
 
-<input type='button' id='hideshow' value='hide/show'>
+<!--<input type='button' id='hideshow' value='hide/show'>-->
 </div>
 
 

@@ -46,6 +46,8 @@ sidebar-nav {
 .sidebar {
     float: left;
     margin-left: 20px;
+    margin-right: 10px;
+    padding: 0;
 
 
 }
@@ -79,3 +81,25 @@ sidebar-nav {
     width: 100%
 
 }
+
+.col-sm-2 {
+    width: 12%;
+}
+
+.navbar-form {
+    margin-left: -15px;
+
+}
+
+
+.col-md-8-2 {
+
+    margin-left: 0px;
+
+}
+
+#subtitle {
+    width: 50%;
+
+}
+
