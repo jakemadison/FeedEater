@@ -10,8 +10,41 @@ import storefeeds
 db_session = db.session
 
 
-def add_user_feed():
-    pass
+def add_user_feed(user, feed):
+    print user
+    print feed
+
+    # check to see if this feed already exist in user table
+    exists = db_session.query(Feed).filter_by(feed_url=feed).first()
+
+    if exists:
+        print "feed already exists in feed table"
+
+        already_associated = db_session.query(UserFeeds).filter_by(feedid=exists.id).first()
+
+        if already_associated:
+            print "this feed is already associated with the current user, return error for info display"
+            return "already_associated"
+
+        else:
+            # add this feed to user_feed table
+            new_user_feed = UserFeeds(userid=user.id, feedid=exists.id, is_active=1)
+
+            try:
+                db_session.add(new_user_feed)
+                db_session.commit()
+
+            except Exception, e:
+                print "error associating feed!"
+                print str(e)
+                db_session.rollback()
+                return "error_adding_feed"
+
+            return "success"
+
+    return None
+
+
 
 
 def remove_user_feed():

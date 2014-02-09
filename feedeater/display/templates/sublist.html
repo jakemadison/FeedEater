@@ -5,12 +5,28 @@
 <div class="col-sm-4" id="subscription_list">
     <h4>Subscriptions</h4>
 
-    <ul class="list-group">
+    <!--add feeds section:-->
 
-        <!--{% for each in subs %}-->
-            <!--<a href="#" class="list-group-item" title="{{ each['desc'] }}">{{ each['title'] }}</a>-->
-        <!--{% endfor %}-->
-    </ul>
+<form name="add_feed" class="navbar-form navbar-left" role="search" action="/add_feed" method="post">
+    <div class="form-group">
+
+        {{ add_feed_form.feed(class="form-control", placeholder="Add Feed") }}
+
+    </div>
+        {{ add_feed_form.submit(class="btn btn-default") }}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == "error" %}
+                        <div class="flash"><span class="label label-danger">{{ message }}</span></div>
+                    {% elif category == "info" %}
+                        <div class="flash"><span class="label label-primary">{{ message }}</span></div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+</form>
 
 
     <script type="text/javascript">
@@ -24,8 +40,6 @@
     <div>
         <div class="btn-group sub-btn">
 
-
-
             {% if each['active'] %}
 
            <button type="button" value="/favs/" class="btn btn-success sub-btn" title="{{ each['desc'] }}"
@@ -33,8 +47,6 @@
 
                     <span class="badge pull-right">42</span>
                    <b>{{ each['title'] }}</b>
-
-
                </button>
 
            {% else %}
@@ -51,7 +63,7 @@
         <span class="caret"></span>
         <span class="sr-only">Toggle Dropdown</span>
         </button>
-        <ul class="dropdown-menu" role="menu">
+        <ul class="dropdown-menu pull-right" role="menu">
 
         {% if each['active'] %}
             <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=0">Hide</a></li>
@@ -64,6 +76,8 @@
           <li><a href="/favs/">Add to Favorites</a></li>
           <li><a href="#">Edit Feed Info...</a></li>
           <li><a href="#">Edit Categories...</a></li>
+            <!--automatically tag entries from this feed-->
+          <li><a href="#" title="Automatically tag entries from this feed">Auto Tag Entries...</a></li>
           <li class="divider"></li>
           <li><a href="/unsubscribe/">Unsubscribe</a></li>
         </ul>
@@ -78,13 +92,7 @@
 
     <!--</div> &lt;!&ndash; end of enclosing well &ndash;&gt;-->
 
-<hr>
-    <form class="navbar-form navbar-left" role="search">
-  <div class="form-group">
-    <input type="text" class="form-control" placeholder="Add Feed">
-  </div>
-  <button type="submit" class="btn btn-default">Add</button>
-</form>
+<!--<hr>-->
 
 
        <!--<div class="input-group">-->

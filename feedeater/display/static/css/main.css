@@ -98,8 +98,19 @@ sidebar-nav {
 
 }
 
+#info {
+    height: 30px;
+    margin-bottom: 10px;
+
+}
+
 #subtitle {
     width: 50%;
 
+}
+
+.flash {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 

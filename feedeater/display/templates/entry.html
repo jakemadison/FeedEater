@@ -1,33 +1,53 @@
-<div class="col-md-8-2" id="contento">
+<div class="col-md-8-2" id="contento" xmlns="http://www.w3.org/1999/html">
 
+<div>
+    <div class="brand">
+    <h3>
+        <b><a  href="{{entry.link}}" target="_blank" title="{{entry.title}}">{{entry.get_title()}}</a></b>
+    </h3>
+    </div>
 
-    <h3><b><a href="{{entry.link}}" target="_blank" title="{{entry.title}}">{{entry.get_title()}}</a></b></h3>
+    <div align="right">
+        <a href="/add_feed"><span class="label label-info">User Defined Tag</span></a>
+        <a href="/add_feed"><span class="label label-info">Pets</span></a>
+        <a href="/add_feed"><span class="label label-info">Funny</span></a>
+    </div>
+    <button type="button" class="btn btn-default btn-lg pull-right">
+        <span class="glyphicon glyphicon-plus pull-right"></span>
+    </button>
+
+</div>
 
 <!--there should be a hide button here to hide the div of the entry-->
 
     <div class="well">
 
+        <div class="row" id="info">
+            <div class="col-md-8">
+                <i>{{entry.get_feed_base()}}</i> @ {{entry.get_parsed_time()}}
+            </div>
+
+            <span class="pull-right">
+                <div class="col-md-8">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle sub-btn" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="/favs/">Add to Favorites</a></li>
+                          <li><a href="#">Edit Entry Tags</a></li>
+                          <li><a href="#">Entry Info...</a></li>
+                          <li class="divider"></li>
+                          <li><a href="/unsubscribe/">Unsubscribe</a></li>
+                        </ul>
+                    </div> <!-- /btn-group -->
+                </div>
+        </span>
+    </div> <!--end of row-->
 
 
-<!--<p align="right">-->
 
-
-    <div class="btn-group sub-btn" align="right">
-        <i>{{entry.get_feed_base()}}</i> @ {{entry.get_parsed_time()}}
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-          <span class="caret"></span>
-          <span class="sr-only">Toggle Dropdown</span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li><a href="/favs/">Add to Favorites</a></li>
-          <li><a href="#">Edit Entry Tags</a></li>
-          <li><a href="#">Entry Info...</a></li>
-          <li class="divider"></li>
-          <li><a href="/unsubscribe/">Unsubscribe</a></li>
-        </ul>
-      </div><!-- /btn-group -->
-
-</p>
 
 
         <p align="center">{{entry.content|safe}}</p>

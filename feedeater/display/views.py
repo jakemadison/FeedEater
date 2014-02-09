@@ -3,7 +3,7 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from flask import Markup
 from feedeater import flaskapp as app
 from feedeater import lm, oid
-from feedeater.display.forms import LoginForm
+from feedeater.display.forms import LoginForm, AddFeedForm
 from feedeater.config import configs as c
 from feedeater.database.models import User, ROLE_USER, Entry
 from feedeater.controller import user_manage_feeds
@@ -20,6 +20,7 @@ def load_user(id):
 @app.before_request
 def before_request():
     g.user = current_user
+
 
 
 
@@ -48,20 +49,11 @@ def index(page=1):
     form = LoginForm(request.form)
     login_form = LoginForm()
 
-    # using this to test DB connection...
-    get_entries = Entry.query.order_by(Entry.published.desc())  # move this to a function w/in models.
-    #print get_entries.all()
-    # entries = get_entries[:30]
+    add_feed_form = AddFeedForm(csrf_enabled=False)
 
-    # this needs to change to get user feeds and only return those entries...
     if g.user.is_authenticated():
         print '!!!!! - retrieving entries from is_authenticated call...'
         entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
-
-        # unread count is really just an entry-based tag, the same as "stared", but
-        # should be divided by feed... so is it actually feed-based?
-
-        # entries = user_manage_feeds.get_user_entries(user).pagingate(page, c['POSTS_PER_PAGE'], False)
 
     else:
         print 'thiiiisssss..... is failing. move all this to user_man_feeds? ...actually, '
@@ -69,18 +61,15 @@ def index(page=1):
         entries = Entry.query.order_by(Entry.published.desc())[:10]
         sub_list = user_manage_feeds.get_guest_feeds()
         sl = sub_list['feed_data']
-        # pass
 
     if request.method == 'POST':
-
         if not form.validate():
             print 'maaaade it here:'
             user = User(nickname="Guest", email="guest@guest.com", role=0)
             return render_template("index.html", form=form, title='Home',
                                    user=user, entries=entries, providers=app.config['OPENID_PROVIDERS'],
-                                   login_form=login_form, subs=sl)
+                                   login_form=login_form, subs=sl)  # SL not defined yet...
 
-        # user = form.valid_login(form, form.username.data)  # , form.password.data
         if not user:
             print 'made it here...'
             form.errors = True
@@ -108,31 +97,63 @@ def index(page=1):
         sub_list = user_manage_feeds.get_user_feeds(user)
 
     print user
-    print "==========="
-    print sub_list
+
     sl = sub_list['feed_data']  # sl needs to send count data as well. or send it from entries?
 
-    print '------>', sl
-
-    # for guest this needs something like "get guest entries" because connection to content is failing.
 
     return render_template("index.html", title='Home',
                            user=user, entries=entries, form=form,
                            providers=app.config['OPENID_PROVIDERS'],
-                           login_form=login_form, subs=sl)
+                           login_form=login_form, subs=sl, add_feed_form=add_feed_form)
+
+
+@app.route('/add_feed', methods=['POST'])
+def add_feed():
+    print "        ]]]]] add_feed has been activated"
+    add_feed_form = AddFeedForm(csrf_enabled=False)
+    user = g.user
+    form = LoginForm()
+    entries = None
+
+    if not add_feed_form.validate_on_submit():
+        print "add form has not validated"
+        print 'form errors: ', add_feed_form.feed.errors
+
+        for error in add_feed_form.feed.errors:
+            flash(error, 'error')
+
+        return redirect(request.args.get('next') or url_for('index'))
+
+    else:
+        print "    add form HAS validated!"
+        print "adding user feed: ", add_feed_form.feed.data
+        result = user_manage_feeds.add_user_feed(user, add_feed_form.feed.data)
+
+        if result == "already_associated":
+            print "flashing"
+            flash("Already Subscribed", "info")
+
+        elif result == "success":
+            print "successfully added"
+            flash("Successfully added new feed", "info")
+
+        elif result == "error_adding_feed":
+            print "error adding feed"
+            flash("Unknown error adding feed", "error")
+
+        return redirect(request.args.get('next') or url_for('index'))
+
 
 
 # temp route to refresh from front end.
 @app.route('/refresh')
 def refresh_feeds():
-
     user = g.user
     x = user_manage_feeds.get_user_feeds(user)
-    send_feed = [f['url'] for f in x['feed_data']]
+    send_feed = [f['url'] for f in x['feed_data']]  # change this...
     FeedGetter.main(send_feed)
 
     return redirect(request.args.get('next') or url_for('index'))
-
 
 
 @app.route('/change_active')
@@ -146,8 +167,6 @@ def change_active():
 
     # this part isn't working for remember page:
     return redirect(request.args.get('next') or url_for('index'))
-
-
 
 
 
