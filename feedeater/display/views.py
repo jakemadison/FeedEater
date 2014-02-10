@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, session, url_for, request, g
+from flask import render_template, flash, redirect, session, url_for, request, g, jsonify
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask import Markup
 from feedeater import flaskapp as app
@@ -9,6 +9,35 @@ from feedeater.database.models import User, ROLE_USER, Entry
 from feedeater.controller import user_manage_feeds
 import sys
 from feedeater.controller import FeedGetter
+
+
+@app.route('/tags', methods=['POST'])
+def get_json():
+
+    user = g.user
+    tag_text = request.form['tagtext']
+    tag_id = request.form['tagid']
+
+    print tag_text, tag_id
+
+    if g.user.is_authenticated():
+        tags = user_manage_feeds.get_user_tags(user)
+    else:
+        return redirect(request.args.get('next') or url_for('index'))
+
+    return jsonify(title='Home', tags=tags)
+
+
+
+
+@app.route('/togglefeed', methods=['POST'])
+def toggle_feed():
+
+    # this should just update DB to change active state
+    ufid = request.form['ufid']
+    print ufid
+    result = True
+    return jsonify({'ufid': ufid, 'result': result})
 
 
 

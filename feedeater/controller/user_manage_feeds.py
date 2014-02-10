@@ -11,6 +11,12 @@ import parsenewfeed
 db_session = db.session
 
 
+def get_user_tags(user):
+    tag_list = ['User Defined Tag', 'Cats', 'Stupid']
+    return {'taglist': tag_list}
+
+
+
 def add_user_feed(user, feed):
 
     # check to see if this feed already exist in user table
@@ -56,7 +62,6 @@ def add_user_feed(user, feed):
             return "no_feed_found"
 
 
-
 def remove_user_feed(user, uf_id):
     print user
     print uf_id
@@ -95,7 +100,6 @@ def get_guest_feeds():
     return final_res
 
 
-# @ds.LogDebug
 def get_user_feeds(user=None):
 
     feed_list = []

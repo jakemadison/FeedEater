@@ -1,11 +1,46 @@
-<div class="col-md-8-2" id="contento" xmlns="http://www.w3.org/1999/html">
+<div class="feedid{{ entry.feed_id }}">
+<div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">
 
     <h3>
         <b><a  href="{{entry.link}}" target="_blank" title="{{entry.title}}">{{entry.get_title()}}</a></b>
     </h3>
 
     <div class="tags">
-        <a href="#"><span class="label label-info">User Defined Tag</span></a>
+
+
+
+<div class="btn-group dropup">
+
+        <!--<button class="dropdown-toggle" data-toggle="dropdown">-->
+            <span class="label label-success" data-toggle="dropdown"><b>+</b></span></a>
+
+        <!--</button>-->
+        <ul class="dropdown-menu" role="menu">
+
+            <li><a href="#"><span class="label label-primary">New Tag...</span></a></li>
+
+            <li class="divider"></li>
+            <li><a href="javascript:tag('User Defined Whatever', '15');">
+            <span class="label label-info">User Defined Tag</span></a></li>
+                          <li><a href="#"><span class="label label-info">Pets</span></a></li>
+                          <li><a href="#"><span class="label label-info">Funny</span></a></li>
+
+
+                        <li><a href="#"><span class="label label-default">Dogs</span></a></li>
+
+
+
+
+        </ul>
+
+    </div>
+
+
+
+        <a href="javascript:tag('User Defined Whatever', '15');">
+            <span class="label label-info">User Defined Tag</span></a>
+
+
         <a href="#"><span class="label label-info">Pets</span></a>
         <a href="#"><span class="label label-info">Funny</span></a>
         <a href="#"><span class="label label-primary">Category Tag</span></a>
@@ -53,5 +88,5 @@
 
     </div>
 
-
+</div>
         <!-- whenever i do incorporate "active" entries, disallow short titles and word wrap long ones.-->
