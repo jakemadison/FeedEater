@@ -1,7 +1,3 @@
-<!--it would be really nice if this was a nested list
-<!--of category, and then feed.. although then one feed cannot
-<!--have more than one category... -->
-
 <div class="col-sm-4" id="subscription_list">
     <h4>Subscriptions</h4>
 
@@ -9,9 +5,7 @@
 
 <form name="add_feed" class="navbar-form navbar-left" role="search" action="/add_feed" method="post">
     <div class="form-group">
-
         {{ add_feed_form.feed(class="form-control", placeholder="Add Feed") }}
-
     </div>
         {{ add_feed_form.submit(class="btn btn-default") }}
 
@@ -28,13 +22,6 @@
         {% endwith %}
 </form>
 
-
-    <script type="text/javascript">
-        function subClick()
-        {
-            pageid = document.getElementById("url");
-        }
-    </script>
 
     {% for each in subs %}
     <div>
@@ -76,53 +63,15 @@
           <li><a href="/favs/">Add to Favorites</a></li>
           <li><a href="#">Edit Feed Info...</a></li>
           <li><a href="#">Edit Categories...</a></li>
-            <!--automatically tag entries from this feed-->
+
           <li><a href="#" title="Automatically tag entries from this feed">Auto Tag Entries...</a></li>
           <li class="divider"></li>
           <li><a href="/unsubscribe?ufid={{ each['uf_id'] }}">Unsubscribe</a></li>
         </ul>
 
-
             </div><!-- /btn-group -->
         </div> <!--end of dropdown menu-->
 
-
-
     {% endfor %}
 
-    <!--</div> &lt;!&ndash; end of enclosing well &ndash;&gt;-->
-
-<!--<hr>-->
-
-
-       <!--<div class="input-group">-->
-          <!--<input type="text" class="form-control" placeholder="Add a new Feed why not...?">-->
-          <!--&lt;!&ndash;<span class="input-group-btn">&ndash;&gt;-->
-            <!--&lt;!&ndash;<button class="btn btn-default" type="button">Add!</button>&ndash;&gt;-->
-          <!--&lt;!&ndash;</span>&ndash;&gt;-->
-        <!--</div>&lt;!&ndash; /input-group &ndash;&gt;-->
-
-
-
-    <!--<ul class="list-group">-->
-            <!--<a href="#" class="list-group-item">Favorite Posts</a>-->
-    <!--</ul>-->
-
-
-
-     <!--<p><a class="btn btn-primary btn-sm" role="button">Add &raquo;</a></p>-->
-
-<!--<input type='button' id='hideshow' value='hide/show'>-->
 </div>
-
-
-
-
-<script>
-    jQuery(document).ready(function(){
-    jQuery('#hideshow').live('click', function(event) {
-         jQuery('#subscription_list').toggle('show');
-    });
-});
-
-</script>

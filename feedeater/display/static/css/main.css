@@ -98,6 +98,18 @@ sidebar-nav {
 
 }
 
+.tags {
+    margin-bottom: 5px;
+    margin-top: -5px;
+}
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+
+}
+
+
 #info {
     height: 30px;
     margin-bottom: 10px;

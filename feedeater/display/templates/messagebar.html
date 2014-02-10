@@ -1,55 +1,44 @@
-
 <div class="jumbotron">
-
-
-    <!--bird was here....-->
-
-      <div class="container">
-        <div class="row">
-
-
-
-            <div class="col-md-8">
-                <script>$('#create_acct').click(function(){
-                    $('#content').load('#login_div');
-                    }
-                </script>
-
+  <div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <script>$('#create_acct').click(function(){
+                $('#content').load('#login_div');
+                }
+            </script>
 
             <div id="welcome-msg" style="display:block;">
-        <h1>Hi, {{user.nickname}}!</h1>
-        <p>Reinventing the wheel for fun, not profit.</p>
 
-        {% if not g.user.is_authenticated() %}
-            <p><a class="btn btn-primary btn-lg" role="button"
-               onclick="show_login()" id="create_acct">Create Account &raquo;</a></p>
-        {% endif %}
-        </div>
+               <h1>Hi, {{user.nickname}}!</h1>
+                <p>Reinventing the wheel for fun, not profit.</p>
 
-        <div id="login_div" style="display:none;">
-            {% include 'login.html' %}
-        </div>
-
-
-        <script>
-            function show_login() {
-                x = document.getElementById("welcome-msg");
-                x.style.display = "none";
-                x1 = document.getElementById("login_div");
-                x1.style.display = "block";
-            }
-        </script>
-
-        </div>
-
-
-
-            <div class="col-md-3" align="right">
-          <p><img src="../static/img/bird-main.png"
-                                       height="47%" width="47%" title="Because internet loves birds"></p>
+                {% if not g.user.is_authenticated() %}
+                    <p><a class="btn btn-primary btn-lg" role="button"
+                       onclick="show_login()" id="create_acct">Create Account &raquo;</a></p>
+                {% endif %}
             </div>
 
-</div>
-</div>
+            <div id="login_div" style="display:none;">
+                {% include 'login.html' %}
+            </div>
 
+
+            <script>
+                function show_login() {
+                    x = document.getElementById("welcome-msg");
+                    x.style.display = "none";
+                    x1 = document.getElementById("login_div");
+                    x1.style.display = "block";
+                }
+            </script>
+
+        </div>
+
+
+        <div class="col-md-3" align="right">
+            <p><img src="../static/img/bird-main.png"
+                                       height="47%" width="47%" title="Because internet loves birds"></p>
+        </div>
+    </div>
+  </div>
 </div>

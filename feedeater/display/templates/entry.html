@@ -1,26 +1,19 @@
 <div class="col-md-8-2" id="contento" xmlns="http://www.w3.org/1999/html">
 
-<div>
-    <div class="brand">
     <h3>
         <b><a  href="{{entry.link}}" target="_blank" title="{{entry.title}}">{{entry.get_title()}}</a></b>
     </h3>
-    </div>
 
-    <div align="right">
+    <div class="tags">
         <a href="#"><span class="label label-info">User Defined Tag</span></a>
         <a href="#"><span class="label label-info">Pets</span></a>
         <a href="#"><span class="label label-info">Funny</span></a>
-
         <a href="#"><span class="label label-primary">Category Tag</span></a>
     </div>
-    <button type="button" class="btn btn-default btn-md pull-right">
-        <span class="glyphicon glyphicon-plus pull-right"></span>
-    </button>
 
 </div>
 
-<!--there should be a hide button here to hide the div of the entry-->
+<!--there should be a hide button here to hide the div of the entry?-->
 
     <div class="well">
 
@@ -29,7 +22,11 @@
                 <i>{{entry.get_feed_base()}}</i> @ {{entry.get_parsed_time()}}
             </div>
 
-            <span class="pull-right">
+            <!--<span class="pull-right">-->
+                    <!--<button type="button" class="btn btn-default btn-md pull-right">-->
+        <!--<span class="glyphicon glyphicon-plus pull-right"></span>-->
+    <!--</button>-->
+
                 <div class="col-md-8">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle sub-btn" data-toggle="dropdown">
@@ -55,6 +52,6 @@
         <p align="center">{{entry.content|safe}}</p>
 
     </div>
-</div>
+
 
         <!-- whenever i do incorporate "active" entries, disallow short titles and word wrap long ones.-->

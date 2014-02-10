@@ -1,17 +1,7 @@
 {% if not g.user.is_authenticated() %}
-<script type="text/javascript">
-function set_openid(openid, pr)
-{
-    u = openid.search('<username>')
-    if (u != -1) {
-        // openid requires username
-        user = prompt('Enter your ' + pr + ' username:')
-        openid = openid.substr(0, u) + user
-    }
-    form = document.forms['login_form'];
-    form.elements['openid'].value = openid
-}
-</script>
+
+<!--open_id script was here...-->
+
 <h2>Sign In</h2>
 <form action="" method="post" name="login_form">
     {{login_form.hidden_tag()}}
@@ -22,7 +12,7 @@ function set_openid(openid, pr)
         <span style="color: red;">[{{error}}]</span>
         {% endfor %}<br>
         |{% for pr in providers %}
-        <a href="javascript:set_openid('{{pr.url}}', '{{pr.name}}');">{{pr.name}}</a> |
+        <a href="javascript:set_openid_new('{{pr.url}}', '{{pr.name}}');">{{pr.name}}</a> |
         {% endfor %}
     </p>
     <p>{{login_form.remember_me}} Remember Me</p>
