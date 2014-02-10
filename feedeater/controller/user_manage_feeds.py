@@ -6,13 +6,12 @@ from feedeater import db
 # from feedeater.debugger import debugging_suite as ds
 import getfeeds
 import storefeeds
+import parsenewfeed
 
 db_session = db.session
 
 
 def add_user_feed(user, feed):
-    print user
-    print feed
 
     # check to see if this feed already exist in user table
     exists = db_session.query(Feed).filter_by(feed_url=feed).first()
@@ -39,16 +38,46 @@ def add_user_feed(user, feed):
                 print str(e)
                 db_session.rollback()
                 return "error_adding_feed"
+            return "success"
+
+    # now comes the hard part... attempt to get a totally new feed:
+    else:
+        returned_url = parsenewfeed.parsefeed(feed)
+        if returned_url:
+            print "found valid rss"
+
+            # add to feed table, add to userfeed table, get new entries.
+            # later: add to cache?
 
             return "success"
 
-    return None
+        else:
+            print "no valid url found at this address"
+            return "no_feed_found"
 
 
 
+def remove_user_feed(user, uf_id):
+    print user
+    print uf_id
+    print "success!"
 
-def remove_user_feed():
-    pass
+    remove = db_session.query(UserFeeds).filter_by(id=uf_id).first()
+
+    if remove:
+        try:
+            db_session.delete(remove)
+            db_session.commit()
+
+        except Exception, e:
+            print "error deleting feed", str(e)
+            db_session.rollback()
+            return "error_deleting_feed"
+
+        return "successfully deleted"
+
+    else:
+        return "feed_id not found"
 
 
 def get_guest_feeds():

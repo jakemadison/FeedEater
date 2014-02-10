@@ -130,16 +130,16 @@ def add_feed():
         result = user_manage_feeds.add_user_feed(user, add_feed_form.feed.data)
 
         if result == "already_associated":
-            print "flashing"
-            flash("Already Subscribed", "info")
+            flash("Already Subscribed  :)", "info")
 
         elif result == "success":
-            print "successfully added"
-            flash("Successfully added new feed", "info")
+            flash("Successfully added new feed  :D", "info")
 
         elif result == "error_adding_feed":
-            print "error adding feed"
-            flash("Unknown error adding feed", "error")
+            flash("Unknown error adding feed  :o", "error")
+
+        elif result == "no_feed_found":
+            flash("No rss feed found at that url  :(", "error")
 
         return redirect(request.args.get('next') or url_for('index'))
 
@@ -169,7 +169,6 @@ def change_active():
     return redirect(request.args.get('next') or url_for('index'))
 
 
-
 @app.route('/favs/')
 def favs():
     print "holy shit... it's not THAT easy.. is it??"
@@ -180,13 +179,24 @@ def favs():
 
     return redirect(url_for('index'))
 
-@app.route('/unsubscribe/')
+
+@app.route('/unsubscribe')
 def unsubscribe():
-    print "remove the fuck outta this feed"
+    print "removing feed from user_feeds"
+    user = g.user
+    feedid = request.args.get('ufid')
+    result = user_manage_feeds.remove_user_feed(user, feedid)
 
-    # remove feed logic here......
+    if result == "successfully deleted":
+        flash("Successfully removed  :D", "info")
+    elif result == "error_deleting_feed":
+        flash("Unknown error removing feed  :(", "error")
+    elif result == "feed_id not found":
+        flash("Feed Id Not found  :(", "error")
 
-    return redirect(url_for('index'))
+    print "finished removing feed"
+
+    return redirect(request.args.get('next') or url_for('index'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
