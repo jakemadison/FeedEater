@@ -11,9 +11,9 @@ import parsenewfeed
 db_session = db.session
 
 
-def get_user_tags(user):
-    tag_list = ['User Defined Tag', 'Cats', 'Stupid']
-    return {'taglist': tag_list}
+def change_user_tags(user, entries):
+
+    return {'taglist': 1}
 
 
 

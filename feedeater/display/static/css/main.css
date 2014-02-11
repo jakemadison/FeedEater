@@ -126,3 +126,19 @@ sidebar-nav {
     margin-bottom: 5px;
 }
 
+#tagplus {
+	cursor:pointer;
+
+}
+
+.star {
+    float:right;
+    margin-left: 5px;
+    font-size: 26px;
+	cursor:pointer;
+}
+
+#chev {
+    float:right;
+    width:10%;
+}

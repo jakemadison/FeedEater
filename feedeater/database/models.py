@@ -104,7 +104,6 @@ class Feed(Model):
     ufeeds = relationship("UserFeeds", backref="source")
     entries = relationship("Entry", backref="entry_source")
 
-
     def __init__(self, update_frequency='0', favicon=None, feed_url=None, feed_site=None,
                  last_checked=1,
                  subscribers=1, title=u"Some feed",
@@ -186,13 +185,35 @@ class User(Model):
 
 
 # for every user+entry combination, these are tags to apply:
-class EntryTags(Model):
+class Tags(Model):
 
     __tablename__ = "entrytags"
 
     id = Column(Integer, primary_key=True)
-    userentryid = Column(Integer)
     topic = Column(String(64))
+    # may want to put in back_refs here (and on entry, and user)
+
+    def __init__(self, topic):
+        self.topic = topic
+
+
+class UserEntryTags(Model):
+
+    __tablename__ = "userentrytags"
+
+    id = Column(Integer, primary_key=True)
+    entryid = Column(Integer, ForeignKey("entry.id"))
+    userid = Column(Integer, ForeignKey("user.id"))
+    topicid = Column(Integer, ForeignKey("entrytags.id"))
+    starred = Column(Boolean, default=False)
+    unread = Column(Boolean, default=True)
+
+    def __init__(self, entryid, userid, topicid, starred=False, unread=True):
+        self.entryid = entryid
+        self.userid = userid
+        self.topicid = topicid
+        self.starred = starred
+        self.unread = unread
 
 
 # associate users with feed entries to do things like tagging, starring, read/unread

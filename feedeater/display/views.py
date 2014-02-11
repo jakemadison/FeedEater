@@ -12,7 +12,7 @@ from feedeater.controller import FeedGetter
 
 
 @app.route('/tags', methods=['POST'])
-def get_json():
+def change_tags():
 
     user = g.user
     tag_text = request.form['tagtext']
@@ -21,7 +21,7 @@ def get_json():
     print tag_text, tag_id
 
     if g.user.is_authenticated():
-        tags = user_manage_feeds.get_user_tags(user)
+        tags = user_manage_feeds.change_user_tags(user)
     else:
         return redirect(request.args.get('next') or url_for('index'))
 
@@ -69,6 +69,9 @@ def return_a_page():
 @oid.loginhandler
 #@login_required
 def index(page=1):
+
+    # really need to decide whether this is all going to be ajax/json
+    # or if we want to use built in flask pagination..
 
     print app
     print __name__
@@ -129,6 +132,7 @@ def index(page=1):
 
     sl = sub_list['feed_data']  # sl needs to send count data as well. or send it from entries?
 
+    print sl
 
     return render_template("index.html", title='Home',
                            user=user, entries=entries, form=form,
