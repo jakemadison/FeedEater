@@ -138,7 +138,32 @@ sidebar-nav {
 	cursor:pointer;
 }
 
+#off {
+
+    font-size: 15px;
+    margin-bottom: -5px;
+}
+
+
 #chev {
     float:right;
     width:10%;
 }
+
+#cog {
+
+    margin-left: 10px;
+    cursor:pointer;
+    font-size: 20px;
+
+}
+
+#cogdiv {
+
+
+}
+
+#test1 {
+    float:right;
+}
+

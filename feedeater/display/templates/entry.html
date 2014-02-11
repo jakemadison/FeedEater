@@ -15,9 +15,14 @@
     <span class="glyphicon glyphicon-plus" id="tagplus"
                   data-toggle="dropdown"></span>
 
+    <!--when no tags, use this:-->
+     <!--<span class="glyphicon glyphicon-plus" id="tagplus"-->
+                  <!--data-toggle="dropdown">Tag this entry..</span>-->
+
+
         <ul class="dropdown-menu" role="menu">
 
-            <li><a href="#"><span class="label label-primary">New Tag...</span></a></li>
+            <li><a href="#"><h6>New Tag...</h6></a></li>
 
             <li class="divider"></li>
             <li><a href="javascript:tag('User Defined Whatever', '15');">
@@ -44,7 +49,7 @@
 
         <a href="#"><span class="label label-info">Pets</span></a>
         <a href="#"><span class="label label-info">Funny</span></a>
-        <a href="#"><span class="label label-primary">Category Tag</span></a>
+        <a href="#"><span class="label label-default" id="test1">Category Tag</span></a>
 
         <!--<button type="button" class="btn btn-default btn-lg pull-right">-->
             <!--<span class="glyphicon glyphicon-star-empty"></span></button>-->
@@ -67,7 +72,8 @@
                   title="star: {{entry.id}}" onclick="startoggle('#star{{entry.id}}')"></span>
 
 
-    <p align="right"><span class="brand"><i>{{entry.get_feed_base()}}</i> @ {{entry.get_parsed_time()}} </span></p>
+            <!--this would look nice as a: <h6></h6>-->
+    <p align="right"><span class="brand"><i>{{entry.get_feed_base()}}</i> @ {{entry.get_parsed_time()}}</span></p>
 
                     <!--</div>-->
 
