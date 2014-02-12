@@ -76,7 +76,7 @@ def index(page=1):
     print app
     print __name__
     #print dir(app)
-
+    user = None
     user = g.user
     form = LoginForm(request.form)
     login_form = LoginForm()
@@ -134,12 +134,21 @@ def index(page=1):
 
     print sl
 
+    # this breaks stuff:
+    # print entries
+    # print entries.all()
+    # print jsonify(entries.all())
+
+    # okay, i believe I can still use pagination and json here.  I just need to jsonify the results of the pagination
+    # for each step.  changes will have to be made to html entries.pagination business too, but NBD.
+
     return render_template("index.html", title='Home',
                            user=user, entries=entries, form=form,
                            providers=app.config['OPENID_PROVIDERS'],
                            login_form=login_form, subs=sl, add_feed_form=add_feed_form)
 
 
+# this needs to be jsonifyied: or at least for the invalid responses...
 @app.route('/add_feed', methods=['POST'])
 def add_feed():
     print "        ]]]]] add_feed has been activated"

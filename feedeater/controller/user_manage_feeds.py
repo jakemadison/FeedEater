@@ -44,7 +44,9 @@ def add_user_feed(user, feed):
                 print str(e)
                 db_session.rollback()
                 return "error_adding_feed"
-            return "success"
+
+            else:
+                return "success"
 
     # now comes the hard part... attempt to get a totally new feed:
     else:
@@ -79,7 +81,8 @@ def remove_user_feed(user, uf_id):
             db_session.rollback()
             return "error_deleting_feed"
 
-        return "successfully deleted"
+        else:
+            return "successfully deleted"
 
     else:
         return "feed_id not found"
@@ -157,9 +160,9 @@ def get_user_entries(user):
         print 'errrror with getting entries..'
         print str(e)
 
-    print qry
-
-    return qry
+    else:
+        print qry
+        return qry
 
 
 def update_is_active(ufid, active):
@@ -189,10 +192,8 @@ def update_users_feeds(u):
     except Exception, e:
         print 'DB error retrieving user feeds'
         print str(e)
-        subs = None
 
-    if subs:
-
+    else:
         subs_list = [x.feedid for x in subs]
 
         print subs_list
@@ -218,11 +219,11 @@ if __name__ == "__main__":
 # entries that are actually greater than that time, skipping the rest except for once per day
 # check... hmmm
 
-    x = get_user_feeds(u)
+    xx = get_user_feeds(u)
     # send_feed = [f['url'] for f in x['feed_data']]  # expand to send both url and feed_id
 
     send_feed = []
-    for f in x['feed_data']:
+    for f in xx['feed_data']:
         unit = {'feed_id': f['feed_id'], 'url': f['url']}
         send_feed.append(unit)
         # send_feed.append(f['url'])
