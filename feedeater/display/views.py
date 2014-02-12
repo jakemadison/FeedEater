@@ -11,6 +11,22 @@ import sys
 from feedeater.controller import FeedGetter
 
 
+
+@app.route('/cats', methods=['GET', 'POST'])
+def get_set_cats():
+    user = g.user
+
+    if request.method == 'GET':
+        print "method was GET"
+
+    if request.method == 'POST':
+        print "method was POST"
+
+    return jsonify({"done": "done!"})
+
+
+
+
 @app.route('/tags', methods=['POST'])
 def change_tags():
 
@@ -26,6 +42,18 @@ def change_tags():
         return redirect(request.args.get('next') or url_for('index'))
 
     return jsonify(title='Home', tags=tags)
+
+
+@app.route('/star', methods=['POST'])
+def toggle_star():
+
+    user = g.user
+    entryid = request.form['starid']
+    entryid = entryid[5:]
+    print entryid
+    result = user_manage_feeds.change_star_state(user, entryid)
+
+    return jsonify({"result": result})
 
 
 
@@ -132,15 +160,13 @@ def index(page=1):
 
     sl = sub_list['feed_data']  # sl needs to send count data as well. or send it from entries?
 
-    print sl
+    # print sl
 
-    # this breaks stuff:
-    # print entries
-    # print entries.all()
-    # print jsonify(entries.all())
-
-    # okay, i believe I can still use pagination and json here.  I just need to jsonify the results of the pagination
-    # for each step.  changes will have to be made to html entries.pagination business too, but NBD.
+    # jsonify and paginate, easy as that!
+    for i, each in enumerate(entries.items):
+        print "\n"
+        print i, jsonify(each.json_entry())
+        print "====="
 
     return render_template("index.html", title='Home',
                            user=user, entries=entries, form=form,

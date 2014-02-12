@@ -41,6 +41,10 @@ function startoggle(starid) {
     //change to loading, do DB call, then return success, change to star-full
     //on fail, change to fail icon.
 
+    $.post('/star', {
+        starid: starid
+    });
+
     $(starid).toggleClass('glyphicon-star-empty glyphicon-star');
 
 }

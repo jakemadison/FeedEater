@@ -1,7 +1,7 @@
 # this module deals with adding, removing, updating user feeds.
 # it will be called by front end actions
 import FeedGetter
-from feedeater.database.models import User, UserFeeds, Feed, Entry
+from feedeater.database.models import User, UserFeeds, Feed, Entry, UserEntryTags
 from feedeater import db
 # from feedeater.debugger import debugging_suite as ds
 import getfeeds
@@ -15,6 +15,39 @@ def change_user_tags(user, entries):
 
     return {'taglist': 1}
 
+
+def change_star_state(user, entryid):
+
+    # this function is a boolean.. so it shouldn't care what the state originally was
+    # it can be state agnostic.  same with the front end.  it only needs to know if
+    # toggle at the back was successful or not
+    current_state = db_session.query(UserEntryTags).filter_by(userid=user.id, entryid=entryid).first()
+    print current_state
+
+    # this should actually check if it exists, and add record if not.
+    # which is a higher function that should be shared with change/add user tags
+
+    # my entire model here for stars is bogus.  Tags and stars probably need to be separate tables
+    # sigh.. one entry can have many tags per client, but each entry can only have a single star state (per client)
+    if current_state:
+        print "yes"
+        if current_state.starred:
+            print "was", current_state.starred
+            db_session.query(UserEntryTags).filter_by(userid=user.id, entryid=entryid).update(
+                                                    {"starred": False})
+            db_session.commit()
+            print "is", db_session.query(UserEntryTags).filter_by(userid=user.id, entryid=entryid).first().starred
+
+        else:
+            print current_state.starred
+            db_session.query(UserEntryTags).filter_by(userid=user.id, entryid=entryid).update(
+                                                        {"starred": True})
+            db_session.commit()
+            print "is", db_session.query(UserEntryTags).filter_by(userid=user.id, entryid=entryid).first().starred
+        return True
+
+    else:
+        return False
 
 
 def add_user_feed(user, feed):
@@ -202,12 +235,20 @@ def update_users_feeds(u):
         FeedGetter.main(feed_list)
 
 
-def add_feed_category():
-    pass
+def apply_feed_category(user, category, feedid, remove=False):
+
+    if remove:
+        return False  # remove category for user/feed combination
+
+    # otherwise, apply category to feedid for user
+    active_row = db_session.query(UserFeeds).filter_by(userid=user.id, feedid=feedid)
+    active_row.update({"category": category})
+    db_session.commit()
 
 
-def remove_feed_category():
-    pass
+
+
+
 
 
 if __name__ == "__main__":
@@ -219,31 +260,19 @@ if __name__ == "__main__":
 # entries that are actually greater than that time, skipping the rest except for once per day
 # check... hmmm
 
+    # use this to update feeds for now:
     xx = get_user_feeds(u)
-    # send_feed = [f['url'] for f in x['feed_data']]  # expand to send both url and feed_id
-
     send_feed = []
     for f in xx['feed_data']:
         unit = {'feed_id': f['feed_id'], 'url': f['url']}
         send_feed.append(unit)
-        # send_feed.append(f['url'])
 
-    # result = []
-    # for each in send_feed:
-    #     result = getfeeds.feed_request(each)
-    #     print result
-
-    # print send_feed
-
-    # for each in send_feed:
-    #     result = getfeeds.feed_request(each)
-
-    # for each in result['posts']:
-    #     storefeeds.add_entry(result, update_entries=True)
-
-    #print send_feed
     FeedGetter.main(send_feed)
 
 
-
-
+    # apply_feed_category(u, "Cats", 4)
+    # apply_feed_category(u, "Pics", 1)
+    # apply_feed_category(u, "Pics", 5)
+    # apply_feed_category(u, "Programming", 7)
+    # apply_feed_category(u, "Programming", 6)
+    #apply_feed_category(u, None, 3)

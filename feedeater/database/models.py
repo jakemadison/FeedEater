@@ -13,6 +13,7 @@ ROLE_ADMIN = 1
 print "models imported as", __name__
 
 
+## Macro Level Data:
 # all entries for all subscribed feeds
 class Entry(Model):
 
@@ -39,6 +40,11 @@ class Entry(Model):
         self.link = link
         self.remote_id = remote_id
 
+    def json_entry(self):
+        result = {"id": self.id, "feed_id": self.feed_id, "published": self.published,
+                  "updated": self.updated, "title": self.title, "content": self.content,
+                  "description": self.description, "link": self.link, "remote_id": self.remote_id}
+        return result
 
     # TODO: These probably make more sense in a controller_util.py file.
     # they are more application logic than model logic, no?
@@ -120,6 +126,7 @@ class Feed(Model):
         self.metadata_update = metadata_update
 
 
+## User Level Data:
 # associate users with feeds they are subscribed to:
 # also put in here, feed-related tags
 class UserFeeds(Model):
@@ -130,11 +137,13 @@ class UserFeeds(Model):
     userid = Column(Integer, ForeignKey("user.id"))
     feedid = Column(Integer, ForeignKey("feed.id"))
     is_active = Column(Boolean, default=True)
+    category = Column(String(64))
 
-    def __init__(self, userid, feedid, is_active=True):
+    def __init__(self, userid, feedid, is_active=True, category=None):
         self.feedid = feedid
         self.userid = userid
         self.is_active = is_active
+        self.category = category
 
 
 # all user accounts registered with the controller
@@ -184,44 +193,52 @@ class User(Model):
         return '<User %r>' % (self.nickname)
 
 
-# for every user+entry combination, these are tags to apply:
-class Tags(Model):
+class UserEntry(Model):
 
-    __tablename__ = "entrytags"
-
-    id = Column(Integer, primary_key=True)
-    topic = Column(String(64))
-    # may want to put in back_refs here (and on entry, and user)
-
-    def __init__(self, topic):
-        self.topic = topic
-
-
-class UserEntryTags(Model):
+    """list of user/entries, whether they are read/unread, starred/unstarred"""
 
     __tablename__ = "userentrytags"
 
     id = Column(Integer, primary_key=True)
     entryid = Column(Integer, ForeignKey("entry.id"))
     userid = Column(Integer, ForeignKey("user.id"))
-    topicid = Column(Integer, ForeignKey("entrytags.id"))
     starred = Column(Boolean, default=False)
     unread = Column(Boolean, default=True)
 
     def __init__(self, entryid, userid, topicid, starred=False, unread=True):
         self.entryid = entryid
         self.userid = userid
-        self.topicid = topicid
         self.starred = starred
         self.unread = unread
 
 
-# associate users with feed entries to do things like tagging, starring, read/unread
-class UserEntries(Model):
+# for every user+entry combination, these are tags to apply:
+class UserEntryTags(Model):
 
-    __tablename__ = "userentries"
+    """from list of all tags per user, apply tags to individual user/entries"""
+
+    __tablename__ = "entrytags"
+
     id = Column(Integer, primary_key=True)
+    userentryid = Column(Integer, ForeignKey("userentrytags.id"))
+    tagid = Column(Integer, ForeignKey("usertags.id"))
+    # may want to put in back_refs here (and on entry, and user)
 
+    def __init__(self):
+        pass
+
+
+class UserTags(Model):
+
+    """list of all tags per user"""
+
+    __tablename__ = "usertags"
+
+    id = Column(Integer, primary_key=True)
+    tag = Column(String(64))
+
+    def __init__(self, tag):
+        self.tag = tag
 
 
 print "done!"
