@@ -49,8 +49,13 @@
         {% endwith %}
 </form>
 
+<hr>
 
-    {% for each in subs %}
+    {% for cat in cats %}
+    <span class="label label-default">{{ cat }}</span>
+        {% for each in subs %}
+            {% if each.category == cat %}
+
     <div>
         <div class="btn-group sub-btn">
 
@@ -112,6 +117,8 @@
             </div><!-- /btn-group -->
         </div> <!--end of dropdown menu-->
 
+       {% endif %}
     {% endfor %}
+   {% endfor %}
 
 </div>

@@ -141,6 +141,7 @@ def get_user_feeds(user=None):
     feed_list = []
     #feed_data = {}
     final_list = []
+    cat_list = []
 
     if user:
         qry = db_session.query(User, UserFeeds, Feed)
@@ -152,12 +153,15 @@ def get_user_feeds(user=None):
             # add user_feed tag/category/star data here in dictionary:
             feed_data = {'title': f_table.title, 'url': f_table.feed_url,
                          'desc': f_table.description, 'active': uf_table.is_active,
-                         'uf_id': uf_table.id, 'feed_id': uf_table.feedid}
+                         'uf_id': uf_table.id, 'feed_id': uf_table.feedid,
+                         'category': uf_table.category}
             final_list.append(feed_data)
+            cat_list.append(uf_table.category)
 
             feed_list.append(f_table.feed_url)  # is this actually being used at all??
 
-        final_res = {'user_id': u_table.id, 'feed_data': final_list}
+        cat_list = set(cat_list)
+        final_res = {'user_id': u_table.id, 'feed_data': final_list, 'cat_list': cat_list}
 
         print final_res
 

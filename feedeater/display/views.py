@@ -168,10 +168,13 @@ def index(page=1):
         print i, jsonify(each.json_entry())
         print "====="
 
+    cats = sub_list['cat_list']
+
     return render_template("index.html", title='Home',
                            user=user, entries=entries, form=form,
                            providers=app.config['OPENID_PROVIDERS'],
-                           login_form=login_form, subs=sl, add_feed_form=add_feed_form)
+                           login_form=login_form, subs=sl, add_feed_form=add_feed_form,
+                           cats=cats)
 
 
 # this needs to be jsonifyied: or at least for the invalid responses...

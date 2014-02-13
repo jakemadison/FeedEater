@@ -46,6 +46,20 @@ class Entry(Model):
                   "description": self.description, "link": self.link, "remote_id": self.remote_id}
         return result
 
+    def get_user_cat(self, userid):
+
+
+        qry = UserFeeds.query.filter(UserFeeds.feedid == self.id, UserFeeds.userid == userid).first()
+
+        if qry:
+            return qry.category
+        else:
+            return "Uncategorized"
+
+    def get_user_topics(self):
+        pass
+
+
     # TODO: These probably make more sense in a controller_util.py file.
     # they are more application logic than model logic, no?
 
