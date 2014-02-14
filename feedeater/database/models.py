@@ -189,6 +189,14 @@ class User(Model):
 
         return qry
 
+    def get_userentries(self):
+
+        qry = UserEntry.query.filter(Entry.id == UserEntry.entryid,
+                     UserEntry.userid == self.id,
+                     UserFeeds.is_active == 1).order_by(Entry.published.desc())
+
+        return qry
+
 
     # following are required by Flask-Login:
     def is_authenticated(self):
@@ -224,6 +232,9 @@ class UserEntry(Model):
         self.userid = userid
         self.starred = starred
         self.unread = unread
+
+
+
 
 
 # for every user+entry combination, these are tags to apply:

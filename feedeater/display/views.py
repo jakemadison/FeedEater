@@ -5,7 +5,7 @@ from feedeater import flaskapp as app
 from feedeater import lm, oid
 from feedeater.display.forms import LoginForm, AddFeedForm
 from feedeater.config import configs as c
-from feedeater.database.models import User, ROLE_USER, Entry
+from feedeater.database.models import User, ROLE_USER, Entry, UserEntry
 from feedeater.controller import user_manage_feeds
 import sys
 from feedeater.controller import FeedGetter
@@ -162,13 +162,18 @@ def index(page=1):
 
     # print sl
 
+    test_entries = user.get_userentries().paginate(page, c['POSTS_PER_PAGE'], False)
+    print '------->', test_entries.items
     # jsonify and paginate, easy as that!
-    for i, each in enumerate(entries.items):
+    for i, each in enumerate(test_entries.items):
         print "\n"
         print i, jsonify(each.json_entry())
         print "====="
 
     cats = sub_list['cat_list']
+
+    # with either json, or render, this should actually be returning the user_entry table joined with entry
+    # so we get a full list of user entries, tags, categories, stars, etc.
 
     return render_template("index.html", title='Home',
                            user=user, entries=entries, form=form,
