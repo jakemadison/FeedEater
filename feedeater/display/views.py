@@ -165,7 +165,7 @@ def index(page=1):
     test_entries = user.get_userentries().first()
     print '------->', test_entries
     # jsonify and paginate, easy as that!
-    print dir(test_entries.remote_id)
+    # print dir(test_entries.remote_id)
 
 
     print "\n"

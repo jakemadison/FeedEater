@@ -3,6 +3,35 @@ import feedparser
 from feedeater.config import configs
 
 
+def get_feed_meta(url):
+
+    try:
+        res = feedparser.parse(url, configs.get('User-Agent'))
+
+    except Exception, e:
+        print str(e)
+        return False
+
+    if res:
+        print res.feed, res.status, res.version
+
+    try:
+        meta = {
+            "feed_title": res['channel'].get('title', "no feed title"),
+            "feed_url": url,
+            "feed_original_site": res['channel']['link'],
+            "feed_description": res['channel'].get('description', "no description available")
+        }
+    except Exception, e:
+        print str(e)
+        print '!!!!!!!!!!'
+
+    else:
+        return meta
+
+
+
+
 def feed_request(f, get_meta=False):
 
     url = f['url']
@@ -77,6 +106,7 @@ def feed_request(f, get_meta=False):
 
         meta = None
         if get_meta:
+
             try:
                 meta = {
                     "feed_title": res['channel'].get('title', "no feed title"),

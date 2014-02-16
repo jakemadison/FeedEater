@@ -52,12 +52,37 @@ def change_star_state(user, entryid):
 
 def add_user_feed(user, feed):
 
+    def associate_feed_with_user():
+
+        new_user_feed = UserFeeds(userid=user.id, feedid=exists.id, is_active=1)
+
+        try:
+            db_session.add(new_user_feed)
+            db_session.commit()
+
+        except Exception, e:
+            print "error associating feed!"
+            print str(e)
+            db_session.rollback()
+            return "error_adding_feed"
+
+        else:
+            # we should probably go get entries for that new feed here...
+            return "success"
+
+    # first get the actual feed from user's input: maybe it's worth checking if exists first before going
+    # through the hassle of feedfinder... meh, whatever.
+    returned_feed = parsenewfeed.parsefeed(feed)
+    if returned_feed:
+        print "found valid rss", returned_feed
+    else:
+        return 'no_feed_found'
+
     # check to see if this feed already exist in user table
-    exists = db_session.query(Feed).filter_by(feed_url=feed).first()
+    exists = db_session.query(Feed).filter_by(feed_url=returned_feed).first()
 
     if exists:
         print "feed already exists in feed table"
-
         already_associated = db_session.query(UserFeeds).filter_by(feedid=exists.id).first()
 
         if already_associated:
@@ -66,35 +91,33 @@ def add_user_feed(user, feed):
 
         else:
             # add this feed to user_feed table
-            new_user_feed = UserFeeds(userid=user.id, feedid=exists.id, is_active=1)
+            result = associate_feed_with_user()
+            # should probably update entries after adding...
+            return result
 
-            try:
-                db_session.add(new_user_feed)
-                db_session.commit()
-
-            except Exception, e:
-                print "error associating feed!"
-                print str(e)
-                db_session.rollback()
-                return "error_adding_feed"
-
-            else:
-                return "success"
-
-    # now comes the hard part... attempt to get a totally new feed:
     else:
-        returned_url = parsenewfeed.parsefeed(feed)
-        if returned_url:
-            print "found valid rss"
+        print "totally new feed, adding everything"
 
-            # add to feed table, add to userfeed table, get new entries.
-            # later: add to cache?
+        get_result = getfeeds.get_feed_meta(returned_feed)
+        print get_result
+        storefeeds.store_feed_data(get_result)
+        exists = db_session.query(Feed).filter_by(feed_url=returned_feed).first()
+        associate_feed_with_user()
+        f_obj = {'url': returned_feed, 'feed_id': exists.id}
+        get_entries_res = getfeeds.feed_request(f_obj)
+        storefeeds.add_entry(get_entries_res)
+        # to add a new feed, we need to what...
+        # attempt to actually fetch the feed?
+        # ugh, this is actually running parsefeed twice.. one to check for existence
+        # then one to actually add to the feed table..
 
-            return "success"
+        # add to feed table, add to userfeed table, get new entries.
+        # later: add to cache?
 
-        else:
-            print "no valid url found at this address"
-            return "no_feed_found"
+        return "success"
+
+
+
 
 
 def remove_user_feed(user, uf_id):

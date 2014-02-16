@@ -4,6 +4,7 @@ import feedfinder
 __author__ = 'jakemadison'
 
 
+# on success, this now returns a feed object, instead of just the URL
 def parsefeed(url):
 
     """take in a URL and attempt to return a valid rss url from that page.
@@ -18,23 +19,28 @@ def parsefeed(url):
             return False
 
         if f.bozo:
+            # are we supposed to fail on bozo exception no matter what?
             print f.bozo_exception
-            return False
+            # return False
 
         if f.feed == {}:
             print 'no content'
             return False
 
+        if f.status == '404':
+            return False
+
+        return f
+
+    if False:
         return url
 
-    if test_url(url):
-        return url
     else:
         try:
             print 'using feed finder'
             res = feedfinder.feed(url)
             if res:
-                print res
+                # feed = test_url(res)
                 return res
             else:
                 print "no results found..."
