@@ -44,6 +44,9 @@ def feed_request(f, get_meta=False):
         print str(e)
 
     if res:
+
+        print res.feed, res.status, res.version
+
         posts = []
         # print 'length of entries: {0}'.format(len(res['entries']))
         # there needs to be a "if length entries > 0 here
@@ -92,9 +95,9 @@ def feed_request(f, get_meta=False):
 test_url = 'http://dir.yahoo.com/rss/dir/getrss.php?rec_games_video'
 test2 = 'http://www.reddit.com/r/python/.rss'
 test3 = 'http://xkcd.com/rss.xml'
-test4 = 'http://www.shiningrocksoftware.com/?feed=rss2'
+test4 = {'url': 'http://www.shiningrocksoftware.com/?feed=rss2', 'feed_id': None}
 
 if __name__ == "__main__":
     import storefeeds
-    feed_result = feed_request(test4, get_meta=True)
-    storefeeds.store_feed_data(feed_result["meta"])
+    feed_result = feed_request(test4, get_meta=False)
+    #storefeeds.store_feed_data(feed_result["meta"])

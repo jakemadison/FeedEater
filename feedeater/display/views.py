@@ -162,13 +162,14 @@ def index(page=1):
 
     # print sl
 
-    test_entries = user.get_userentries().paginate(page, c['POSTS_PER_PAGE'], False)
-    print '------->', test_entries.items
+    test_entries = user.get_userentries().first()
+    print '------->', test_entries
     # jsonify and paginate, easy as that!
-    for i, each in enumerate(test_entries.items):
-        print "\n"
-        print i, jsonify(each.json_entry())
-        print "====="
+    print dir(test_entries.remote_id)
+
+
+    print "\n"
+
 
     cats = sub_list['cat_list']
 

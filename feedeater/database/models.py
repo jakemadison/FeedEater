@@ -191,10 +191,13 @@ class User(Model):
 
     def get_userentries(self):
 
-        qry = UserEntry.query.filter(Entry.id == UserEntry.entryid,
-                     UserEntry.userid == self.id,
-                     UserFeeds.is_active == 1).order_by(Entry.published.desc())
-
+        qry = Entry.query.filter(UserFeeds.userid == self.id,  # get subscriptions associated with user
+                                 Entry.feed_id == UserFeeds.feedid,  # only get entries that user subs to
+                                 UserFeeds.is_active == 1  # get only active ones
+                                 )
+        #qry.outerjoin(UserEntry, Entry.id == UserEntry.entryid, User.id == UserEntry.userid)
+        qry.join(UserFeeds, (UserFeeds.userid == User.id))
+        qry.order_by(Entry.published.desc())
         return qry
 
 
