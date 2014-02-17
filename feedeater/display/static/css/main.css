@@ -158,12 +158,21 @@ sidebar-nav {
 
 #cog {
 
-    margin-left: 10px;
     cursor:pointer;
     font-size: 20px;
     float: left;
 
 }
+
+#hand {
+
+    cursor:pointer;
+    font-size: 20px;
+    float: left;
+
+}
+
+
 
 #cogdiv {
 

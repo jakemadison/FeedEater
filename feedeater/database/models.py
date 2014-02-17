@@ -153,7 +153,7 @@ class UserFeeds(Model):
     is_active = Column(Boolean, default=True)
     category = Column(String(64))
 
-    def __init__(self, userid, feedid, is_active=True, category=None):
+    def __init__(self, userid, feedid, is_active=True, category="None"):
         self.feedid = feedid
         self.userid = userid
         self.is_active = is_active

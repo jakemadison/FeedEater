@@ -343,10 +343,22 @@ def get_user_categories(user):
     pass
 
 
+def main(user):
+    xx = get_user_feeds(user)
+    send_feed = []
+
+    for f in xx['feed_data']:
+        unit = {'feed_id': f['feed_id'], 'url': f['url']}
+        send_feed.append(unit)
+
+    FeedGetter.main(send_feed)
+
+
+
 
 if __name__ == "__main__":
     u = User(nickname="jmadison", email="jmadison@quotemedia.com", role=0, id=1)
-
+    main(u)
     # get_user_entries(u)
 
 #TODO: actually, might just be better to check most recent update and only look at those
@@ -354,13 +366,7 @@ if __name__ == "__main__":
 # check... hmmm
 
     # use this to update feeds for now:
-    xx = get_user_feeds(u)
-    send_feed = []
-    for f in xx['feed_data']:
-        unit = {'feed_id': f['feed_id'], 'url': f['url']}
-        send_feed.append(unit)
 
-    FeedGetter.main(send_feed)
 
 
     # apply_feed_category(u, "Cats", 4)

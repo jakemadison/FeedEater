@@ -290,6 +290,13 @@ def change_active():
     return redirect(request.args.get('next') or url_for('index'))
 
 
+@app.route('/refreshfeeds')
+def ref_feeds():
+    user = g.user
+    user_manage_feeds.main(user)
+
+    return redirect(request.args.get('next') or url_for('index'))
+
 @app.route('/favs/')
 def favs():
     print "holy shit... it's not THAT easy.. is it??"

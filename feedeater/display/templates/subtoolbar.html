@@ -1,0 +1,30 @@
+
+<div class="btn-toolbar" role="toolbar">
+<div class="btn-group">
+    <button type="button" class="btn btn-default"  onclick="window.location.href='/refreshfeeds'">
+
+            <span class="glyphicon glyphicon-refresh" id="cog" title="refresh feeds"></span></button>
+
+    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-cog" id="cog"
+                  data-toggle="dropdown"></span>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="#"><h6>Unread only</h6></a></li>
+            <li class="divider"></li>
+            <li><a href="javascript:tag('User Defined Whatever', '15');">
+            <span class="label label-info">User Defined Tag</span></a></li>
+                          <li><a href="#"><span class="">Starred</span></a></li>
+                          <li><a href="#"><span class="">Edit Categories</span></a></li>
+                          <li><a href="/allfeeds"><span class="">Show All Feeds</span></a></li>
+        </ul></button>
+
+
+   <button type="button" class="btn btn-default">
+       <span class="glyphicon glyphicon-align-justify" id="cog" title="compressed view"></span></button>
+   <button type="button" class="btn btn-default">
+       <span class="glyphicon glyphicon-th-list" id="cog" title="expanded view"></span></button>
+   <button type="button" class="btn btn-default" onclick="window.location.href='/allfeeds'">
+       <span class="glyphicon glyphicon-globe" id="hand" title="show all feeds"></span></button>
+   <button type="button" class="btn btn-default">
+       <span class="glyphicon glyphicon-hand-left" id="hand" title="push left"></span></button>
+    </div>
+ </div>

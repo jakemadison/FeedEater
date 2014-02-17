@@ -1,0 +1,90 @@
+
+    {% for cat in cats %}
+
+        <a href="/activatecategory?cat={{ cat }}"><span class="label label-default">{{ cat }}</span></a>
+
+        {% for each in subs %}
+
+            {% if each.category == cat %}
+
+    <div>
+        <div class="btn-group sub-btn">
+
+            {% if each['active'] %}
+
+           <button type="button" value="/favs/" class="btn btn-success sub-btn" title="{{ each['desc'] }}"
+                       onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=0'">
+
+                    <span class="badge pull-right">42</span>
+                   <b>{{ each['title'] }}</b>
+               </button>
+
+            <!--ajax version of the above: -->
+            <!--<button type="button" value="/favs/" class="btn btn-success sub-btn" title="{{ each['desc'] }}"-->
+                       <!--onclick="togglefeed('div.feedid{{each['uf_id']}}')">-->
+
+                    <!--<span class="badge pull-right">42</span>-->
+                   <!--<b>{{ each['title'] }}</b>-->
+               <!--</button>-->
+
+           {% else %}
+
+           <button type="button" value="/favs/" class="btn btn-default sub-btn" title="{{ each['desc'] }}"
+                   onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=1'">
+                    {{ each['title'] }}
+           </button>
+
+           {% endif %}
+
+
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+        <!--<span class="glyphicon glyphicon-chevron-down" id="chev"></span>-->
+        <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+
+        {% if each['active'] %}
+            <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=0">Hide</a></li>
+        {% else %}
+            <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=1">Show</a></li>
+        {% endif %}
+
+        <li><a href="/onefeedonly?ufid={{ each['uf_id'] }}">Show only this feed</a></li>
+
+        <li class="divider"></li>
+
+          <li><a href="/favs/">Add to Favorites</a></li>
+          <li><a href="#">Edit Feed Info...</a></li>
+
+          <li><a href="#" title="Automatically tag entries from this feed">Auto Tag Entries...</a></li>
+          <li class="divider"></li>
+          <!--<li><a href="/unsubscribe?ufid={{ each['uf_id'] }}">Unsubscribe</a></li>-->
+
+                <li class="dropdown-header">Set Category</li>
+
+                {% for catnew in cats %}
+
+                {% if catnew == each.category %}
+
+                    <li><a><span class="label label-info" id="{{each.category}}">{{ catnew }}</span>
+                        </a></li>
+
+                {% else %}
+                    <li><a><span class="label label-default cat" id="{{cat}}"
+                                      onclick="change_cat('{{each.category}}', '{{catnew}}', '{{each['uf_id']}}')">
+                        {{ catnew }}</span></a></li>
+                {% endif %}
+
+                {% endfor %}
+
+            <li class="divider"></li>
+          <li><a class="unsub" href=#>Unsubscribe</a></li>
+        </ul>
+
+            </div><!-- /btn-group -->
+        </div> <!--end of dropdown menu-->
+
+       {% endif %}
+    {% endfor %}
+   {% endfor %}
