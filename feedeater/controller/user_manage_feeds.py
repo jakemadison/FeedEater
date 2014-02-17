@@ -117,9 +117,6 @@ def add_user_feed(user, feed):
         return "success"
 
 
-
-
-
 def remove_user_feed(user, uf_id):
     print user
     print uf_id
@@ -225,6 +222,66 @@ def get_user_entries(user):
         return qry
 
 
+def single_active(user, ufid):
+
+    try:
+        db_session.query(UserFeeds).filter_by(userid=user.id).update(
+            {
+                "is_active": False
+            })
+
+        db_session.query(UserFeeds).filter_by(id=ufid).update(
+            {
+                "is_active": True
+            })
+
+        db_session.commit()
+
+    except Exception, e:
+        print 'errrror with existing is_active record'
+        print str(e)
+        db_session.rollback()
+
+
+def all_active(user):
+
+    try:
+        db_session.query(UserFeeds).filter_by(userid=user.id).update(
+            {
+                "is_active": True
+            })
+
+        db_session.commit()
+
+    except Exception, e:
+        print 'errrror with existing is_active record'
+        print str(e)
+        db_session.rollback()
+
+
+def activate_category(user, cat):
+
+    try:
+        db_session.query(UserFeeds).filter_by(userid=user.id).update(
+            {
+                "is_active": False
+            })
+
+        db_session.query(UserFeeds).filter_by(category=cat).update(
+            {
+                "is_active": True
+            })
+
+        db_session.commit()
+
+    except Exception, e:
+        print 'errrror with existing is_active record'
+        print str(e)
+        db_session.rollback()
+
+
+
+
 def update_is_active(ufid, active):
 
     try:
@@ -262,19 +319,28 @@ def update_users_feeds(u):
         FeedGetter.main(feed_list)
 
 
-def apply_feed_category(user, category, feedid, remove=False):
+def apply_feed_category(category, ufid, remove=False):
+
+    print category
 
     if remove:
         return False  # remove category for user/feed combination
 
     # otherwise, apply category to feedid for user
-    active_row = db_session.query(UserFeeds).filter_by(userid=user.id, feedid=feedid)
-    active_row.update({"category": category})
-    db_session.commit()
+    try:
+        active_row = db_session.query(UserFeeds).filter_by(id=ufid)
+        active_row.update({"category": category})
+        db_session.commit()
 
+    except Exception, e:
+        return "failed", str(e)
 
+    else:
+        return "success"
 
-
+def get_user_categories(user):
+    # categories = db_session.query(UserFeeds).filter_by(userid=user.id)
+    pass
 
 
 

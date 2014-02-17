@@ -145,6 +145,12 @@ sidebar-nav {
 }
 
 
+.cat {
+    cursor: pointer;
+
+}
+
+
 #chev {
     float:right;
     width:10%;

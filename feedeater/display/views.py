@@ -52,6 +52,7 @@ def toggle_star():
     entryid = entryid[5:]
     print entryid
     result = user_manage_feeds.change_star_state(user, entryid)
+    print result
 
     return jsonify({"result": result})
 
@@ -121,6 +122,7 @@ def index(page=1):
         entries = Entry.query.order_by(Entry.published.desc())[:10]
         sub_list = user_manage_feeds.get_guest_feeds()
         sl = sub_list['feed_data']
+        cats = []
 
     if request.method == 'POST':
         if not form.validate():
@@ -151,10 +153,12 @@ def index(page=1):
         print 'user is none!'
         user = User(nickname="Guest", email="guest@guest.com", role=0)
         sub_list = user_manage_feeds.get_guest_feeds()
+        cats = []
 
     else:
         print "}}}retrieving sublist here...."
         sub_list = user_manage_feeds.get_user_feeds(user)
+        cats = sub_list['cat_list']
 
     print user
 
@@ -171,7 +175,7 @@ def index(page=1):
     print "\n"
 
 
-    cats = sub_list['cat_list']
+
 
     # with either json, or render, this should actually be returning the user_entry table joined with entry
     # so we get a full list of user entries, tags, categories, stars, etc.
@@ -222,6 +226,23 @@ def add_feed():
 
 
 
+@app.route('/changecat', methods=['POST'])
+def change_cats():
+
+    print "++++++++++++++++++++++++"
+    cat_old = request.form['current_cat_name']
+    cat_new = request.form['cat_new']
+    uf_id = request.form['uf_id']
+    print cat_old
+    print cat_new
+    print uf_id
+    result = user_manage_feeds.apply_feed_category(cat_new, uf_id, remove=False)
+    print result
+    flash(result, "info")
+    return redirect(url_for('/'))
+
+
+
 # temp route to refresh from front end.
 @app.route('/refresh')
 def refresh_feeds():
@@ -230,6 +251,29 @@ def refresh_feeds():
     send_feed = [f['url'] for f in x['feed_data']]  # change this...
     FeedGetter.main(send_feed)
 
+    return redirect(request.args.get('next') or url_for('index'))
+
+
+@app.route('/activatecategory')
+def activate_category():
+    user = g.user
+    cat = request.args.get('cat')
+    user_manage_feeds.activate_category(user, cat)
+    return redirect(request.args.get('next') or url_for('index'))
+
+@app.route('/onefeedonly')
+def one_feed_only():
+    print 'changing to one feed only'
+    ufid = request.args.get('ufid')
+    user = g.user
+    user_manage_feeds.single_active(user, ufid)
+
+    return redirect(request.args.get('next') or url_for('index'))
+
+@app.route('/allfeeds')
+def show_all_feeds():
+    user = g.user
+    user_manage_feeds.all_active(user)
     return redirect(request.args.get('next') or url_for('index'))
 
 

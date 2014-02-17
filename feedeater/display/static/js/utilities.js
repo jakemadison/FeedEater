@@ -51,5 +51,13 @@ function startoggle(starid) {
 
 
 
+function change_cat(catid, catnew, uf_id) {
 
+    $.post('/changecat', {
+        current_cat_name: catid,
+        cat_new: catnew,
+        uf_id: uf_id
+        });
+
+}
 

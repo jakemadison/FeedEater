@@ -17,8 +17,11 @@
             <span class="label label-info">User Defined Tag</span></a></li>
                           <li><a href="#"><span class="">Starred</span></a></li>
                           <li><a href="#"><span class="">Edit Categories</span></a></li>
-                          <li><a href="#"><span class="">Select All/None</span></a></li>
+                          <li><a href="/allfeeds"><span class="">Show All Feeds</span></a></li>
         </ul>
+
+     <span class="glyphicon glyphicon-refresh" id="cog"></span>
+
     </div>
 
 
@@ -51,8 +54,11 @@
 <hr>
 
     {% for cat in cats %}
-    <span class="label label-default">{{ cat }}</span>
+
+        <a href="/activatecategory?cat={{ cat }}"><span class="label label-default">{{ cat }}</span></a>
+
         {% for each in subs %}
+
             {% if each.category == cat %}
 
     <div>
@@ -74,10 +80,6 @@
                     <!--<span class="badge pull-right">42</span>-->
                    <!--<b>{{ each['title'] }}</b>-->
                <!--</button>-->
-
-
-
-
 
            {% else %}
 
@@ -102,15 +104,36 @@
             <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=1">Show</a></li>
         {% endif %}
 
+        <li><a href="/onefeedonly?ufid={{ each['uf_id'] }}">Show only this feed</a></li>
+
         <li class="divider"></li>
 
           <li><a href="/favs/">Add to Favorites</a></li>
           <li><a href="#">Edit Feed Info...</a></li>
-          <li><a href="#">Edit Categories...</a></li>
 
           <li><a href="#" title="Automatically tag entries from this feed">Auto Tag Entries...</a></li>
           <li class="divider"></li>
-          <li><a href="/unsubscribe?ufid={{ each['uf_id'] }}">Unsubscribe</a></li>
+          <!--<li><a href="/unsubscribe?ufid={{ each['uf_id'] }}">Unsubscribe</a></li>-->
+
+                <li class="dropdown-header">Set Category</li>
+
+                {% for catnew in cats %}
+
+                {% if catnew == each.category %}
+
+                    <li><a><span class="label label-info" id="{{each.category}}">{{ catnew }}</span>
+                        {{each.title}} - {{each.uf_id}} - {{each.feedid}}</a></li>
+
+                {% else %}
+                    <li><a><span class="label label-default cat" id="{{cat}}"
+                                      onclick="change_cat('{{each.category}}', '{{catnew}}', '{{each['uf_id']}}')">
+                        {{ catnew }}</span></a></li>
+                {% endif %}
+
+                {% endfor %}
+
+            <li class="divider"></li>
+          <li><a class="unsub" href=#>Unsubscribe</a></li>
         </ul>
 
             </div><!-- /btn-group -->
@@ -121,3 +144,6 @@
    {% endfor %}
 
 </div>
+
+
+
