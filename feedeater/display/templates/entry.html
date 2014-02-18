@@ -1,4 +1,4 @@
-<div class="feedid{{ entry.feed_id }}">
+<div class="feedid{{ entry.feed_id }}" entryId="{{entry.id}}">
 <div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">
 
     <h3>
@@ -62,7 +62,7 @@
 </div>
 
 <!--there should be a hide button here to hide the div of the entry?-->
-
+<div class="entrycontent">
     <div class="well">
 
         <div class="row" id="info">
@@ -107,6 +107,8 @@
 
 
         <p align="center">{{entry.content|safe}}</p>
+
+    </div>
 
     </div>
 

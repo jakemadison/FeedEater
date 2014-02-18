@@ -150,6 +150,10 @@ sidebar-nav {
 
 }
 
+.folder {
+    cursor: pointer;
+
+}
 
 #chev {
     float:right;

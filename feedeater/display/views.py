@@ -159,6 +159,10 @@ def index(page=1):
         print "}}}retrieving sublist here...."
         sub_list = user_manage_feeds.get_user_feeds(user)
         cats = sub_list['cat_list']
+        cats = sorted(cats)
+
+        print "================>", cats
+
 
     print user
 

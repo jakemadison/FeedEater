@@ -49,6 +49,13 @@ function startoggle(starid) {
 
 }
 
+function foldertoggle(folderid, catid) {
+
+    $(folderid).toggleClass('glyphicon-folder-open glyphicon-folder-close');
+    $(catid).toggle();
+}
+
+
 
 
 function change_cat(catid, catnew, uf_id) {

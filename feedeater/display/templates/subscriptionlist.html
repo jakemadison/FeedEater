@@ -1,14 +1,17 @@
 
     {% for cat in cats %}
+        <span class="glyphicon glyphicon-folder-open folder" id="cat{{cat}}"
+              onclick="foldertoggle('#cat{{cat}}', '.catlist{{cat}}');"></span>
 
         <a href="/activatecategory?cat={{ cat }}"><span class="label label-default">{{ cat }}</span></a>
 
-        {% for each in subs %}
+
+    {% for each in subs %}
 
             {% if each.category == cat %}
 
     <div>
-        <div class="btn-group sub-btn">
+        <div class="btn-group sub-btn btn-group-sm catlist{{cat}}">
 
             {% if each['active'] %}
 

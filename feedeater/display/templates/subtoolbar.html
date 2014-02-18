@@ -18,11 +18,16 @@
         </ul></button>
 
 
-   <button type="button" class="btn btn-default">
+   <button type="button" class="btn btn-default" onclick="$('.entrycontent div').hide();">
        <span class="glyphicon glyphicon-align-justify" id="cog" title="compressed view"></span></button>
-   <button type="button" class="btn btn-default">
+
+
+    <button type="button" class="btn btn-default" onclick="$('.entrycontent div').show();">
        <span class="glyphicon glyphicon-th-list" id="cog" title="expanded view"></span></button>
-   <button type="button" class="btn btn-default" onclick="window.location.href='/allfeeds'">
+
+
+
+    <button type="button" class="btn btn-default" onclick="window.location.href='/allfeeds'">
        <span class="glyphicon glyphicon-globe" id="hand" title="show all feeds"></span></button>
    <button type="button" class="btn btn-default">
        <span class="glyphicon glyphicon-hand-left" id="hand" title="push left"></span></button>
