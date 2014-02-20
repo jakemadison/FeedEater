@@ -11,20 +11,14 @@ import sys
 from feedeater.controller import FeedGetter
 
 
-
-@app.route('/cats', methods=['GET', 'POST'])
-def get_set_cats():
-    user = g.user
-
-    if request.method == 'GET':
-        print "method was GET"
-
-    if request.method == 'POST':
-        print "method was POST"
-
-    return jsonify({"done": "done!"})
+@app.before_request
+def before_request():
+    g.user = current_user
 
 
+@lm.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 @app.route('/tags', methods=['POST'])
@@ -55,37 +49,6 @@ def toggle_star():
     print result
 
     return jsonify({"result": result})
-
-
-
-
-@app.route('/togglefeed', methods=['POST'])
-def toggle_feed():
-
-    # this should just update DB to change active state
-    ufid = request.form['ufid']
-    print ufid
-    result = True
-    return jsonify({'ufid': ufid, 'result': result})
-
-
-
-@lm.user_loader
-def load_user(id):
-    return User.query.get(int(id))
-
-
-@app.before_request
-def before_request():
-    g.user = current_user
-
-
-
-
-def return_a_page():
-    user = g.user
-    form = LoginForm(request.form)
-    login_form = LoginForm()
 
 
 @app.route('/_json', methods=['GET', 'POST'])
@@ -187,18 +150,9 @@ def json_index(page=1):
     #                        cats=cats)
 
 
-
 @app.route('/json.html')
 def json_index():
     return render_template("jsonindex.html")
-
-
-
-
-
-
-
-
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -338,7 +292,6 @@ def add_feed():
         return redirect(request.args.get('next') or url_for('index'))
 
 
-
 @app.route('/changecat', methods=['POST'])
 def change_cats():
 
@@ -355,24 +308,13 @@ def change_cats():
     return redirect(url_for('/'))
 
 
-
-# temp route to refresh from front end.
-@app.route('/refresh')
-def refresh_feeds():
-    user = g.user
-    x = user_manage_feeds.get_user_feeds(user)
-    send_feed = [f['url'] for f in x['feed_data']]  # change this...
-    FeedGetter.main(send_feed)
-
-    return redirect(request.args.get('next') or url_for('index'))
-
-
 @app.route('/activatecategory')
 def activate_category():
     user = g.user
     cat = request.args.get('cat')
     user_manage_feeds.activate_category(user, cat)
     return redirect(request.args.get('next') or url_for('index'))
+
 
 @app.route('/onefeedonly')
 def one_feed_only():
@@ -382,6 +324,7 @@ def one_feed_only():
     user_manage_feeds.single_active(user, ufid)
 
     return redirect(request.args.get('next') or url_for('index'))
+
 
 @app.route('/allfeeds')
 def show_all_feeds():
@@ -407,18 +350,7 @@ def change_active():
 def ref_feeds():
     user = g.user
     user_manage_feeds.main(user)
-
     return redirect(request.args.get('next') or url_for('index'))
-
-@app.route('/favs/')
-def favs():
-    print "holy shit... it's not THAT easy.. is it??"
-
-    # I feel like this redirection business is causing page loading that
-    # it does not need to, and so overall app slowdown.
-    # except that feed changes, do need to be dealt with somehow
-
-    return redirect(url_for('index'))
 
 
 @app.route('/unsubscribe')
