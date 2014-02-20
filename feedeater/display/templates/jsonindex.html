@@ -1,0 +1,133 @@
+{% include 'head.html' %}
+
+{% include 'header.html' %}
+
+
+<div class="col-sm-4" id="subscription_list" xmlns="http://www.w3.org/1999/html">
+
+
+<h4>Subscriptions</h4>
+
+<form name="add_feed" class="navbar-form navbar-left" role="search" action="/add_feed" method="post">
+    <div class="form-group">
+
+    </div>
+
+
+</form>
+
+    {% include 'subtoolbar.html' %}
+
+<br>
+</div>
+
+
+
+        <!--actual sublist is here:-->
+
+
+<script type=text/javascript>
+  $(function() {
+    $('a.subs').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/_json', {
+      }, function(data) {
+        $(".subs").text(data.result);
+      });
+      return false;
+    });
+  });
+</script>
+
+
+
+
+
+        <span class="glyphicon glyphicon-folder-open folder"
+              onclick="#"></span>
+
+        <a href=#><span class="label label-default"></span></a>
+
+
+
+
+    <div>
+        <div class="btn-group sub-btn btn-group-sm">
+
+           <button type="button" value="/favs/" class="btn btn-success sub-btn subs" title="#"
+                       onclick="#">
+
+                    <span class="badge pull-right">42</span>
+                   <b>title</b>
+               </button>
+
+
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+
+        <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+
+            <li><a>Hide</a></li>
+
+
+        <li><a href=#>Show only this feed</a></li>
+
+        <li class="divider"></li>
+
+          <li><a href="/favs/">Add to Favorites</a></li>
+          <li><a href="#">Edit Feed Info...</a></li>
+
+          <li><a href="#" title="Automatically tag entries from this feed">Auto Tag Entries...</a></li>
+          <li class="divider"></li>
+
+                <li class="dropdown-header">Set Category</li>
+
+
+                    <li><a><span class="label label-info">cat</span>
+                        </a></li>
+
+
+            <li class="divider"></li>
+          <li><a class="unsub" href=#>Unsubscribe</a></li>
+        </ul>
+
+            </div><!-- /btn-group -->
+        </div> <!--end of dropdown menu-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+
+
+  </body>
+</html>

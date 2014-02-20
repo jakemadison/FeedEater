@@ -88,11 +88,7 @@ def return_a_page():
     login_form = LoginForm()
 
 
-@app.route('/json', methods=['GET', 'POST'])
-@app.route('/json/', methods=['GET', 'POST'])
-@app.route('/json/<int:page>', methods=['GET', 'POST'])
-@oid.loginhandler
-#@login_required
+@app.route('/_json', methods=['GET', 'POST'])
 def json_index(page=1):
 
     print app
@@ -180,7 +176,7 @@ def json_index(page=1):
 
 
     # return jsonify({"subs": sl, "entries": entries})
-    return True
+    return jsonify({"subs": sl})
     # with either json, or render, this should actually be returning the user_entry table joined with entry
     # so we get a full list of user entries, tags, categories, stars, etc.
 
@@ -191,6 +187,10 @@ def json_index(page=1):
     #                        cats=cats)
 
 
+
+@app.route('/json.html')
+def json_index():
+    return render_template("jsonindex.html")
 
 
 
