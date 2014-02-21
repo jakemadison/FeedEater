@@ -1,7 +1,7 @@
 # this module deals with adding, removing, updating user feeds.
 # it will be called by front end actions
 import FeedGetter
-from feedeater.database.models import User, UserFeeds, Feed, Entry, UserEntryTags
+from feedeater.database.models import User, UserFeeds, Feed, Entry, UserEntryTags, UserEntry
 from feedeater import db
 # from feedeater.debugger import debugging_suite as ds
 import getfeeds
@@ -21,7 +21,7 @@ def change_star_state(user, entryid):
     # this function is a boolean.. so it shouldn't care what the state originally was
     # it can be state agnostic.  same with the front end.  it only needs to know if
     # toggle at the back was successful or not
-    current_state = db_session.query(UserEntryTags).filter_by(userid=user.id, entryid=entryid).first()
+    current_state = db_session.query(UserEntry).filter_by(userid=user.id, entryid=entryid).first()
     print current_state
 
     # this should actually check if it exists, and add record if not.
@@ -33,17 +33,17 @@ def change_star_state(user, entryid):
         print "yes"
         if current_state.starred:
             print "was", current_state.starred
-            db_session.query(UserEntryTags).filter_by(userid=user.id, entryid=entryid).update(
+            db_session.query(UserEntry).filter_by(userid=user.id, entryid=entryid).update(
                                                     {"starred": False})
             db_session.commit()
-            print "is", db_session.query(UserEntryTags).filter_by(userid=user.id, entryid=entryid).first().starred
+            print "is", db_session.query(UserEntry).filter_by(userid=user.id, entryid=entryid).first().starred
 
         else:
             print current_state.starred
-            db_session.query(UserEntryTags).filter_by(userid=user.id, entryid=entryid).update(
+            db_session.query(UserEntry).filter_by(userid=user.id, entryid=entryid).update(
                                                         {"starred": True})
             db_session.commit()
-            print "is", db_session.query(UserEntryTags).filter_by(userid=user.id, entryid=entryid).first().starred
+            print "is", db_session.query(UserEntry).filter_by(userid=user.id, entryid=entryid).first().starred
         return True
 
     else:
