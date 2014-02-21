@@ -73,7 +73,7 @@ sidebar-nav {
 
 .sub-btn {
 
-    width: 90%;
+    width: 99%;
     text-align: left;
 }
 
@@ -185,5 +185,24 @@ sidebar-nav {
 
 #test1 {
     float:right;
+}
+
+
+.catheader {
+
+    float: left;
+    width: 90%;
+}
+
+.catbutton {
+    float: left;
+    width: 9%;
+
+
+}
+
+.catchevron {
+
+    font-size: 10px;
 }
 
