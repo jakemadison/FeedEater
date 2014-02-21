@@ -13,7 +13,11 @@
     <div>
         <div class="btn-group sub-btn btn-group-sm catlist{{cat}}">
 
+
+            <div class="catheader">
             {% if each['active'] %}
+
+
 
            <button type="button" value="/favs/" class="btn btn-success sub-btn" title="{{ each['desc'] }}"
                        onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=0'">
@@ -38,11 +42,14 @@
            </button>
 
            {% endif %}
+</div>
 
+
+            <div class="catbutton">
 
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-        <span class="caret"></span>
-        <!--<span class="glyphicon glyphicon-chevron-down" id="chev"></span>-->
+        <!--<span class="caret"></span>-->
+        <span class="glyphicon glyphicon-chevron-down catchevron"></span>
         <span class="sr-only">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
@@ -84,6 +91,10 @@
             <li class="divider"></li>
           <li><a class="unsub" href=#>Unsubscribe</a></li>
         </ul>
+
+
+        </div>
+
 
             </div><!-- /btn-group -->
         </div> <!--end of dropdown menu-->
