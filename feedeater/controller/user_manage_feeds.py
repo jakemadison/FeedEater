@@ -11,6 +11,46 @@ import parsenewfeed
 db_session = db.session
 
 
+def recalculate_entries(active_list, user):
+
+    feed_list = []
+    #feed_data = {}
+    final_list = []
+    cat_list = []
+
+    print active_list, user
+
+    # get all feed entries for user where UserFeeds.id in active_list
+    # okay, so really this should be the only query used everywhere
+    # and then we should pull things like "cat list" out of this giant, ugly thing
+
+    qry = db_session.query(User, UserFeeds, Feed, Entry)
+    qry = qry.filter(Entry.feed_id == Feed.id, Feed.id == UserFeeds.feedid,
+                     UserFeeds.userid == User.id, User.id == user.id)
+    qry.order_by(Entry.published.desc())
+
+    for each in qry.all():
+        u_table, uf_table, f_table, e_table = each
+
+        if uf_table.id in active_list:
+            entry_data = {'title': f_table.title, 'url': f_table.feed_url,
+                          'desc': f_table.description, 'active': uf_table.is_active,
+                          'uf_id': uf_table.id, 'feed_id': uf_table.feedid,
+                          'category': uf_table.category,
+                          'entry_title': e_table.title,
+                          'entry_content': e_table.content,
+                          'entry_published': e_table.published,
+                          'entry_link': e_table.link}
+
+            final_list.append(entry_data)
+
+    for each in final_list:
+        for k, v in each.iteritems():
+            print k, '---', v
+        print '-----------'
+
+
+
 def change_user_tags(user, entries):
 
     return {'taglist': 1}

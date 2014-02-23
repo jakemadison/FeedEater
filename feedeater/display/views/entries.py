@@ -55,3 +55,20 @@ def toggle_star():
     print result
 
     return jsonify({"result": result})
+
+
+@app.route('/recalculate_entries', methods=['POST'])
+def recalculate_entries():
+
+    user = g.user
+    active_list = request.form.getlist('active_list[]')
+
+    for each in active_list:
+        print '!!!!!!!', each
+    active_list = [int(a.replace('uf_id', '')) for a in active_list]
+
+    entries = user_manage_feeds.recalculate_entries(active_list, user)
+
+    print entries
+
+    return jsonify(success=True)

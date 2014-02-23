@@ -42,11 +42,14 @@ function startoggle(starid) {
 // toggles hiding/showing category:
 function foldertoggle(folderid, catid) {
 
+    //this needs a post function somewhere...
+
     $(folderid).toggleClass('glyphicon-folder-open glyphicon-folder-close');
     $(catid).toggle();
 }
 
 
+//change a feed category:
 function change_cat(catid, catnew, uf_id) {
 
     $.post('/changecat', {
@@ -54,6 +57,8 @@ function change_cat(catid, catnew, uf_id) {
         cat_new: catnew,
         uf_id: uf_id
         });
+
+    // on success, this needs to rearrange the subscription list.. somehow...
 
 }
 
@@ -63,8 +68,12 @@ function all_feeds() {
 
         //make all feeds look active
         $(".catbtn").removeClass('btn-default');
+        $(".catbtn").removeClass('inactive-category');
+
         $(".catbtn").addClass('btn-success');
-        $(".catbtn").css("font-weight","Bold");
+        $(".catbtn").addClass('active-category');
+
+        //$(".catbtn").css("font-weight","Bold");
 
 
     }); //needs a fail function here...
@@ -79,21 +88,46 @@ function toggleCategory(catname) {
     }).done(function() {
 
     //change active/deactivate state for these categories
-    //these should really just change cat css "active" "inactive"... way simpler.
+
     $(".catbtn").removeClass('btn-success');
+    $(".catbtn").removeClass('active-category');
     $(".catbtn").addClass('inactive-category');
     $(".catbtn").addClass('btn');
-    $(".catbtn").css("font-weight","Normal");
+
 
     $("."+catname).addClass('btn-success');
+    $("."+catname).removeClass('inactive-category');
     $("."+catname).addClass('active-category');
-    $("."+catname).css("font-weight","Bold");
+
+
+    });
+
+}
+
+//show single feed
+function oneFeedOnly(uf_id) {
+    $.post('/onefeedonly', {
+
+        uf_id: uf_id
+
+    }).done(function() {
+
+    //change active states here.
+    $(".catbtn").removeClass('btn-success');
+    $(".catbtn").removeClass('active-category');
+    $(".catbtn").addClass('inactive-category');
+    $(".catbtn").addClass('btn');
+
+    $(".uf_id"+uf_id).toggleClass('btn-success');
+    $(".uf_id"+uf_id).toggleClass('active-category inactive-category');
+
 
     });
 
 }
 
 
+//turn a single feed on/off
 function togglefeed(uf_id) {
 
     // sends post request to view.py
@@ -106,9 +140,65 @@ function togglefeed(uf_id) {
 
     });
 
+
+    //recalculateEntries();
+
 }
 
 
 // there needs to be a "load/reload/update entries javascript function
 // which other functions can call on to refresh actual content
 // hmmmm...... to do this, we'll need to access the paging object and reset it.. hrrrmmm...
+// OKAY, so hitting next page does re-run our pagination query, so our JS function here, just needs to
+// recalculate query, using page as indexing (figure out what page we're on as offset), then return entries
+// as json, then remove all current entries and put our jsonified ones up!
+
+function recalculateEntries() {
+
+    // first remove all entries that exist now
+    // then put up loading sign
+    // then get list, query DB, attempt to return entries
+    // then get rid of loading sign (progress bar?)
+    // then put up new entries
+
+
+    //get list of currently active entries
+
+    var active_list = [];
+
+    $(".active-category").each(function() {
+        var classList =$(this).attr('class').split(/\s+/);
+        for (var i=0; i<classList.length; i++){
+            if (classList[i].indexOf('uf_id') !== -1) {
+                console.log(classList[i]);
+                active_list.push(classList[i]);
+            }
+        }
+    });
+
+    console.log('FINAL!');
+    console.log(active_list);
+
+    $.post('/recalculate_entries', {
+        active_list: active_list
+
+    }).done(function() {
+
+        console.log('successfully posted')
+
+    });
+
+
+    //send that to entries.py
+
+    //return jsonified list of entries
+
+    //recreate those entries on main page
+
+
+}
+
+
+
+
+

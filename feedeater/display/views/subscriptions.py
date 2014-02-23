@@ -52,14 +52,15 @@ def activate_category():
 
 
 
-@app.route('/onefeedonly')
+@app.route('/onefeedonly', methods=['POST'])
 def one_feed_only():
     print 'changing to one feed only'
-    ufid = request.args.get('ufid')
-    user = g.user
-    user_manage_feeds.single_active(user, ufid)
 
-    return redirect(request.args.get('next') or url_for('index'))
+    uf_id = request.form['uf_id']
+    user = g.user
+    user_manage_feeds.single_active(user, uf_id)
+
+    return jsonify(success=True)
 
 
 @app.route('/allfeeds', methods=['POST'])

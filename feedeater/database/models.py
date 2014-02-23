@@ -183,11 +183,14 @@ class User(Model):
 
     def get_entries_new(self):
 
+        print "----------------------------------------------running get entries new!!!"
         qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
                          UserFeeds.userid == User.id,
                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
 
         return qry
+
+
 
     def get_userentries(self):
 
