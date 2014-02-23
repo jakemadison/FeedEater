@@ -19,10 +19,10 @@
 
 
 
-           <button type="button" value="/favs/" class="btn btn-success sub-btn" title="{{ each['desc'] }}"
+           <button type="button" value="/favs/" class="btn-sm btn-success sub-btn catbtn" title="{{ each['desc'] }}"
                        onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=0'">
 
-                    <span class="badge pull-right">42</span>
+                    <span class="badge pull-right unreadcount">24</span>
                    <b>{{ each['title'] }}</b>
                </button>
 
@@ -36,9 +36,12 @@
 
            {% else %}
 
-           <button type="button" value="/favs/" class="btn btn-default sub-btn" title="{{ each['desc'] }}"
+           <button type="button" value="/favs/" class="btn-sm btn-default sub-btn catbtn" title="{{ each['desc'] }}"
                    onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=1'">
+
+
                     {{ each['title'] }}
+
            </button>
 
            {% endif %}
@@ -47,7 +50,7 @@
 
             <div class="catbutton">
 
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <button type="button" class="btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
         <!--<span class="caret"></span>-->
         <span class="glyphicon glyphicon-chevron-down catchevron"></span>
         <span class="sr-only">Toggle Dropdown</span>

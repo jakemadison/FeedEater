@@ -54,6 +54,11 @@ def toggle_star():
 @app.route('/_json', methods=['GET', 'POST'])
 def json_index(page=1):
 
+    # ok, i think i have a handle on this then. these view functions need to be
+    # divided. on one side, are all functions that return static/refresh data
+    # those need to use "render template". the other group needs to be json
+    # and those methods do not refresh, but do make server calls.
+
     print app
     print __name__
     user = None

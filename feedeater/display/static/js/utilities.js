@@ -68,3 +68,18 @@ function change_cat(catid, catnew, uf_id) {
 
 }
 
+//show all feeds
+function all_feeds() {
+    $.post('/allfeeds').done(function() {
+
+        //make all feeds look active
+        $(".catbtn").removeClass('btn-default');
+        $(".catbtn").addClass('btn-success');
+
+
+    }); //needs a fail function here...
+}
+
+// there needs to be a "load/reload/update entries javascript function
+// which other functions can call on to refresh actual content
+// hmmmm......

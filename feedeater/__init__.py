@@ -31,11 +31,12 @@ lm = LoginManager()
 lm.init_app(flaskapp)
 lm.login_view = 'login'
 oid = OpenID(flaskapp, os.path.join(basedir, 'tmp'))
-import feedeater.display.views
 
+from feedeater.display.views import main, subscriptions, entries
 
-
-
+flaskapp.register_blueprint(main.app)
+flaskapp.register_blueprint(subscriptions.app)
+flaskapp.register_blueprint(entries.app)
 
 
 
