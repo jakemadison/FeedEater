@@ -62,13 +62,10 @@ def recalculate_entries():
 
     user = g.user
     active_list = request.form.getlist('active_list[]')
+    page = request.form['current_page']
 
-    for each in active_list:
-        print '!!!!!!!', each
     active_list = [int(a.replace('uf_id', '')) for a in active_list]
 
-    entries = user_manage_feeds.recalculate_entries(active_list, user)
+    entries = user_manage_feeds.recalculate_entries(active_list, user, page)
 
-    print entries
-
-    return jsonify(success=True)
+    return jsonify(success=True, e=entries)

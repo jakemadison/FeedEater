@@ -188,7 +188,12 @@ class User(Model):
                          UserFeeds.userid == User.id,
                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
 
+        print '_______________', dir(qry.first())
+
+
         return qry
+
+
 
 
 

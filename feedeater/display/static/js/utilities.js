@@ -153,7 +153,8 @@ function togglefeed(uf_id) {
 // recalculate query, using page as indexing (figure out what page we're on as offset), then return entries
 // as json, then remove all current entries and put our jsonified ones up!
 
-function recalculateEntries() {
+
+function recalculateEntries(current_page) {
 
     // first remove all entries that exist now
     // then put up loading sign
@@ -180,11 +181,14 @@ function recalculateEntries() {
     console.log(active_list);
 
     $.post('/recalculate_entries', {
+        current_page: current_page,
         active_list: active_list
 
-    }).done(function() {
+    }).done(function(e) {
 
-        console.log('successfully posted')
+        console.log('successfully posted');
+        console.log(e);
+        console.log('---');
 
     });
 

@@ -40,6 +40,11 @@ def index(page=1):
     # or if we want to use built in flask pagination..
 
     # print app
+
+    # will this work??
+    g.page = page
+
+
     print __name__
     #print dir(app)
     user = None

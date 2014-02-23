@@ -7,48 +7,64 @@ from feedeater import db
 import getfeeds
 import storefeeds
 import parsenewfeed
+from feedeater.config import configs as c
 
 db_session = db.session
 
 
-def recalculate_entries(active_list, user):
+def recalculate_entries(active_list, user, p):
 
     feed_list = []
     #feed_data = {}
     final_list = []
     cat_list = []
 
+    per_page = int(c['POSTS_PER_PAGE'])
+    page = int(p)
+
+    print '----> current page:', page, '----> posts per page:', per_page
+
+    start_pos = ((page-1)*per_page)
+    end_pos = start_pos + per_page
+
+    print start_pos, end_pos
+
+
     print active_list, user
 
     # get all feed entries for user where UserFeeds.id in active_list
     # okay, so really this should be the only query used everywhere
     # and then we should pull things like "cat list" out of this giant, ugly thing
+    # ^ that actually doesn't make sense, because if we only return the first page of results
+    # we might not get all categories that we want in the sidebar.  we need a more "global" search for that
+    # so they do need to be separate.  But, we can still do this for entry content.
 
     qry = db_session.query(User, UserFeeds, Feed, Entry)
     qry = qry.filter(Entry.feed_id == Feed.id, Feed.id == UserFeeds.feedid,
-                     UserFeeds.userid == User.id, User.id == user.id)
-    qry.order_by(Entry.published.desc())
+                     UserFeeds.userid == User.id, User.id == user.id, UserFeeds.id.in_(active_list))
+    qry = qry.order_by(Entry.published.desc())
 
-    for each in qry.all():
+    for each in qry[start_pos:end_pos]:
         u_table, uf_table, f_table, e_table = each
 
-        if uf_table.id in active_list:
-            entry_data = {'title': f_table.title, 'url': f_table.feed_url,
-                          'desc': f_table.description, 'active': uf_table.is_active,
-                          'uf_id': uf_table.id, 'feed_id': uf_table.feedid,
-                          'category': uf_table.category,
-                          'entry_title': e_table.title,
-                          'entry_content': e_table.content,
-                          'entry_published': e_table.published,
-                          'entry_link': e_table.link}
+        entry_data = {'title': f_table.title, 'url': f_table.feed_url,
+                      'desc': f_table.description, 'active': uf_table.is_active,
+                      'uf_id': uf_table.id, 'feed_id': uf_table.feedid,
+                      'category': uf_table.category,
+                      'entry_title': e_table.title,
+                      'entry_content': e_table.content,
+                      'entry_published': e_table.published,
+                      'entry_link': e_table.link}
 
-            final_list.append(entry_data)
+        final_list.append(entry_data)
 
     for each in final_list:
         for k, v in each.iteritems():
-            print k, '---', v
+            # print k, '---', v
+            pass
         print '-----------'
 
+    return final_list
 
 
 def change_user_tags(user, entries):
