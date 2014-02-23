@@ -25,17 +25,6 @@ function tag(tagtext, tagid) {
 }
 
 
-function togglefeed(uf_id) {
-
-    $(uf_id).hide();
-    // sends post request to view.py
-    $.post('/togglefeed', {
-        ufid: uf_id
-    });
-
-}
-
-
 function startoggle(starid) {
 
     //change to loading, do DB call, then return success, change to star-full
@@ -56,8 +45,6 @@ function foldertoggle(folderid, catid) {
     $(folderid).toggleClass('glyphicon-folder-open glyphicon-folder-close');
     $(catid).toggle();
 }
-
-
 
 
 function change_cat(catid, catnew, uf_id) {
@@ -107,7 +94,21 @@ function toggleCategory(catname) {
 }
 
 
+function togglefeed(uf_id) {
+
+    // sends post request to view.py
+    $.post('/change_active', {
+        uf_id: uf_id
+    }).done(function() {
+
+    $(".uf_id"+uf_id).toggleClass('btn-success');
+    $(".uf_id"+uf_id).toggleClass('active-category inactive-category');
+
+    });
+
+}
+
 
 // there needs to be a "load/reload/update entries javascript function
 // which other functions can call on to refresh actual content
-// hmmmm......
+// hmmmm...... to do this, we'll need to access the paging object and reset it.. hrrrmmm...

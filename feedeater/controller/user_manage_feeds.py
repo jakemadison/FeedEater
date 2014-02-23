@@ -280,14 +280,21 @@ def activate_category(user, cat):
         db_session.rollback()
 
 
-
-
-def update_is_active(ufid, active):
-
+def update_is_active(uf_id):
     try:
-        db_session.query(UserFeeds).filter_by(id=ufid).update(
+        print uf_id
+        existing = db_session.query(UserFeeds).filter_by(id=uf_id).first()
+
+        if existing.is_active == True:
+            active = False
+
+        elif existing.is_active == False:
+            active = True
+
+
+        db_session.query(UserFeeds).filter_by(id=uf_id).update(
             {
-                "is_active": active,
+                "is_active": active
             })
 
         db_session.commit()

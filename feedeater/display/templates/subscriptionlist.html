@@ -3,7 +3,8 @@
         <span class="glyphicon glyphicon-folder-open folder" id="cat{{cat}}"
               onclick="foldertoggle('#cat{{cat}}', '.catlist{{cat}}');"></span>
 
-        <!--<a href="/activatecategory?cat={{ cat }}"><span class="label label-default catlabel">{{ cat }}</span></a>-->
+        <!--<a href="/activatecategory?cat={{ cat }}">
+        <span class="label label-default catlabel">{{ cat }}</span></a>-->
         <span onclick="toggleCategory('{{cat}}')" class="label label-default catlabel">{{ cat }}</span>
 
     {% for each in subs %}
@@ -19,25 +20,23 @@
 
 
 
-           <button type="button" value="/favs/" class="btn active-category btn-sm btn-success sub-btn catbtn {{cat}}" title="{{ each['desc'] }}"
-                       onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=0'">
+           <button type="button"
+                   class="btn active-category btn-sm btn-success sub-btn catbtn {{cat}} uf_id{{each['uf_id']}}"
+                   title="{{ each['desc'] }}"
+                   onclick="togglefeed('{{each['uf_id']}}')">
 
                     <span class="badge pull-right unreadcount">24</span>
                    {{ each['title'] }}
                </button>
 
-            <!--ajax version of the above: -->
-            <!--<button type="button" value="/favs/" class="btn btn-success sub-btn" title="{{ each['desc'] }}"-->
-                       <!--onclick="togglefeed('div.feedid{{each['uf_id']}}')">-->
-
-                    <!--<span class="badge pull-right">42</span>-->
-                   <!--<b>{{ each['title'] }}</b>-->
-               <!--</button>-->
-
            {% else %}
 
-           <button type="button" value="/favs/" class="btn inactive-category btn-sm sub-btn catbtn {{cat}}" title="{{ each['desc'] }}"
-                   onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=1'">
+           <button type="button"
+                   class="btn inactive-category btn-sm sub-btn catbtn {{cat}} uf_id{{each['uf_id']}}"
+                   title="{{ each['desc'] }}"
+                   onclick="togglefeed('{{each['uf_id']}}')">
+
+                   <!--onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=1'">-->
 
                     {{ each['title'] }}
 
@@ -56,12 +55,6 @@
         <span class="sr-only">Toggle Dropdown</span>
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
-
-        {% if each['active'] %}
-            <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=0">Hide</a></li>
-        {% else %}
-            <li><a href="/change_active?ufid={{ each['uf_id'] }}&a=1">Show</a></li>
-        {% endif %}
 
         <li><a href="/onefeedonly?ufid={{ each['uf_id'] }}">Show only this feed</a></li>
 

@@ -71,17 +71,18 @@ def show_all_feeds():
     # return redirect(request.args.get('next') or url_for('index'))
     return jsonify(success=True)
 
-@app.route('/change_active')
+
+@app.route('/change_active', methods=['POST'])
 def change_active():
 
     print "----- entering change active"
-    ufid = request.args.get('ufid')
-    active = request.args.get('a')
-    user_manage_feeds.update_is_active(ufid, active)
+    uf_id = request.form['uf_id']
+    user_manage_feeds.update_is_active(uf_id)
+
     print 'finished change_active.'
 
-    # this part isn't working for remember page:
-    return redirect(request.args.get('next') or url_for('index'))
+    return jsonify(success=True)
+
 
 
 @app.route('/refreshfeeds')
