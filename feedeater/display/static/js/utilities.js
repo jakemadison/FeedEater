@@ -203,6 +203,18 @@ function recalculateEntries(current_page) {
 }
 
 
+function refreshFeeds() {
 
+    //get a list of all feeds
+    //draw a progress bar
+    //iterate through them one by one, calling refresh
+    //as soon as refresh is done, update progress bar by total/num_done*100
+    //call recalc entries?
+    //send next feed for updating...
+    //etc, till done
+    //remove progress bar
+
+
+}
 
 
