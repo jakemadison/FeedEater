@@ -152,6 +152,8 @@ sidebar-nav {
 
 .folder {
     cursor: pointer;
+    margin-bottom: 8px;
+    margin-top: 8px;
 
 }
 
@@ -213,6 +215,24 @@ sidebar-nav {
 }
 
 .catbtn {
-    font-size: 12px;
+    font-size: 13px;
 
+}
+
+.catlabel {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.btn-sm {
+    border-radius: 7px;
+    margin-bottom: 3px;
+}
+
+.active-category {
+    font-weight: bold;
+}
+
+.inactive-category {
+    font-weight: normal;
 }

@@ -40,13 +40,17 @@ def change_cats():
     return redirect(url_for('/'))
 
 
-@app.route('/activatecategory')
+@app.route('/activatecategory', methods=['POST'])
 def activate_category():
+
+    print 'entering activate_category function'
     user = g.user
-    cat = request.args.get('cat')
+    cat = request.form['catname']
     user_manage_feeds.activate_category(user, cat)
     # return redirect(request.args.get('next') or url_for('index'))
     return jsonify(success=True)
+
+
 
 @app.route('/onefeedonly')
 def one_feed_only():

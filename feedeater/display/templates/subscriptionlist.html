@@ -3,8 +3,8 @@
         <span class="glyphicon glyphicon-folder-open folder" id="cat{{cat}}"
               onclick="foldertoggle('#cat{{cat}}', '.catlist{{cat}}');"></span>
 
-        <a href="/activatecategory?cat={{ cat }}"><span class="label label-default">{{ cat }}</span></a>
-
+        <!--<a href="/activatecategory?cat={{ cat }}"><span class="label label-default catlabel">{{ cat }}</span></a>-->
+        <span onclick="toggleCategory('{{cat}}')" class="label label-default catlabel">{{ cat }}</span>
 
     {% for each in subs %}
 
@@ -19,11 +19,11 @@
 
 
 
-           <button type="button" value="/favs/" class="btn-sm btn-success sub-btn catbtn" title="{{ each['desc'] }}"
+           <button type="button" value="/favs/" class="btn active-category btn-sm btn-success sub-btn catbtn {{cat}}" title="{{ each['desc'] }}"
                        onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=0'">
 
                     <span class="badge pull-right unreadcount">24</span>
-                   <b>{{ each['title'] }}</b>
+                   {{ each['title'] }}
                </button>
 
             <!--ajax version of the above: -->
@@ -36,12 +36,12 @@
 
            {% else %}
 
-           <button type="button" value="/favs/" class="btn-sm btn-default sub-btn catbtn" title="{{ each['desc'] }}"
+           <button type="button" value="/favs/" class="btn inactive-category btn-sm sub-btn catbtn {{cat}}" title="{{ each['desc'] }}"
                    onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=1'">
-
 
                     {{ each['title'] }}
 
+                    <span class="badge pull-right unreadcount">24</span>
            </button>
 
            {% endif %}
@@ -50,7 +50,7 @@
 
             <div class="catbutton">
 
-        <button type="button" class="btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
         <!--<span class="caret"></span>-->
         <span class="glyphicon glyphicon-chevron-down catchevron"></span>
         <span class="sr-only">Toggle Dropdown</span>

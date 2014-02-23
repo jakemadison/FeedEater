@@ -16,6 +16,13 @@ basedir = c.get('basedir')
 app = Blueprint('entries', __name__, static_folder=basedir+'/display/static',
                 template_folder=basedir+'/display/templates')
 
+
+# this module requires a "recalculate entries" function which will need to take into account
+# which categories are active, which page we are currently on.. ah crap that'll be fun..
+# how do you recalculate a paging function? are we going to have to manually put
+# together a paging sql query?
+
+
 @app.before_request
 def before_request():
     g.user = current_user

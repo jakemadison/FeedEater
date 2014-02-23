@@ -49,6 +49,8 @@ function startoggle(starid) {
 
 }
 
+
+// toggles hiding/showing category:
 function foldertoggle(folderid, catid) {
 
     $(folderid).toggleClass('glyphicon-folder-open glyphicon-folder-close');
@@ -75,10 +77,36 @@ function all_feeds() {
         //make all feeds look active
         $(".catbtn").removeClass('btn-default');
         $(".catbtn").addClass('btn-success');
+        $(".catbtn").css("font-weight","Bold");
 
 
     }); //needs a fail function here...
 }
+
+//this should hide/show full category:
+function toggleCategory(catname) {
+
+    $.post('/activatecategory', {
+        catname: catname
+
+    }).done(function() {
+
+    //change active/deactivate state for these categories
+    //these should really just change cat css "active" "inactive"... way simpler.
+    $(".catbtn").removeClass('btn-success');
+    $(".catbtn").addClass('inactive-category');
+    $(".catbtn").addClass('btn');
+    $(".catbtn").css("font-weight","Normal");
+
+    $("."+catname).addClass('btn-success');
+    $("."+catname).addClass('active-category');
+    $("."+catname).css("font-weight","Bold");
+
+    });
+
+}
+
+
 
 // there needs to be a "load/reload/update entries javascript function
 // which other functions can call on to refresh actual content
