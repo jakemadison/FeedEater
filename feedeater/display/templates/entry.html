@@ -2,7 +2,9 @@
 <div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">
 
     <h3>
-        <b><a  href="{{entry.link}}" target="_blank" title="{{entry.title}}">{{entry.get_title()}}</a></b>
+        <b><a  href="{{entry.link}}" target="_blank"
+               data-toggle="tooltip" data-original-title="{{entry.title}}"
+               title="{{entry.title}}">{{entry.get_title()}}</a></b>
     </h3>
 
     <div class="tags">

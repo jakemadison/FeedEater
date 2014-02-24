@@ -30,3 +30,12 @@
     <script type=text/javascript>
         var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
     </script>
+
+
+<!--tool tips?-->
+
+<script type="text/javascript">
+    $(function () {
+        $("[rel='tooltip']").tooltip();
+    });
+</script>

@@ -215,7 +215,7 @@ sidebar-nav {
 }
 
 .catbtn {
-    font-size: 13px;
+    font-size: 12px;
 
 }
 
@@ -226,7 +226,9 @@ sidebar-nav {
 
 .btn-sm {
     border-radius: 7px;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
+    padding-top: 2px;
+    padding-right: 6px;
 }
 
 .active-category {
