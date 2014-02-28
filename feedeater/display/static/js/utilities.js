@@ -27,6 +27,15 @@ $(document).keydown(function(event) {
 });
 
 
+//This is a stub for redrawing the sub list.  Basically, this should get called on changes to
+//feeds, adding/deleting/changing categories, and should erase current sublist
+//and create anew from an ajax call so we don't lose our current page.
+function redrawSublist() {
+    return;
+}
+
+
+
 
 function subClick() {
     pageid = document.getElementById("url");
