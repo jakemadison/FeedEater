@@ -17,9 +17,10 @@
 
     <!--add feeds section:-->
 
-<form name="add_feed" class="navbar-form navbar-left" role="search" action="/add_feed" method="post">
+<form name="add_feed" class="navbar-form navbar-left input_thing" role="search" action="#" method="post"
+        onsubmit="return addFeed(this);">
     <div class="form-group">
-        {{ add_feed_form.feed(class="form-control", placeholder="Add Feed") }}
+        {{ add_feed_form.feed(class="form-control input_thing", placeholder="Add Feed") }}
     </div>
         {{ add_feed_form.submit(class="btn btn-default") }}
 

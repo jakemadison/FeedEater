@@ -1,3 +1,36 @@
+
+
+// left and right keys to move pages when appropriate, a la tumblr
+$(document).keydown(function(event) {
+
+    if ($(".input_thing").is(":focus")) {  // check if we are in an input thing and don't change page if so
+        return;
+    }
+
+    var ch = event.keyCode || event.which;  //get keypress
+
+    if (ch == 37){
+        if ($(".previous").length !== 0){  // if we can go left, go left
+            var h = $(".previous").children('a').attr('href');
+            window.location = h;
+        }
+        event.preventDefault();
+
+    }
+    else if (ch == 39) {
+        console.log('right');
+        if ($(".next").length !== 0){  // if we can go right, go right
+            var h = $(".next").children('a').attr('href');
+            console.log(h);
+            window.location = h;
+        }
+        event.preventDefault();
+    }
+});
+
+
+
+
 function subClick() {
     pageid = document.getElementById("url");
 }
@@ -216,5 +249,14 @@ function refreshFeeds() {
 
 
 }
+
+function addFeed() {
+    console.log('beginning addFeeeeeeed');
+    $.post('/add_feed').done(console.log('hey! i actually finished!!'));
+
+}
+
+
+
 
 

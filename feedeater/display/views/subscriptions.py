@@ -118,8 +118,6 @@ def add_feed():
     print "        ]]]]] add_feed has been activated"
     add_feed_form = AddFeedForm(csrf_enabled=False)
     user = g.user
-    form = LoginForm()
-    entries = None
 
     if not add_feed_form.validate_on_submit():
         print "add form has not validated"
@@ -128,7 +126,7 @@ def add_feed():
         for error in add_feed_form.feed.errors:
             flash(error, 'error')
 
-        return redirect(request.args.get('next') or url_for('index'))
+        return jsonify(result=add_feed_form.errors)
 
     else:
         print "    add form HAS validated!"
@@ -147,4 +145,4 @@ def add_feed():
         elif result == "no_feed_found":
             flash("No rss feed found at that url  :(", "error")
 
-        return redirect(request.args.get('next') or url_for('index'))
+        return jsonify(result=add_feed_form.errors)

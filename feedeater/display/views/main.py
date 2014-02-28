@@ -67,12 +67,13 @@ def index(page=1):
         cats = []
 
     if request.method == 'POST':
+        user = g.user
         if not form.validate():
             print 'maaaade it here:'
-            user = User(nickname="Guest", email="guest@guest.com", role=0)
-            return render_template("index.html", form=form, title='Home',
-                                   user=user, entries=entries, providers=flaskapp.config['OPENID_PROVIDERS'],
-                                   login_form=login_form, subs=sl)  # SL not defined yet...
+            #user = User(nickname="Guest", email="guest@guest.com", role=0)
+            # return render_template("index.html", form=form, title='Home',
+            #                        user=user, entries=entries, providers=flaskapp.config['OPENID_PROVIDERS'],
+            #                        login_form=login_form, subs=sl)  # SL not defined yet...
 
         if not user:
             print 'made it here...'
@@ -85,7 +86,7 @@ def index(page=1):
         print '!!!!yesssssssssssss!!!!'
         login_user(user)
         session['logged_in'] = True
-        flash("Logged in successfully.")
+        # flash("Logged in successfully.")
 
     if login_form.validate_on_submit():
         session['remember_me'] = login_form.remember_me.data
