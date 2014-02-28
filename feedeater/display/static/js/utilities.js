@@ -1,6 +1,5 @@
-
-
 // left and right keys to move pages when appropriate, a la tumblr
+// can expand this for other controls (star? tags even?)
 $(document).keydown(function(event) {
 
     if ($(".input_thing").is(":focus")) {  // check if we are in an input thing and don't change page if so
@@ -21,13 +20,11 @@ $(document).keydown(function(event) {
         console.log('right');
         if ($(".next").length !== 0){  // if we can go right, go right
             var h = $(".next").children('a').attr('href');
-            console.log(h);
             window.location = h;
         }
         event.preventDefault();
     }
 });
-
 
 
 
