@@ -1,6 +1,7 @@
 __author__ = 'jmadison'
 
 #add project root to PYTHONPATH:
+#apparently this ain't working..
 from os.path import dirname
 from sys import path
 path.append(dirname(dirname(__file__)))
@@ -35,11 +36,13 @@ oid = OpenID(flaskapp, os.path.join(basedir, 'tmp'))
 
 from feedeater.display.views import main, subscriptions, entries, custom_filters
 
+# register blueprints
 flaskapp.register_blueprint(main.app)
 flaskapp.register_blueprint(subscriptions.app)
 flaskapp.register_blueprint(entries.app)
 
+# register custom template filters:
 flaskapp.jinja_env.filters['truncate_title'] = custom_filters.truncate_title
-
-
+flaskapp.jinja_env.filters['parse_time'] = custom_filters.parse_time
+flaskapp.jinja_env.filters['url_base'] = custom_filters.url_base
 

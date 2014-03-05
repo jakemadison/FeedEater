@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, SmallInteger, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import backref, relationship, query
-from datetime import datetime, timedelta
-import urlparse
+# from datetime import datetime, timedelta
+# import urlparse
 from feedeater import db
 
 Model = db.Model
@@ -58,55 +58,6 @@ class Entry(Model):
 
     def get_user_topics(self):
         pass
-
-
-    # TODO: These probably make more sense in a controller_util.py file.
-    # they are more application logic than model logic, no?
-
-    # people don't like reading unix timestamps
-    # use weekdays unless older than one week.
-    def get_parsed_time(self):
-        parse_date = datetime.fromtimestamp(self.published)
-        now = datetime.now()
-        starter_word = ''
-
-        if parse_date >= now - timedelta(days=7):  # this week?
-            if parse_date >= now - timedelta(days=1):  # yesterday? (this checks for within 24hours.
-                                                        # need > midnight
-                starter_word = ''
-                form = '%I:%M%p'
-
-            else:
-                form = '%a %I:%M%p'
-
-        else:
-            form = '%I:%M%p %m/%d/%Y'
-
-        return starter_word + parse_date.strftime(form).lstrip('0')
-
-    # quick method to return truncated (at the space) titles
-    # NOTE: there is apparently a template function that will truncate for you, jeeebs
-    def get_title(self):
-        title = self.title
-
-        if not title:
-            title = 'no title'  # not needed.
-
-        if len(title) > 50:
-            temp_t = title[0:50]
-            k = temp_t.rfind(" ")
-            if k:
-                short_title = temp_t[:k]+"..."
-                return short_title
-            else:
-                short_title = temp_t[:47]+"..."
-                return short_title
-
-        return title
-
-    def get_feed_base(self):
-        return urlparse.urlparse(self.remote_id).netloc.lstrip('www.')
-
 
     def get_user_entry_records(self, user_id):
         qry = UserEntry.query.filter(UserEntry.entryid == self.id, UserEntry.userid == user_id)

@@ -7,8 +7,6 @@
 
                 title="{{entry.title}}">{{entry.title|truncate_title}}</a></b>
 
-    <!--title="{{entry.title}}">{{entry.get_title()}}</a></b>-->
-
     </h3>
 
     <div class="tags">
@@ -98,7 +96,8 @@
             {% endif %}
 
             <!--this would look nice as a: <h6></h6>-->
-    <p align="right"><span class="brand"><i>{{entry.get_feed_base()}}</i> @ {{entry.get_parsed_time()}}</span></p>
+
+<p align="right"><span class="brand"><i>{{entry.remote_id|url_base}}</i> @ {{entry.published|parse_time}}</span></p>
 
                     <!--</div>-->
 
