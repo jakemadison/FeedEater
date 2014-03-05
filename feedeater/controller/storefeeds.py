@@ -136,6 +136,7 @@ def add_entry(entries, update_entries=False):
                     feed_id=entry.get("feed_id")
                 )
 
+
                 # logger.debug(u"Adding new entry with id: {0}".format(entry.get("id")))
                 db_session.add(new_entry)
                 # db_session.commit()

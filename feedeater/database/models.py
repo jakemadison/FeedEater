@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text, SmallInteger, DateTime, ForeignKey, Boolean
-from sqlalchemy.orm import backref, relationship
+from sqlalchemy.orm import backref, relationship, query
 from datetime import datetime, timedelta
 import urlparse
 from feedeater import db
@@ -85,6 +85,7 @@ class Entry(Model):
         return starter_word + parse_date.strftime(form).lstrip('0')
 
     # quick method to return truncated (at the space) titles
+    # NOTE: there is apparently a template function that will truncate for you, jeeebs
     def get_title(self):
         title = self.title
 
@@ -105,6 +106,17 @@ class Entry(Model):
 
     def get_feed_base(self):
         return urlparse.urlparse(self.remote_id).netloc.lstrip('www.')
+
+
+    def get_user_entry_records(self, user_id):
+        qry = UserEntry.query.filter(UserEntry.entryid == self.id, UserEntry.userid == user_id)
+
+        if qry.first() is None:
+            return {"status": False, "record": UserEntry(entryid=self.id, userid=user_id)}
+
+        else:
+            return {"status": True, "query": qry.first()}
+
 
 
 # list of active feeds from all active subscribers
@@ -185,16 +197,21 @@ class User(Model):
 
         print "----------------------------------------------running get entries new!!!"
         qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
-                         UserFeeds.userid == User.id,
+                         UserFeeds.userid == self.id,
                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
 
-        print '_______________', dir(qry.first())
+
+
+        # qry = query(Entry, UserEntry).outerjoin(UserEntry, Entry.id == UserEntry.entryid).filter(Entry.feed_id == UserFeeds.feedid,
+        #                          UserFeeds.userid == User.id,
+        #                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
+
+        print '----------------', qry.first()
+
+        # print '_______________', dir(qry.first())
 
 
         return qry
-
-
-
 
 
     def get_userentries(self):
@@ -223,14 +240,14 @@ class User(Model):
         return unicode(self.id)
 
     def __repr__(self):
-        return '<User %r>' % (self.nickname)
+        return '<User %r>' % (self.username)
 
 
 class UserEntry(Model):
 
     """list of user/entries, whether they are read/unread, starred/unstarred"""
 
-    __tablename__ = "userentrytags"
+    __tablename__ = "user_entry"
 
     id = Column(Integer, primary_key=True)
     entryid = Column(Integer, ForeignKey("entry.id"))
@@ -238,14 +255,14 @@ class UserEntry(Model):
     starred = Column(Boolean, default=False)
     unread = Column(Boolean, default=True)
 
-    def __init__(self, entryid, userid, topicid, starred=False, unread=True):
+    entry = relationship("Entry", backref=backref("user_entries"))
+    # user = relationship("user")
+
+    def __init__(self, entryid, userid, starred=False, unread=True):
         self.entryid = entryid
         self.userid = userid
         self.starred = starred
         self.unread = unread
-
-
-
 
 
 # for every user+entry combination, these are tags to apply:
@@ -253,28 +270,16 @@ class UserEntryTags(Model):
 
     """from list of all tags per user, apply tags to individual user/entries"""
 
-    __tablename__ = "entrytags"
+    __tablename__ = "entry_tags"
 
     id = Column(Integer, primary_key=True)
-    userentryid = Column(Integer, ForeignKey("userentrytags.id"))
-    tagid = Column(Integer, ForeignKey("usertags.id"))
+    user_entry_id = Column(Integer, ForeignKey("user_entry.id"))
+    tag = Column(String(64))
     # may want to put in back_refs here (and on entry, and user)
 
     def __init__(self):
         pass
 
 
-class UserTags(Model):
 
-    """list of all tags per user"""
-
-    __tablename__ = "usertags"
-
-    id = Column(Integer, primary_key=True)
-    tag = Column(String(64))
-
-    def __init__(self, tag):
-        self.tag = tag
-
-
-print "done!"
+print "done loading models.py!"

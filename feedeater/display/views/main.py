@@ -58,6 +58,12 @@ def index(page=1):
         print '!!!!! - retrieving entries from is_authenticated call...'
         entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
 
+        # user_entry_list = user_manage_feeds.get_user_entry_records(user, entries)
+        # okay, so now I just need to add these entries to our entry list...
+
+
+
+
     else:
         print 'thiiiisssss..... is failing. move all this to user_man_feeds? ...actually, '
         print 'sub_list returns a list of feedIds.. can just use those to get entries..'
@@ -100,27 +106,42 @@ def index(page=1):
 
     else:
         print "}}}retrieving sublist here...."
+        # something here is causing OS to kill with OOM error.
+
         sub_list = user_manage_feeds.get_user_feeds(user)
+
+        print "sublist received"
+
         cats = sub_list['cat_list']
         cats = sorted(cats)
 
-        print "================>", cats
+        print "categories loaded and sorted"
+
+        #print "================>", cats
 
 
-    print user
+    #print user
 
     sl = sub_list['feed_data']  # sl needs to send count data as well. or send it from entries?
 
+    print "sl loaded"
     # print sl
 
-    test_entries = user.get_userentries().first()
-    print '------->', test_entries
+    # wow, this was causing an OOM error apparently.
+    # test_entries = user.get_userentries().first()
+    # print '------->', test_entries
     # jsonify and paginate, easy as that!
     # print dir(test_entries.remote_id)
 
 
     print "\n"
 
+    # test = user_manage_feeds.test_get_entires(user)
+    # for each in test:
+    #     print each
+
+
+    print "finished all loading.. rendering template now."
 
     # with either json, or render, this should actually be returning the user_entry table joined with entry
     # so we get a full list of user entries, tags, categories, stars, etc.

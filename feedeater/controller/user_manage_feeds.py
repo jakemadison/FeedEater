@@ -224,6 +224,7 @@ def get_user_feeds(user=None):
         qry = qry.filter(Feed.id == UserFeeds.feedid, UserFeeds.userid == User.id)
 
         for each in qry.filter(User.id == user.id).all():
+            print "query loop is running now..."
             u_table, uf_table, f_table = each
 
             # add user_feed tag/category/star data here in dictionary:
@@ -239,17 +240,58 @@ def get_user_feeds(user=None):
         cat_list = set(cat_list)
         final_res = {'user_id': u_table.id, 'feed_data': final_list, 'cat_list': cat_list}
 
-        print final_res
+        # print final_res
 
         return final_res
 
     else:
+        print "getting all feeds"
         feed_list = Feed.query.all()
 
+    print "finished get_user_feeds"
     return [q.feed_url for q in feed_list]
 
 
-# @ds.LogDebug
+
+def test_get_entires(user):
+    qry = db_session.query(User, UserFeeds, Entry, UserEntry)
+    qry.filter(Entry.feed_id == UserFeeds.feedid,
+                         UserFeeds.userid == user.id,
+                         UserEntry.userid == user.id, UserEntry.entryid == Entry.id,
+                         UserFeeds.is_active == 1).order_by(Entry.published.desc())
+    return qry
+
+
+
+def get_user_entry_records(user, entry_list):
+
+    entry_records = []
+
+    for each in entry_list.items:
+        result = each.get_user_entry_records(user.id)
+
+        if result["status"]:
+            entry_records.append(result["query"])
+
+        else:
+            try:
+                db_session.add(result["record"])
+
+            except Exception, e:
+                print str(e)
+
+            else:
+                db_session.commit()
+                entry_records.append(result["record"])
+
+    print "these are the recorddddds: ", entry_records
+
+
+    # qry = UserEntry.query.filter(UserEntry.entryid == entry_list.id)
+
+
+
+
 def get_user_entries(user):
 
     #this needs to return a query object so we can paginate results
