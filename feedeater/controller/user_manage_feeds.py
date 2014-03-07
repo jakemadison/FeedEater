@@ -1,7 +1,7 @@
 # this module deals with adding, removing, updating user feeds.
 # it will be called by front end actions
 import FeedGetter
-from feedeater.database.models import User, UserFeeds, Feed, Entry, UserEntryTags, UserEntry
+from feedeater.database.models import User, UserFeeds, Feed, Entry, UserEntryTags, UserEntry, UserPrefs
 from feedeater import db
 # from feedeater.debugger import debugging_suite as ds
 import getfeeds
@@ -443,6 +443,28 @@ def apply_feed_category(category, ufid, remove=False):
     else:
         return "success"
 
+
+def get_user_prefs(user):
+    return db_session.query(UserPrefs).filter_by(userid=user.id).first()
+
+
+def changeview(user):
+    print 'changeview activated!'
+    current_state = db_session.query(UserPrefs).filter_by(userid=user.id).first()
+
+    if current_state.compressed_view:
+        db_session.query(UserPrefs).filter_by(userid=user.id).update({"compressed_view": False})
+
+    else:
+        db_session.query(UserPrefs).filter_by(userid=user.id).update({"compressed_view": True})
+
+    db_session.commit()
+
+    return
+
+
+
+
 def get_user_categories(user):
     # categories = db_session.query(UserFeeds).filter_by(userid=user.id)
     pass
@@ -457,8 +479,6 @@ def main(user):
         send_feed.append(unit)
 
     FeedGetter.main(send_feed)
-
-
 
 
 if __name__ == "__main__":

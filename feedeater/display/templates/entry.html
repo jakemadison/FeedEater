@@ -73,7 +73,14 @@
 </div>
 
 <!--there should be a hide button here to hide the div of the entry?-->
-<div class="entrycontent">
+
+    {% if prefs.compressed_view %}
+    <div class="entrycontent compview">
+    {% else %}
+    <div class="entrycontent fullview">
+    {% endif %}
+
+
     <div class="well">
 
         <div class="row" id="info">

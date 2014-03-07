@@ -57,6 +57,7 @@ def index(page=1):
     if g.user.is_authenticated():
         print '!!!!! - retrieving entries from is_authenticated call...'
         entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
+        prefs = user_manage_feeds.get_user_prefs(user)
 
         # user_entry_list = user_manage_feeds.get_user_entry_records(user, entries)
         # okay, so now I just need to add these entries to our entry list...
@@ -149,7 +150,7 @@ def index(page=1):
                            user=user, entries=entries, form=form,
                            providers=flaskapp.config['OPENID_PROVIDERS'],
                            login_form=login_form, subs=sl, add_feed_form=add_feed_form,
-                           cats=cats)
+                           cats=cats, prefs=prefs)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -196,6 +197,15 @@ def logout():
     return redirect(url_for('index'))
 
 
+
+@app.route('/change_view', methods=['POST'])
+def change_view():
+
+    user = g.user
+    user_manage_feeds.changeview(user)
+    print "done! changeview!"
+
+    return jsonify(success=True)
 
 
 

@@ -123,6 +123,18 @@ class UserFeeds(Model):
         self.category = category
 
 
+class UserPrefs(Model):
+
+    __tablename__ = "user_preferences"
+
+    id = Column('id', Integer, primary_key=True)
+    userid = Column(Integer, ForeignKey("user.id"))
+    posts_per_page = Column(Integer, default=10)
+    compressed_view = Column(Boolean, default=False)
+
+
+
+
 # all user accounts registered with the controller
 class User(Model):
 
@@ -135,6 +147,7 @@ class User(Model):
     role = Column(SmallInteger, default=ROLE_USER)
     password = Column(String(64), unique=True)
     ufeeds = relationship("UserFeeds")
+    uprefs = relationship("UserPrefs", backref='users_pref')
     # posts = relationship('Post', backref = 'author', lazy = 'dynamic')
 
     def get_entries(self):

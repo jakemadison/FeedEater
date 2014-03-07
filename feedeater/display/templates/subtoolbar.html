@@ -18,13 +18,18 @@
         </ul></button>
 
 
-   <button type="button" class="btn btn-default" onclick="$('.entrycontent div').hide();">
-       <span class="glyphicon glyphicon-align-justify" id="cog" title="compressed view"></span></button>
+    {% if not prefs.compressed_view %}
 
+   <!--<button type="button" class="btn btn-default" onclick="$('.entrycontent div').toggle();">-->
+       <button type="button" class="btn btn-default" onclick="changeView();">
+       <span class="viewchange glyphicon glyphicon-align-justify" id="cog" title="compressed view"></span></button>
 
-    <button type="button" class="btn btn-default" onclick="$('.entrycontent div').show();">
-       <span class="glyphicon glyphicon-th-list" id="cog" title="expanded view"></span></button>
+    {% else %}
 
+    <button type="button" class="btn btn-default" onclick="changeView()">
+       <span class="viewchange glyphicon glyphicon-th-list" id="cog" title="expanded view"></span></button>
+
+    {% endif %}
 
 
     <button type="button" class="btn btn-default" onclick="all_feeds()">

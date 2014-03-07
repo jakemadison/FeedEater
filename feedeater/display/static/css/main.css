@@ -238,3 +238,13 @@ sidebar-nav {
 .inactive-category {
     font-weight: normal;
 }
+
+.compview {
+    display: none;
+
+}
+
+.fullview {
+
+    display: block;
+}

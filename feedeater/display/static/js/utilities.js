@@ -262,7 +262,17 @@ function addFeed() {
 
 }
 
+function changeView() {
+    console.log('beginning changeview');
+    $.post('/change_view').done(function () {
 
+        console.log('hey! i actually finished!!');
+        $('.entrycontent').toggleClass('compview fullview');
+        $('.viewchange').toggleClass('glyphicon-th-list glyphicon-align-justify');
+            }
+        );
+
+}
 
 
 
