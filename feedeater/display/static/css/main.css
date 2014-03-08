@@ -166,7 +166,7 @@ sidebar-nav {
 
     cursor:pointer;
     font-size: 20px;
-    float: left;1
+    float: left;
 
 }
 
@@ -247,4 +247,15 @@ sidebar-nav {
 .fullview {
 
     display: block;
+}
+
+.avatar {
+
+    float:left;
+
+}
+
+.avatar img {
+    border-radius: 6px;
+
 }

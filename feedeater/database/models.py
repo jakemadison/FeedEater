@@ -3,6 +3,7 @@ from sqlalchemy.orm import backref, relationship, query
 # from datetime import datetime, timedelta
 # import urlparse
 from feedeater import db
+from hashlib import md5
 
 Model = db.Model
 
@@ -146,9 +147,14 @@ class User(Model):
     email = Column(String(120), unique=True)
     role = Column(SmallInteger, default=ROLE_USER)
     password = Column(String(64), unique=True)
+
     ufeeds = relationship("UserFeeds")
     uprefs = relationship("UserPrefs", backref='users_pref')
     # posts = relationship('Post', backref = 'author', lazy = 'dynamic')
+
+    def get_avatar(self, size):
+        return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
+
 
     def get_entries(self):
 

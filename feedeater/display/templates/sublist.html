@@ -23,7 +23,6 @@
         {{ add_feed_form.feed(class="form-control input_thing", placeholder="Add Feed") }}
     </div>
         {{ add_feed_form.submit(class="btn btn-default") }}
-
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}

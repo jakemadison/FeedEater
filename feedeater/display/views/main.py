@@ -7,7 +7,7 @@ from feedeater import lm, oid
 from feedeater.display.forms import LoginForm, AddFeedForm
 from feedeater.config import configs as c
 from feedeater.database.models import User, ROLE_USER, Entry, UserEntry
-from feedeater.controller import user_manage_feeds
+from feedeater.controller import user_manage_feeds, manage_users
 import sys
 from feedeater.controller import FeedGetter
 
@@ -28,13 +28,12 @@ def before_request():
 def load_user(id):
     return User.query.get(int(id))
 
-
+# @login_required
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index/', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
 @oid.loginhandler
-#@login_required
-def index(page=1):
+def build_index(page=1):
 
     # really need to decide whether this is all going to be ajax/json
     # or if we want to use built in flask pagination..
@@ -51,6 +50,7 @@ def index(page=1):
     user = g.user
     form = LoginForm(request.form)
     login_form = LoginForm()
+    prefs = None
 
     add_feed_form = AddFeedForm(csrf_enabled=False)
 
@@ -61,9 +61,6 @@ def index(page=1):
 
         # user_entry_list = user_manage_feeds.get_user_entry_records(user, entries)
         # okay, so now I just need to add these entries to our entry list...
-
-
-
 
     else:
         print 'thiiiisssss..... is failing. move all this to user_man_feeds? ...actually, '
@@ -141,6 +138,9 @@ def index(page=1):
     # for each in test:
     #     print each
 
+    if not prefs:
+        prefs = {"compressed_view": False}
+
 
     print "finished all loading.. rendering template now."
 
@@ -157,8 +157,9 @@ def index(page=1):
 @oid.loginhandler
 def login():
     if g.user is not None and g.user.is_authenticated():
-        return redirect(url_for('index'))
+        return redirect(url_for('.build_index'))
     form = LoginForm()
+
     if form.validate_on_submit():
         session['remember_me'] = form.remember_me.data
         return oid.try_login(form.openid.data, ask_for=['nickname', 'email'])
@@ -172,29 +173,35 @@ def login():
 def after_login(resp):
     if resp.email is None or resp.email == "":
         flash('Invalid login. Please try again.')
-        return redirect(url_for('index'))
+        return redirect(url_for('.build_index'))
 
     user = User.query.filter_by(email=resp.email).first()
 
+    # if totally new user
     if user is None:
-        nickname = resp.nickname
-        if nickname is None or nickname == "":
-            nickname = resp.email.split('@')[0]
-        user = User(nickname=nickname, email=resp.email, role=ROLE_USER)
-        db.session.add(user)
-        db.session.commit()
+        print resp
+        print dir(resp)
+
+        manage_users.add_user(resp)
+
+
     remember_me = False
+
     if 'remember_me' in session:
         remember_me = session['remember_me']
         session.pop('remember_me', None)
+
     login_user(user, remember=remember_me)
-    return redirect(request.args.get('next') or url_for('index'))
+
+    return redirect(request.args.get('next') or url_for('.build_index'))
 
 
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    print "successful logout"
+    print g.user
+    return redirect(url_for('.build_index'))
 
 
 

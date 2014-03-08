@@ -218,13 +218,13 @@ def get_user_feeds(user=None):
     #feed_data = {}
     final_list = []
     cat_list = []
+    u_table, uf_table, f_table = (None, None, None)
 
     if user:
         qry = db_session.query(User, UserFeeds, Feed)
         qry = qry.filter(Feed.id == UserFeeds.feedid, UserFeeds.userid == User.id)
 
         for each in qry.filter(User.id == user.id).all():
-            print "query loop is running now..."
             u_table, uf_table, f_table = each
 
             # add user_feed tag/category/star data here in dictionary:
@@ -238,19 +238,21 @@ def get_user_feeds(user=None):
             feed_list.append(f_table.feed_url)  # is this actually being used at all??
 
         cat_list = set(cat_list)
-        final_res = {'user_id': u_table.id, 'feed_data': final_list, 'cat_list': cat_list}
+
+        if not uf_table:
+            pass
+
+
+        final_res = {'user_id': user.id, 'feed_data': final_list, 'cat_list': cat_list}
 
         # print final_res
 
         return final_res
 
     else:
-        print "getting all feeds"
         feed_list = Feed.query.all()
 
-    print "finished get_user_feeds"
     return [q.feed_url for q in feed_list]
-
 
 
 def test_get_entires(user):
@@ -260,7 +262,6 @@ def test_get_entires(user):
                          UserEntry.userid == user.id, UserEntry.entryid == Entry.id,
                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
     return qry
-
 
 
 def get_user_entry_records(user, entry_list):
