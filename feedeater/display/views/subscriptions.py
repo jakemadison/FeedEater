@@ -115,9 +115,19 @@ def unsubscribe():
 # this needs to be jsonifyied: or at least for the invalid responses...
 @app.route('/add_feed', methods=['POST'])
 def add_feed():
-    print "        ]]]]] add_feed has been activated"
+    print "........]]]]] add_feed has been activated"
     add_feed_form = AddFeedForm(csrf_enabled=False)
     user = g.user
+
+    data = request.form["data"]
+    print '...............', data
+
+    # this doesn't check for bad input..
+
+    result = user_manage_feeds.add_user_feed(user, data)
+    print result
+
+
 
     if not add_feed_form.validate_on_submit():
         print "add form has not validated"
@@ -126,11 +136,16 @@ def add_feed():
         for error in add_feed_form.feed.errors:
             flash(error, 'error')
 
+        print "now returning..."
+        print "======>", add_feed_form.feed.data
         return jsonify(result=add_feed_form.errors)
+
+
 
     else:
         print "    add form HAS validated!"
         print "adding user feed: ", add_feed_form.feed.data
+        print "======>", add_feed_form.feed_data
         result = user_manage_feeds.add_user_feed(user, add_feed_form.feed.data)
 
         if result == "already_associated":
@@ -146,3 +161,5 @@ def add_feed():
             flash("No rss feed found at that url  :(", "error")
 
         return jsonify(result=add_feed_form.errors)
+
+        # return redirect(url_for('index.build_index'))

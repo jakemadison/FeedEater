@@ -9,7 +9,8 @@ class LoginForm(Form):
 
 
 class AddFeedForm(Form):
-    feed = TextField("feed", validators=[Required("Feed Url is Required"), url("Not a recognized url")])
+    feed = TextField("feed", validators=[Required("Feed Url is Required"),
+                                         url("Not a recognized url")], id="add_feed_text")
     submit = SubmitField("Add")
 
 

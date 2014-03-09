@@ -1,5 +1,8 @@
 <div class="jumbotron">
-  <div class="avatar"><img src="{{user.get_avatar(100)}}"></div>
+
+    <div class="avatar"><a href="http://gravatar.com/emails/" target="_blank">
+      <img src="{{user.get_avatar(150)}}" title="Change your avatar at gravatar.com"></a></div>
+
     <div class="container">
       <div class="row">
         <div class="col-md-8">
@@ -12,7 +15,6 @@
 
                <h1>Hi, {{user.nickname}}!</h1>
                 <p>Reinventing the wheel for fun, not profit.</p>
-
                 {% if not g.user.is_authenticated() %}
                     <p><a class="btn btn-primary btn-lg" role="button"
                        onclick="show_login()" id="create_acct">Create Account &raquo;</a></p>

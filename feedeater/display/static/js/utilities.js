@@ -258,9 +258,17 @@ function refreshFeeds() {
 
 function addFeed() {
     console.log('beginning addFeeeeeeed');
-    $.post('/add_feed').done(console.log('hey! i actually finished!!'));
 
+    var submission = $("#add_feed_text").val();
+    console.log(submission)
+    $.post('/add_feed', {data:submission}).done(console.log('hey! i actually finished!!'));
+
+    //this has to display errors and info
+    //then it needs to recalculate subs list and entries
+
+    return false;
 }
+
 
 function changeView() {
     console.log('beginning changeview');
