@@ -21,7 +21,9 @@ app = Blueprint('index', __name__, static_folder=basedir+'/display/static',
 
 @app.before_request
 def before_request():
+    print "\n\n\nNEW REQUEST:"
     g.user = current_user
+    # print "\n        ->user: ", g.user, dir(g.user), g.user.nickname, g.user.id, "\n\n..."
 
 
 @lm.user_loader
@@ -48,6 +50,7 @@ def build_index(page=1):
     #print dir(app)
     user = None
     user = g.user
+    # print "\n        ->user: ", user, dir(user), user.nickname, "\n\n..."
     form = LoginForm(request.form)
     login_form = LoginForm()
     prefs = None
@@ -209,7 +212,9 @@ def logout():
 def change_view():
 
     user = g.user
+    print 'user: ', user.nickname, user.id
     user_manage_feeds.changeview(user)
+
     print "done! changeview!"
 
     return jsonify(success=True)

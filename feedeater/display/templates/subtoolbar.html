@@ -32,13 +32,13 @@
     {% endif %}
 
 
-    <button type="button" class="btn btn-default" onclick="all_feeds()">
+    <button type="button" class="btn btn-default" onclick="all_feeds('{{g.page}}')">
        <span class="glyphicon glyphicon-globe" id="hand" title="show all feeds"></span></button>
    <button type="button" class="btn btn-default">
        <span class="glyphicon glyphicon-hand-left" id="hand" title="push left"></span></button>
     </div>
 
 
-    <button type="button" onclick="recalculateEntries('{{g.page}}')">recalc entries</button>
+    <!--<button type="button" onclick="recalculateEntries('{{g.page}}')">recalc entries</button>-->
 
  </div>

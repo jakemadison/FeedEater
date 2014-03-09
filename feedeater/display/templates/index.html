@@ -29,11 +29,12 @@
 
     <div class="container"> <!--was class="container"-->
         <div class="row">
+            <div class="entry_container">
             <!--<div id="contentcolumn">-->
                 {% block content %}
 
                 {% if entries.items|length == 0 %}
-                    <div class="col-md-8-2">
+                    <div class="col-md-8-2 no_entry_alert">
                     <div class="alert alert-info"><p align="center"><b>There are no entries to display.</b></p></div>
                     </div>
 
@@ -46,10 +47,13 @@
                 {% endblock %}
 
 
-            <div class="col-md-8-2">
+            </div>
+
+            <div class="col-md-8-2 paging_div">
                 <hr>
                     {% include 'pager.html' %}
             </div>
+
         </div>
 
     </div>

@@ -19,9 +19,10 @@ app = Blueprint('subscriptions', __name__, static_folder=basedir+'/display/stati
 
 # all of these methods need to now be json instead of redirect. fun.
 
-@app.before_request
-def before_request():
+def before_blueprint_request():
     g.user = current_user
+
+app.before_request(before_blueprint_request)
 
 
 @app.route('/changecat', methods=['POST'])
@@ -45,6 +46,8 @@ def activate_category():
 
     print 'entering activate_category function'
     user = g.user
+    print user
+
     cat = request.form['catname']
     user_manage_feeds.activate_category(user, cat)
     # return redirect(request.args.get('next') or url_for('index'))

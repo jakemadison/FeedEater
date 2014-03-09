@@ -152,6 +152,11 @@ class User(Model):
     uprefs = relationship("UserPrefs", backref='users_pref')
     # posts = relationship('Post', backref = 'author', lazy = 'dynamic')
 
+    def get_user(self, uid):
+        qry = self.query.filter(self.id == uid).first()
+        return qry
+
+
     def get_avatar(self, size):
         return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
 

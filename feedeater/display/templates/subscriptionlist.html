@@ -5,7 +5,7 @@
 
         <!--<a href="/activatecategory?cat={{ cat }}">
         <span class="label label-default catlabel">{{ cat }}</span></a>-->
-        <span onclick="toggleCategory('{{cat}}')" class="label label-default catlabel">{{ cat }}</span>
+        <span onclick="toggleCategory('{{cat}}', '{{g.page}}')" class="label label-default catlabel">{{ cat }}</span>
 
     {% for each in subs %}
 
@@ -24,7 +24,7 @@
                    class="btn active-category btn-sm btn-success sub-btn catbtn {{cat}} uf_id{{each['uf_id']}}"
                    title="{{ each['desc'] }}"
                    data-toggle="tooltip" data-placement="right"
-                   onclick="togglefeed('{{each['uf_id']}}')">
+                   onclick="togglefeed('{{each['uf_id']}}', '{{g.page}}')">
 
                     <span class="badge pull-right unreadcount">24</span>
                    {{ each['title']|truncate_title(amt=40) }}
@@ -35,7 +35,7 @@
                    class="btn inactive-category btn-sm sub-btn catbtn {{cat}} uf_id{{each['uf_id']}}"
                    data-toggle="tooltip" data-placement="right"
                    title="{{ each['desc'] }}"
-                   onclick="togglefeed('{{each['uf_id']}}')">
+                   onclick="togglefeed('{{each['uf_id']}}', '{{g.page}}')">
 
                    <!--onclick="window.location.href='/change_active?ufid={{ each['uf_id'] }}&a=1'">-->
 
@@ -57,7 +57,7 @@
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
 
-        <li><a onclick="oneFeedOnly('{{each['uf_id']}}')">Show only this feed</a></li>
+        <li><a onclick="oneFeedOnly('{{each['uf_id']}}', '{{g.page}}')">Show only this feed</a></li>
 
         <li class="divider"></li>
 

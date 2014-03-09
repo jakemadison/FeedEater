@@ -25,7 +25,12 @@ app = Blueprint('entries', __name__, static_folder=basedir+'/display/static',
 
 @app.before_request
 def before_request():
+
+    print "\n\n\nNEW ENTRIES REQUEST: "
     g.user = current_user
+    # print g.user.nickname, g.user.id
+
+
 
 @app.route('/tags', methods=['POST'])
 def change_tags():
@@ -65,7 +70,15 @@ def recalculate_entries():
     page = request.form['current_page']
 
     active_list = [int(a.replace('uf_id', '')) for a in active_list]
+    print 'active list......', active_list
 
-    entries = user_manage_feeds.recalculate_entries(active_list, user, page)
+    if active_list:
+        entries = user_manage_feeds.recalculate_entries(active_list, user, page)
 
-    return jsonify(success=True, e=entries)
+    else:
+        entries = []
+
+    prefs = user_manage_feeds.get_user_prefs(user)
+    print prefs
+
+    return jsonify(success=True, e=entries, compressed_view=prefs)

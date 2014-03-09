@@ -102,7 +102,7 @@ function change_cat(catid, catnew, uf_id) {
 }
 
 //show all feeds
-function all_feeds() {
+function all_feeds(page) {
     $.post('/allfeeds').done(function() {
 
         //make all feeds look active
@@ -115,51 +115,58 @@ function all_feeds() {
         //$(".catbtn").css("font-weight","Bold");
 
 
+        recalculateEntries(page);
+
+
+
+
     }); //needs a fail function here...
 }
 
 //this should hide/show full category:
-function toggleCategory(catname) {
+function toggleCategory(catname, page) {
 
     $.post('/activatecategory', {
         catname: catname
 
     }).done(function() {
 
-    //change active/deactivate state for these categories
+        //change active/deactivate state for these categories
 
-    $(".catbtn").removeClass('btn-success');
-    $(".catbtn").removeClass('active-category');
-    $(".catbtn").addClass('inactive-category');
-    $(".catbtn").addClass('btn');
+        $(".catbtn").removeClass('btn-success');
+        $(".catbtn").removeClass('active-category');
+        $(".catbtn").addClass('inactive-category');
+        $(".catbtn").addClass('btn');
 
 
-    $("."+catname).addClass('btn-success');
-    $("."+catname).removeClass('inactive-category');
-    $("."+catname).addClass('active-category');
+        $("."+catname).addClass('btn-success');
+        $("."+catname).removeClass('inactive-category');
+        $("."+catname).addClass('active-category');
 
+        recalculateEntries(page);
 
     });
 
 }
 
 //show single feed
-function oneFeedOnly(uf_id) {
+function oneFeedOnly(uf_id, page) {
     $.post('/onefeedonly', {
 
         uf_id: uf_id
 
     }).done(function() {
 
-    //change active states here.
-    $(".catbtn").removeClass('btn-success');
-    $(".catbtn").removeClass('active-category');
-    $(".catbtn").addClass('inactive-category');
-    $(".catbtn").addClass('btn');
+        //change active states here.
+        $(".catbtn").removeClass('btn-success');
+        $(".catbtn").removeClass('active-category');
+        $(".catbtn").addClass('inactive-category');
+        $(".catbtn").addClass('btn');
 
-    $(".uf_id"+uf_id).toggleClass('btn-success');
-    $(".uf_id"+uf_id).toggleClass('active-category inactive-category');
+        $(".uf_id"+uf_id).toggleClass('btn-success');
+        $(".uf_id"+uf_id).toggleClass('active-category inactive-category');
 
+        recalculateEntries(page);
 
     });
 
@@ -167,9 +174,12 @@ function oneFeedOnly(uf_id) {
 
 
 //turn a single feed on/off
-function togglefeed(uf_id) {
+function togglefeed(uf_id, page) {
 
     // sends post request to view.py
+
+    console.log(page);
+
     $.post('/change_active', {
         uf_id: uf_id
     }).done(function() {
@@ -177,10 +187,11 @@ function togglefeed(uf_id) {
     $(".uf_id"+uf_id).toggleClass('btn-success');
     $(".uf_id"+uf_id).toggleClass('active-category inactive-category');
 
+    recalculateEntries(page);
     });
 
 
-    //recalculateEntries();
+
 
 }
 
@@ -223,23 +234,90 @@ function recalculateEntries(current_page) {
         current_page: current_page,
         active_list: active_list
 
-    }).done(function(e) {
+    }).done(function(result) {
 
         console.log('successfully posted');
-        console.log(e);
+        console.log(result);
+        console.log('+++++++');
+        console.log(result.e);
         console.log('---');
 
+        //replacing them is not going to work.
+        //i need to erase all existing elements, and redraw completely
+
+        $('.entry_container').empty()
+
+        var entry_length = result.e.length;
+
+        if (entry_length == 0) {
+
+            $('.paging_div').remove();
+
+            $('.entry_container').append('\
+            <div class="col-md-8-2 no_entry_alert">\
+                <div class="alert alert-info"><p align="center"><b>There are no entries to display.</b></p></div>\
+            </div>\
+            ');
+        }
+        else {
+            $('.no_entry_alert').remove();
+
+            for (i=0; i<entry_length; i++) {
+                console.log(result.e[i]);
+                drawEntries(result.e[i]);
+            }
+        }
     });
+}
 
 
-    //send that to entries.py
+function drawEntries(entry){
 
-    //return jsonified list of entries
+    //console.log(entry);
+    //console.log('-');
 
-    //recreate those entries on main page
+    var e_head = '\
+        <div class="feedid'+entry.feed_id+' entry_list" entryId="'+entry.entry_id+'">\
+        <div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">\
+    ';
 
+    var e_title='\
+       <h3>\
+        <b><a  href="'+entry.entry_link+'" target="_blank"\
+            data-toggle="tooltip" data-original-title="'+entry.entry_title+'"\
+            class="'+entry.entry_title+'"\
+            title="'+entry.entry_title+'">'+entry.entry_title+'</a></b>\
+        </h3>\
+        </div>\
+    ';
+
+    if ($('.viewchange').hasClass('glyphicon-th-list')) {
+        var e_view = '<div class="entrycontent compview">'
+    }
+    else {
+        var e_view = '<div class="entrycontent fullview">'
+    }
+
+    var e_main = '\
+        <div class="well">\
+        <div class="row" id="info">\
+        <span class="glyphicon glyphicon-info-sign" style="float:left"></span>\
+        <span class="glyphicon star glyphicon-star" id="star{{entry.id}}"\
+            title="star: {{entry.id}}"></span>\
+        <p align="right"><span class="brand"><i>'+entry.url+'</i> @ '+entry.entry_published+'</span></p>\
+        </span>\
+        </div>\
+        <p align="center">'+entry.entry_content+'</p>\
+        </div>\
+        </div>\
+        </div>\
+       ';
+
+    $('.entry_container').append(e_head, e_view, e_title, e_main);
 
 }
+
+
 
 
 function refreshFeeds() {

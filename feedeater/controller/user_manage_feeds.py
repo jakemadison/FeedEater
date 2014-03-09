@@ -50,6 +50,7 @@ def recalculate_entries(active_list, user, p):
         entry_data = {'title': f_table.title, 'url': f_table.feed_url,
                       'desc': f_table.description, 'active': uf_table.is_active,
                       'uf_id': uf_table.id, 'feed_id': uf_table.feedid,
+                      'entry_id': e_table.id,
                       'category': uf_table.category,
                       'entry_title': e_table.title,
                       'entry_content': e_table.content,
@@ -446,11 +447,19 @@ def apply_feed_category(category, ufid, remove=False):
 
 
 def get_user_prefs(user):
-    return db_session.query(UserPrefs).filter_by(userid=user.id).first()
+
+    prefs = db_session.query(UserPrefs).filter_by(userid=user.id)
+    x = prefs.first()
+
+    return x.compressed_view
+
 
 
 def changeview(user):
+
     print 'changeview activated!'
+    print "attempting to change view state for user: ", user.nickname, "id: ", user.id
+
     current_state = db_session.query(UserPrefs).filter_by(userid=user.id).first()
 
     if current_state.compressed_view:
@@ -469,6 +478,7 @@ def changeview(user):
 def get_user_categories(user):
     # categories = db_session.query(UserFeeds).filter_by(userid=user.id)
     pass
+
 
 
 def main(user):
