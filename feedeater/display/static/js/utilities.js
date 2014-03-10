@@ -196,13 +196,6 @@ function togglefeed(uf_id, page) {
 }
 
 
-// there needs to be a "load/reload/update entries javascript function
-// which other functions can call on to refresh actual content
-// hmmmm...... to do this, we'll need to access the paging object and reset it.. hrrrmmm...
-// OKAY, so hitting next page does re-run our pagination query, so our JS function here, just needs to
-// recalculate query, using page as indexing (figure out what page we're on as offset), then return entries
-// as json, then remove all current entries and put our jsonified ones up!
-
 
 function recalculateEntries(current_page) {
 
@@ -262,11 +255,27 @@ function recalculateEntries(current_page) {
         else {
             $('.no_entry_alert').remove();
 
+            //draw progress bar and update in loop below
+
+            $('#pbar').width('10%');
+
             for (i=0; i<entry_length; i++) {
                 console.log(result.e[i]);
+                var amt = 10*(i+1);
+                var per = amt+"%";
+
+                $('#pbar').css("width: ","100%");
+
+                console.log(per);
+                console.log(amt+"%");
+                console.log($('#pbar').width());
                 drawEntries(result.e[i]);
             }
+
+            console.log('done!');
+            $('#pbar').width(0);
         }
+
     });
 }
 
@@ -314,6 +323,7 @@ function drawEntries(entry){
        ';
 
     $('.entry_container').append(e_head, e_view, e_title, e_main);
+
 
 }
 

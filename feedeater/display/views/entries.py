@@ -10,6 +10,7 @@ from feedeater.database.models import User, ROLE_USER, Entry, UserEntry
 from feedeater.controller import user_manage_feeds
 import sys
 from feedeater.controller import FeedGetter
+import time
 
 
 basedir = c.get('basedir')
@@ -65,6 +66,9 @@ def toggle_star():
 @app.route('/recalculate_entries', methods=['POST'])
 def recalculate_entries():
 
+    # time.sleep(5)
+
+
     user = g.user
     active_list = request.form.getlist('active_list[]')
     page = request.form['current_page']
@@ -82,3 +86,11 @@ def recalculate_entries():
     print prefs
 
     return jsonify(success=True, e=entries, compressed_view=prefs)
+
+
+@app.route('/sleep_data', methods=['POST'])
+def sleep_data():
+
+    print "sleeeeeeep, data"
+    time.sleep(5)
+    return jsonify(success=True)
