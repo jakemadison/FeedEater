@@ -511,3 +511,9 @@ if __name__ == "__main__":
     # apply_feed_category(u, "Programming", 7)
     # apply_feed_category(u, "Programming", 6)
     #apply_feed_category(u, None, 3)
+
+
+    # some feeds to add:
+    # https://explosm.net/comics/3489/
+    # http://theoatmeal.com/
+    #
