@@ -307,12 +307,18 @@ function drawEntries(entry){
         var e_view = '<div class="entrycontent fullview">'
     }
 
+    if (entry.entry_starred) {
+        var star = '<span class="glyphicon star glyphicon-star" id="star{{entry.id}}"></span>'
+    }
+    else {
+        var star = '<span class="glyphicon star glyphicon-star-empty" id="star{{entry.id}}"></span>'
+    }
+
     var e_main = '\
         <div class="well">\
         <div class="row" id="info">\
         <span class="glyphicon glyphicon-info-sign" style="float:left"></span>\
-        <span class="glyphicon star glyphicon-star" id="star{{entry.id}}"\
-            title="star: {{entry.id}}"></span>\
+        '+star+'\
         <p align="right"><span class="brand"><i>'+entry.url+'</i> @ '+entry.entry_published+'</span></p>\
         </span>\
         </div>\
@@ -344,18 +350,42 @@ function refreshFeeds() {
 
 }
 
-function addFeed() {
+function addFeed(page) {
     console.log('beginning addFeeeeeeed');
 
     var submission = $("#add_feed_text").val();
     console.log(submission)
-    $.post('/add_feed', {data:submission}).done(console.log('hey! i actually finished!!'));
+    $.post('/add_feed', {data:submission}).done(function(result) {
+
+        console.log('hey! i actually finished!!');
+        console.log(result);
+
+        if (result.category == 'error') {
+
+            $('#error_msg').show();
+            $('#error_msg span').text(result.msg);
+        }
+        else {
+            $('#info_msg').show();
+            $('#info_msg span').text(result.msg);
+
+            if (result.category == 'success') {
+                recalculateEntries(page);
+            }
+        }
+
+    });
+
+
 
     //this has to display errors and info
     //then it needs to recalculate subs list and entries
 
     return false;
 }
+
+
+
 
 
 function changeView() {

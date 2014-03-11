@@ -39,13 +39,21 @@ def recalculate_entries(active_list, user, p):
     # we might not get all categories that we want in the sidebar.  we need a more "global" search for that
     # so they do need to be separate.  But, we can still do this for entry content.
 
-    qry = db_session.query(User, UserFeeds, Feed, Entry)
+
+    # god damn, that's some ugly SQL.. I could see a 5 table join having performance implications...
+
+    # Okay, so really, this should just send entries, and there should be a separate GET request
+    # that retrieves tag info, star info, etc etc etc.
+    #
+
+    qry = db_session.query(User, UserFeeds, Feed, Entry, UserEntry)
     qry = qry.filter(Entry.feed_id == Feed.id, Feed.id == UserFeeds.feedid,
+                     UserEntry.userfeedid == UserFeeds.id,
                      UserFeeds.userid == User.id, User.id == user.id, UserFeeds.id.in_(active_list))
     qry = qry.order_by(Entry.published.desc())
 
     for each in qry[start_pos:end_pos]:
-        u_table, uf_table, f_table, e_table = each
+        u_table, uf_table, f_table, e_table, ufe_table = each
 
         entry_data = {'title': f_table.title, 'url': f_table.feed_url,
                       'desc': f_table.description, 'active': uf_table.is_active,
@@ -55,7 +63,9 @@ def recalculate_entries(active_list, user, p):
                       'entry_title': e_table.title,
                       'entry_content': e_table.content,
                       'entry_published': e_table.published,
-                      'entry_link': e_table.link}
+                      'entry_link': e_table.link,
+                      'entry_starred': ufe_table.starred,
+                      'entry_unread': ufe_table.unread}
 
         final_list.append(entry_data)
 

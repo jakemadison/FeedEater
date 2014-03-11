@@ -10,6 +10,8 @@
 
 <h4>Subscriptions</h4>
 
+
+
     <!--what options should apply to all subs? refresh? select all/none? edit categories?
     unread only? starred posts only?
     well, anyways, those can be attached to this down-chevron: -->
@@ -29,10 +31,11 @@
         <input type="text" id="add_feed_text" class="form-control input_thing"/>
     </div>
 
-        <input type="button" name="submit" value="Add" onclick="addFeed();" class="btn btn-default"/>
+        <input type="button" id="add_btn" name="submit" value="Add" onclick="addFeed('{{g.page}}');" class="btn btn-default"/>
 
 
     <!--error/info messages-->
+        <!--okay, so what's the point of these if we're using jquery for everything?-->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -45,7 +48,12 @@
             {% endif %}
         {% endwith %}
 
+        <div class="flash" id="error_msg"><span class="label label-danger"> </span></div>
+        <div class="flash" id="info_msg"><span class="label label-primary"> </span></div>
+
 </form>
+
+
 
 
 

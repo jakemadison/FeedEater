@@ -222,11 +222,11 @@ class UserEntry(Model):
 
     """list of user/entries, whether they are read/unread, starred/unstarred"""
 
-    __tablename__ = "user_entry"
+    __tablename__ = "user_feed_entry"
 
     id = Column(Integer, primary_key=True)
     entryid = Column(Integer, ForeignKey("entry.id"))
-    userid = Column(Integer, ForeignKey("user.id"))
+    userfeedid = Column(Integer, ForeignKey("userfeeds.id"))
     starred = Column(Boolean, default=False)
     unread = Column(Boolean, default=True)
 
@@ -245,7 +245,7 @@ class UserEntryTags(Model):
 
     """from list of all tags per user, apply tags to individual user/entries"""
 
-    __tablename__ = "entry_tags"
+    __tablename__ = "userfeed_entry_tags"
 
     id = Column(Integer, primary_key=True)
     user_entry_id = Column(Integer, ForeignKey("user_entry.id"))
