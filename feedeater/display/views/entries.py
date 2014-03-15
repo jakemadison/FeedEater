@@ -57,7 +57,9 @@ def toggle_star():
     entryid = request.form['starid']
     entryid = entryid[5:]
     print entryid
+
     result = user_manage_feeds.change_star_state(user, entryid)
+
     print result
 
     return jsonify({"result": result})

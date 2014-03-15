@@ -290,6 +290,7 @@ function drawEntries(entry){
         <div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">\
     ';
 
+    //set title information
     var e_title='\
        <h3>\
         <b><a  href="'+entry.entry_link+'" target="_blank"\
@@ -300,6 +301,8 @@ function drawEntries(entry){
         </div>\
     ';
 
+
+    //check if we are compressed view or not
     if ($('.viewchange').hasClass('glyphicon-th-list')) {
         var e_view = '<div class="entrycontent compview">'
     }
@@ -307,12 +310,27 @@ function drawEntries(entry){
         var e_view = '<div class="entrycontent fullview">'
     }
 
-    if (entry.entry_starred) {
-        var star = '<span class="glyphicon star glyphicon-star" id="star{{entry.id}}"></span>'
+    var togs = "'#star"+entry.entry_id+"'"
+
+    //check if our entry is starred or not
+    if (!entry.entry_starred) {
+        var star = '<span class="glyphicon star glyphicon-star"\
+         id="star' + entry.entry_id + '" \
+         title="star: '+entry.entry_id+'" \
+         onclick="startoggle('+togs+')"></span>'
     }
     else {
         var star = '<span class="glyphicon star glyphicon-star-empty" id="star{{entry.id}}"></span>'
     }
+
+
+//<span class="glyphicon star glyphicon-star-empty" id="star{{entry.id}}"
+//                  title="star: {{entry.id}}" onclick="startoggle('#star{{entry.id}}')">
+//            </span>
+
+
+
+
 
     var e_main = '\
         <div class="well">\

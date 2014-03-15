@@ -98,8 +98,11 @@ def change_star_state(user, entryid):
     # this function is a boolean.. so it shouldn't care what the state originally was
     # it can be state agnostic.  same with the front end.  it only needs to know if
     # toggle at the back was successful or not
-    current_state = db_session.query(UserEntry).filter_by(userid=user.id, entryid=entryid).first()
-    print current_state
+    current_state = db_session.query(UserEntry).filter(UserFeeds.userid == user.id,
+                                                       UserEntry.entryid == entryid,
+                                                       UserEntry.userfeedid == UserFeeds.id).first()
+
+    qry = db_session.query(UserEntry).filter(UserEntry.id == current_state.id)
 
     # this should actually check if it exists, and add record if not.
     # which is a higher function that should be shared with change/add user tags
@@ -109,18 +112,17 @@ def change_star_state(user, entryid):
     if current_state:
         print "yes"
         if current_state.starred:
+
             print "was", current_state.starred
-            db_session.query(UserEntry).filter_by(userid=user.id, entryid=entryid).update(
-                                                    {"starred": False})
+
+            qry.update({"starred": False})
             db_session.commit()
-            print "is", db_session.query(UserEntry).filter_by(userid=user.id, entryid=entryid).first().starred
 
         else:
             print current_state.starred
-            db_session.query(UserEntry).filter_by(userid=user.id, entryid=entryid).update(
-                                                        {"starred": True})
+            qry.update({"starred": True})
             db_session.commit()
-            print "is", db_session.query(UserEntry).filter_by(userid=user.id, entryid=entryid).first().starred
+
         return True
 
     else:

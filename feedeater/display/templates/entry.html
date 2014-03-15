@@ -90,7 +90,7 @@
             <!--not sure about this one, but it could pop up a js modal with feed/entry information
             and the ability to edit certain thannnnngs... hmmm -->
 
-            {% if True %}
+            {% if entry.get_user_star(current_user.id) %}
 
             <span class="glyphicon star glyphicon-star" id="star{{entry.id}}"
                   title="star: {{entry.id}}" onclick="startoggle('#star{{entry.id}}')"></span>

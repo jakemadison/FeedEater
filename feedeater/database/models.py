@@ -71,6 +71,20 @@ class Entry(Model):
 
 
 
+    def get_user_star(self, userid):
+        # print "star says current user is: ", userid
+
+        qry = UserEntry.query.filter(UserEntry.entryid == self.id,
+                                     UserEntry.userfeedid == UserFeeds.id,
+                                     UserFeeds.userid == userid).first()
+
+        # print qry
+        # print "starred is probably:", qry.starred
+
+        return qry.starred
+
+
+
 # list of active feeds from all active subscribers
 class Feed(Model):
     __tablename__ = "feed"
