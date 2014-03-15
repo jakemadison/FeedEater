@@ -44,12 +44,22 @@ def recalculate_entries(active_list, user, p):
 
     # Okay, so really, this should just send entries, and there should be a separate GET request
     # that retrieves tag info, star info, etc etc etc.
+
+    #
+
+    # qry = db_session.query(User, UserFeeds, Feed, Entry, UserEntry)
+    #
+    # qry = qry.filter(Entry.feed_id == Feed.id, Feed.id == UserFeeds.feedid,
+    #                  UserEntry.userfeedid == UserFeeds.id,
+    #                  UserFeeds.userid == User.id, User.id == user.id, UserFeeds.id.in_(active_list))
     #
 
     qry = db_session.query(User, UserFeeds, Feed, Entry, UserEntry)
-    qry = qry.filter(Entry.feed_id == Feed.id, Feed.id == UserFeeds.feedid,
-                     UserEntry.userfeedid == UserFeeds.id,
-                     UserFeeds.userid == User.id, User.id == user.id, UserFeeds.id.in_(active_list))
+
+    qry = qry.filter(Entry.id == UserEntry.entryid, UserEntry.userfeedid == UserFeeds.id,
+                     UserFeeds.userid == User.id, User.id == user.id, Feed.id == Entry.feed_id,
+                     UserFeeds.id.in_(active_list))
+
     qry = qry.order_by(Entry.published.desc())
 
     for each in qry[start_pos:end_pos]:
