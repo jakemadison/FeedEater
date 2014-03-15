@@ -156,3 +156,17 @@ def add_feed():
     return jsonify(msg=msg, category=category)
 
         # return redirect(url_for('index.build_index'))
+
+
+@app.route('/starred_only', methods=['POST'])
+def only_starred():
+    user = g.user
+
+    # this should run recalc entries.. but with all feeds considered active (?)
+    # or should you only see starred entries from active ones?
+    # anyways, either way, just send starred_only=True (default to false on sig
+    # of function) and then just add an extra where clause for UserEntry.starred = True.
+
+    # result = user_manage_feeds.recalculate_entries()
+
+    return False

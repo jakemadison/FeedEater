@@ -58,6 +58,8 @@ def toggle_star():
     entryid = entryid[5:]
     print entryid
 
+    # right.. so before i made the decision to only add an entry when needed..
+
     result = user_manage_feeds.change_star_state(user, entryid)
 
     print result

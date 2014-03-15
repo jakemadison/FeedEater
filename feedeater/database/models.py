@@ -81,7 +81,11 @@ class Entry(Model):
         # print qry
         # print "starred is probably:", qry.starred
 
-        return qry.starred
+        if qry is None:
+            return False
+
+        else:
+            return qry.starred
 
 
 
@@ -247,9 +251,10 @@ class UserEntry(Model):
     entry = relationship("Entry", backref=backref("user_entries"))
     # user = relationship("user")
 
-    def __init__(self, entryid, userid, starred=False, unread=True):
+    def __init__(self, entryid, userid, userfeedid, starred=False, unread=True):
         self.entryid = entryid
         self.userid = userid
+        self.userfeedid = userfeedid
         self.starred = starred
         self.unread = unread
 

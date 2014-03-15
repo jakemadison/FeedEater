@@ -102,7 +102,22 @@ def change_star_state(user, entryid):
                                                        UserEntry.entryid == entryid,
                                                        UserEntry.userfeedid == UserFeeds.id).first()
 
+    if current_state is None:
+        print "no userEntry found, adding a new one..."
+
+        entry = db_session.query(Entry).filter(Entry.id == entryid).first()
+        uf_id = db_session.query(UserFeeds).filter(UserFeeds.userid == user.id,
+                                                   UserFeeds.feedid == entry.feed_id).first().id
+
+        # fuck.. i need to add UserFeed Id as well.
+        new_user_entry = UserEntry(entryid, user.id, userfeedid=uf_id, starred=True, unread=True)
+        db_session.add(new_user_entry)
+        db_session.commit()
+        return True
+
     qry = db_session.query(UserEntry).filter(UserEntry.id == current_state.id)
+
+    # okay... if this line doesn't exist, we need to create a new one.
 
     # this should actually check if it exists, and add record if not.
     # which is a higher function that should be shared with change/add user tags
