@@ -12,7 +12,27 @@ from feedeater.config import configs as c
 db_session = db.session
 
 
-def recalculate_entries(active_list, user, p):
+def get_unread_count(uf_list):
+
+    # to get an unread count, need count of total,
+    # count of "read" and subtract.  remember, userEntry is only created on demand
+    # so missing entries there should be assumed to be unread entries.
+
+    # ORM this guy:
+    # select count(*) from userfeeds uf join entry e on e.feed_id = uf.feedid
+    # left join user_feed_entry ufe on ufe.entryid = e.id
+    # where uf.userid = 3 and (ufe.unread = 1 or ufe.unread is null)
+
+    print uf_list
+    return True
+
+
+
+
+def recalculate_entries(active_list, user, p, only_star=False):
+
+    # i need to add a bit of logic here that checks current page, length of entries, and
+    # if no entries are going to be drawn, redirect us somewhere.. last page of them maybe
 
     feed_list = []
     #feed_data = {}
@@ -38,15 +58,10 @@ def recalculate_entries(active_list, user, p):
     # ^ that actually doesn't make sense, because if we only return the first page of results
     # we might not get all categories that we want in the sidebar.  we need a more "global" search for that
     # so they do need to be separate.  But, we can still do this for entry content.
-
-
     # god damn, that's some ugly SQL.. I could see a 5 table join having performance implications...
-
     # Okay, so really, this should just send entries, and there should be a separate GET request
     # that retrieves tag info, star info, etc etc etc.
-
     #
-
     # qry = db_session.query(User, UserFeeds, Feed, Entry, UserEntry)
     #
     # qry = qry.filter(Entry.feed_id == Feed.id, Feed.id == UserFeeds.feedid,
@@ -54,11 +69,20 @@ def recalculate_entries(active_list, user, p):
     #                  UserFeeds.userid == User.id, User.id == user.id, UserFeeds.id.in_(active_list))
     #
 
+    # ah crap. does this need to be a left join on UserEntry?
     qry = db_session.query(User, UserFeeds, Feed, Entry, UserEntry)
+    print 'query done, filter/joining'
 
-    qry = qry.filter(Entry.id == UserEntry.entryid, UserEntry.userfeedid == UserFeeds.id,
-                     UserFeeds.userid == User.id, User.id == user.id, Feed.id == Entry.feed_id,
-                     UserFeeds.id.in_(active_list))
+    qry = qry.filter(UserFeeds.userid == User.id)
+    qry = qry.filter(Feed.id == UserFeeds.feedid)
+    qry = qry.filter(Entry.feed_id == Feed.id)
+
+    qry = qry.filter(User.id == user.id)
+    qry = qry.filter(UserFeeds.id.in_(active_list))
+    qry = qry.outerjoin(UserEntry, UserEntry.entryid == Entry.id)
+
+    if only_star:
+        qry = qry.filter(UserEntry.starred == True)
 
     qry = qry.order_by(Entry.published.desc())
 
@@ -73,17 +97,24 @@ def recalculate_entries(active_list, user, p):
                       'entry_title': e_table.title,
                       'entry_content': e_table.content,
                       'entry_published': e_table.published,
-                      'entry_link': e_table.link,
-                      'entry_starred': ufe_table.starred,
-                      'entry_unread': ufe_table.unread}
+                      'entry_link': e_table.link}
+
+        # there has to be a better way to do this:
+        try:
+            entry_data['entry_starred'] = ufe_table.starred
+            entry_data['entry_unread'] = ufe_table.unread
+
+        except AttributeError:
+            entry_data['entry_starred'] = False
+            entry_data['entry_unread'] = True
 
         final_list.append(entry_data)
 
-    for each in final_list:
-        for k, v in each.iteritems():
-            # print k, '---', v
-            pass
-        print '-----------'
+    # for each in final_list:
+    #     for k, v in each.iteritems():
+    #         # print k, '---', v
+    #         pass
+    #     print '-----------'
 
     return final_list
 
@@ -109,7 +140,6 @@ def change_star_state(user, entryid):
         uf_id = db_session.query(UserFeeds).filter(UserFeeds.userid == user.id,
                                                    UserFeeds.feedid == entry.feed_id).first().id
 
-        # fuck.. i need to add UserFeed Id as well.
         new_user_entry = UserEntry(entryid, user.id, userfeedid=uf_id, starred=True, unread=True)
         db_session.add(new_user_entry)
         db_session.commit()

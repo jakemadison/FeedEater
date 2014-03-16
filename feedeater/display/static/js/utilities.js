@@ -197,7 +197,7 @@ function togglefeed(uf_id, page) {
 
 
 
-function recalculateEntries(current_page) {
+function recalculateEntries(current_page, star_only) {
 
     // first remove all entries that exist now
     // then put up loading sign
@@ -225,7 +225,8 @@ function recalculateEntries(current_page) {
 
     $.post('/recalculate_entries', {
         current_page: current_page,
-        active_list: active_list
+        active_list: active_list,
+        star_only: star_only
 
     }).done(function(result) {
 
@@ -313,14 +314,19 @@ function drawEntries(entry){
     var togs = "'#star"+entry.entry_id+"'"
 
     //check if our entry is starred or not
-    if (!entry.entry_starred) {
+    if (entry.entry_starred === true) {
+
         var star = '<span class="glyphicon star glyphicon-star"\
          id="star' + entry.entry_id + '" \
          title="star: '+entry.entry_id+'" \
          onclick="startoggle('+togs+')"></span>'
     }
     else {
-        var star = '<span class="glyphicon star glyphicon-star-empty" id="star{{entry.id}}"></span>'
+
+        var star = '<span class="glyphicon star glyphicon-star-empty"\
+        id="star' + entry.entry_id + '" \
+        title="star: '+entry.entry_id+'" \
+        onclick="startoggle('+togs+')"></span>'
     }
 
 

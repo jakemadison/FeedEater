@@ -72,16 +72,18 @@ def recalculate_entries():
 
     # time.sleep(5)
 
-
+    print "recalculating entries...."
     user = g.user
     active_list = request.form.getlist('active_list[]')
     page = request.form['current_page']
+
+    star = request.form.get('star_only', False)
 
     active_list = [int(a.replace('uf_id', '')) for a in active_list]
     print 'active list......', active_list
 
     if active_list:
-        entries = user_manage_feeds.recalculate_entries(active_list, user, page)
+        entries = user_manage_feeds.recalculate_entries(active_list, user, page, star)
 
     else:
         entries = []
