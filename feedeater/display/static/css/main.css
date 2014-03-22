@@ -273,3 +273,8 @@ sidebar-nav {
 .bird {
     float: right;
 }
+
+img {
+    max-width: 700px;
+
+}

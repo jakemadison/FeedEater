@@ -21,7 +21,7 @@ app = Blueprint('index', __name__, static_folder=basedir+'/display/static',
 
 @app.before_request
 def before_request():
-    print "\n\n\nNEW REQUEST:"
+    print "\n\n\nNEW MAIN.PY REQUEST:"
     g.user = current_user
     # print "\n        ->user: ", g.user, dir(g.user), g.user.nickname, g.user.id, "\n\n..."
 

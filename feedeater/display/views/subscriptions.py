@@ -89,11 +89,11 @@ def change_active():
 
 
 
-@app.route('/refreshfeeds')
+@app.route('/refreshfeeds', methods=['POST'])
 def ref_feeds():
     user = g.user
     user_manage_feeds.main(user)
-    return redirect(request.args.get('next') or url_for('index'))
+    return jsonify(success=True)
 
 
 @app.route('/unsubscribe')

@@ -360,7 +360,18 @@ function drawEntries(entry){
 
 
 
-function refreshFeeds() {
+function refreshFeeds(p) {
+
+    var page = p;
+
+    $.post('/refreshfeeds').done(function() {
+
+        console.log("finished refreshing feeds. Recalcing entries now");
+        recalculateEntries(page);
+        console.log("done!");
+
+    });
+
 
     //get a list of all feeds
     //draw a progress bar
