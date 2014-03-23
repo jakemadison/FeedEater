@@ -93,7 +93,28 @@ def change_active():
 def ref_feeds():
     user = g.user
     user_manage_feeds.main(user)
+
     return jsonify(success=True)
+
+
+@app.route('/get_progress', methods=['GET'])
+def get_progress():
+
+    user = g.user
+    print "made it to get_progress"
+
+    fin_list = user_manage_feeds.get_progress()
+    feed_len = user_manage_feeds.get_user_feeds(user)
+
+    print len(feed_len['feed_data'])
+
+    if len(fin_list) >= len(feed_len['feed_data']):
+        done = True
+    else:
+        done = False
+
+    return jsonify(fin=fin_list, done=done)
+
 
 
 @app.route('/unsubscribe')

@@ -21,7 +21,7 @@
 
 
            <button type="button"
-                   class="btn active-category btn-sm btn-success sub-btn catbtn {{cat}} uf_id{{each['uf_id']}}"
+                   class="btn active-category btn-sm btn-success sub-btn catbtn {{cat}} uf_id{{each['uf_id']}} f_id{{each['feed_id']}}"
                    title="{{ each['desc'] }}"
                    data-toggle="tooltip" data-placement="right"
                    onclick="togglefeed('{{each['uf_id']}}', '{{g.page}}')">

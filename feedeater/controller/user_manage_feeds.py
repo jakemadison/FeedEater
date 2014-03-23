@@ -547,6 +547,11 @@ def get_user_categories(user):
     pass
 
 
+def get_progress():
+    print "is this actually going to work??", FeedGetter.fin_q
+    return FeedGetter.fin_q
+
+
 
 def main(user):
     xx = get_user_feeds(user)

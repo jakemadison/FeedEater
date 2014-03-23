@@ -74,7 +74,7 @@ def feed_request(f, get_meta=False):
 
     if res:
 
-        print res.feed, res.status, res.version
+        # print res.feed, res.status, res.version
 
         posts = []
         # print 'length of entries: {0}'.format(len(res['entries']))
@@ -112,7 +112,8 @@ def feed_request(f, get_meta=False):
                     "feed_title": res['channel'].get('title', "no feed title"),
                     "feed_url": url,
                     "feed_original_site": res['channel']['link'],
-                    "feed_description": res['channel'].get('description', "no description available")
+                    "feed_description": res['channel'].get('description', "no description available"),
+                    "feed_id": feed_id
                 }
             except Exception, e:
                 print str(e)

@@ -214,14 +214,14 @@ function recalculateEntries(current_page, star_only) {
         var classList =$(this).attr('class').split(/\s+/);
         for (var i=0; i<classList.length; i++){
             if (classList[i].indexOf('uf_id') !== -1) {
-                console.log(classList[i]);
+                //console.log(classList[i]);
                 active_list.push(classList[i]);
             }
         }
     });
 
-    console.log('FINAL!');
-    console.log(active_list);
+    //console.log('FINAL!');
+    //console.log(active_list);
 
     $.post('/recalculate_entries', {
         current_page: current_page,
@@ -230,11 +230,11 @@ function recalculateEntries(current_page, star_only) {
 
     }).done(function(result) {
 
-        console.log('successfully posted');
-        console.log(result);
-        console.log('+++++++');
-        console.log(result.e);
-        console.log('---');
+        //console.log('successfully posted');
+        //console.log(result);
+        //console.log('+++++++');
+        //console.log(result.e);
+        //console.log('---');
 
         //replacing them is not going to work.
         //i need to erase all existing elements, and redraw completely
@@ -258,23 +258,23 @@ function recalculateEntries(current_page, star_only) {
 
             //draw progress bar and update in loop below
 
-            $('#pbar').width('10%');
+            //$('#pbar').width('10%');
 
             for (i=0; i<entry_length; i++) {
-                console.log(result.e[i]);
-                var amt = 10*(i+1);
-                var per = amt+"%";
+                //console.log(result.e[i]);
+            //    var amt = 10*(i+1);
+            //    var per = amt+"%";
 
-                $('#pbar').css("width: ","100%");
+                //$('#pbar').css("width: ","100%");
 
-                console.log(per);
-                console.log(amt+"%");
-                console.log($('#pbar').width());
+                //console.log(per);
+                //console.log(amt+"%");
+                //console.log($('#pbar').width());
                 drawEntries(result.e[i]);
             }
 
             console.log('done!');
-            $('#pbar').width(0);
+            //$('#pbar').width(0);
         }
 
     });
@@ -362,15 +362,29 @@ function drawEntries(entry){
 
 function refreshFeeds(p) {
 
-    var page = p;
+
+    $('.refspan').toggleClass('glyphicon-refresh glyphicon-dashboard');
+    $('#refbtn').disabled = true;
+
 
     $.post('/refreshfeeds').done(function() {
 
         console.log("finished refreshing feeds. Recalcing entries now");
-        recalculateEntries(page);
         console.log("done!");
-
+        $('.refspan').toggleClass('glyphicon-refresh glyphicon-dashboard');
+        $('#refbtn').disabled = false;
     });
+
+    console.log("done posting! carry on....");
+
+    setTimeout(function() {
+                    processProgress(p);
+                }, 500);
+
+    //refresh feeds should send an update whenever a single feed is completed storing,
+    //and it should highlight that entry in sub list with blue
+    //when all are blue, refresh is done.
+    //could always recalculate entries along the way too
 
 
     //get a list of all feeds
@@ -384,6 +398,63 @@ function refreshFeeds(p) {
 
 
 }
+
+function processProgress(p){
+    //recursive call to get progress and update
+
+    console.log("processProgress is running now...");
+
+    $.getJSON($SCRIPT_ROOT + '/get_progress',
+
+        function(data) {
+        console.log("inside get progress call...");
+        console.log(data);
+        console.log(data.fin.length);
+        var arraylength = data.fin.length;
+
+        for (var i=0; i < arraylength; i++) {
+            $('.f_id'+data.fin[i]).removeClass('btn-success');
+            $('.f_id'+data.fin[i]).addClass('btn-info');
+            var total_length = $('.catbtn').length
+            per_length = arraylength/total_length*100
+            $('#pbar').width(per_length+'%');
+        }
+
+
+        if(!data.done) {
+            setTimeout(function() {
+                processProgress(p);
+                }, 500);
+        }
+
+        else {
+
+            setTimeout(function() {
+
+                $('.catbtn').removeClass('btn-info');
+                $('.catbtn').addClass('btn-success');
+                $('#pbar').hide();
+                $('#pbar').width('0%');
+                $('#pbar').show();
+            }, 1000);
+        }
+    }).done(function(data) {
+            console.log("process progress has finished");
+            recalculateEntries(p)
+
+
+
+
+
+
+    });
+}
+
+
+
+
+
+
 
 function addFeed(page) {
     console.log('beginning addFeeeeeeed');
