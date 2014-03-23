@@ -1,5 +1,5 @@
 Feed_Eater Project
--------------------
+---
 - A Flask + AJAX rss reader thing.
 - feed detection courtesy of <a href='http://www.aaronsw.com/2002/feedfinder/'>feedfinder</a>
 - network & db concurrency using concurrent.futures
