@@ -1,4 +1,4 @@
-<div class="jumbotron">
+<div class="jumbotron jum_one">
 
     <div class="avatar"><a href="http://gravatar.com/emails/" target="_blank">
       <img src="{{user.get_avatar(150)}}" title="Change your avatar at gravatar.com"></a></div>
@@ -13,7 +13,7 @@
 
             <div id="welcome-msg" style="display:block;">
 
-               <h1>Hi, {{user.nickname}}!</h1>
+               <h1 class="hi_class">Hi, {{user.nickname}}!</h1>
                 <p>Reinventing the wheel for fun, not profit.</p>
                 {% if not g.user.is_authenticated() %}
                     <p><a class="btn btn-primary btn-lg" role="button"
@@ -42,6 +42,18 @@
             <p><img src="../static/img/bird-main.png"
                                        height="47%" width="47%" title="Because internet loves birds"></p>
         </div>
-    </div>
-  </div>
+
+
+</div>
+
+    <div class="progress progress-striped active pbar">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="10"
+                         aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="pbar">
+                    <!--<span class="sr-only">40% Complete (success)</span>-->
+                </div>
+                </div>
+
+
+
+</div>
 </div>

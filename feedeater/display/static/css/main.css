@@ -1,3 +1,21 @@
+.hi_class {
+    margin: 0px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+}
+
+
+.pbar {
+    margin-bottom: 2px;
+
+}
+
+
+.jum_one {
+    padding-bottom: 5px;
+
+}
 
 #menucolumn {
     float: right;
@@ -228,7 +246,8 @@ sidebar-nav {
 .btn-sm {
     border-radius: 7px;
     margin-bottom: 2px;
-    padding-top: 2px;
+    padding-top: 1px;
+    padding-bottom: 1px;
     padding-right: 6px;
 }
 

@@ -37,6 +37,13 @@
 
     <button type="button" class="btn btn-default" onclick="all_feeds('{{g.page}}')">
        <span class="glyphicon glyphicon-globe" id="hand" title="show all feeds"></span></button>
+
+    <button type="button" class="btn btn-default">
+       <span class="glyphicon glyphicon-star" id="starred_btn"
+             onclick="recalculateEntries('{{g.page}}', 'true')"
+             title="show starred posts"></span></button>
+
+
    <button type="button" class="btn btn-default">
        <span class="glyphicon glyphicon-hand-left" id="hand" title="push left"></span></button>
     </div>
