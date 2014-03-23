@@ -233,7 +233,7 @@ function recalculateEntries(current_page, star_only) {
         //console.log('successfully posted');
         //console.log(result);
         //console.log('+++++++');
-        //console.log(result.e);
+        console.log(result.e);
         //console.log('---');
 
         //replacing them is not going to work.
@@ -363,6 +363,8 @@ function drawEntries(entry){
 function refreshFeeds(p) {
 
 
+    $('.unreadcount').text('?');
+
     $('.refspan').toggleClass('glyphicon-refresh glyphicon-dashboard');
     $('#refbtn').disabled = true;
 
@@ -413,11 +415,19 @@ function processProgress(p){
         var arraylength = data.fin.length;
 
         for (var i=0; i < arraylength; i++) {
-            $('.f_id'+data.fin[i]).removeClass('btn-success');
-            $('.f_id'+data.fin[i]).addClass('btn-info');
+
+            //instead of redrawing everytime, let's just do that for new ones
+
+            if (!$('.f_id'+data.fin[i]).hasClass('btn-info')) {
+                $('.f_id'+data.fin[i]).removeClass('btn-success');
+                $('.f_id'+data.fin[i]).addClass('btn-info');
+                getUnreadCount(data.fin[i]);
+            }
+
             var total_length = $('.catbtn').length
             per_length = arraylength/total_length*100
             $('#pbar').width(per_length+'%');
+
         }
 
 
@@ -442,12 +452,26 @@ function processProgress(p){
             console.log("process progress has finished");
             recalculateEntries(p)
 
+    });
+}
 
 
 
 
+function getUnreadCount(feed) {
+
+    $.getJSON($SCRIPT_ROOT + '/get_unread_count', {
+        'feed': feed
+
+    }, function(data) {
+        console.log("finished getting unread count");
+        console.log(data);
+
+        $('.f_id'+feed+' span').text(data.count);
 
     });
+
+
 }
 
 

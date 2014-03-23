@@ -112,9 +112,11 @@ def build_index(page=1):
         sub_list = user_manage_feeds.get_user_feeds(user)
 
         print "sublist received"
+        # print sub_list
 
         cats = sub_list['cat_list']
         cats = sorted(cats)
+        # print "cats cats cats ------- ", cats
 
         print "categories loaded and sorted"
 

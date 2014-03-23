@@ -100,3 +100,24 @@ def sleep_data():
     print "sleeeeeeep, data"
     time.sleep(5)
     return jsonify(success=True)
+
+
+
+@app.route('/get_unread_count', methods=['GET'])
+def unread_count():
+
+    user = g.user
+
+    # Ok, so currently this is just using "feed_id", I probably actually want to send "uf_id"
+
+    feed_id = request.args.get('feed', '', type=int)
+    print feed_id
+
+    result = user_manage_feeds.get_unread_count(feed_id, user)
+    print result
+
+    return jsonify(success=True, count=result)
+
+
+
+

@@ -12,7 +12,17 @@ from feedeater.config import configs as c
 db_session = db.session
 
 
-def get_unread_count(uf_list):
+def get_unread_count(feed_id, user):
+
+    # first just get the uf_id
+
+    uf_res = db_session.query(UserFeeds).filter(UserFeeds.userid == user.id, UserFeeds.feedid == feed_id).first()
+    uf_id = uf_res.id
+
+    entry_count = db_session.query(Entry).filter(Entry.feed_id == feed_id).count()
+    # qry = qry.outerjoin(UserEntry, UserEntry.entryid == Entry.id)
+    # qry = qry.filter
+
 
     # to get an unread count, need count of total,
     # count of "read" and subtract.  remember, userEntry is only created on demand
@@ -23,8 +33,8 @@ def get_unread_count(uf_list):
     # left join user_feed_entry ufe on ufe.entryid = e.id
     # where uf.userid = 3 and (ufe.unread = 1 or ufe.unread is null)
 
-    print uf_list
-    return True
+    print feed_id
+    return entry_count
 
 
 
@@ -295,14 +305,16 @@ def get_user_feeds(user=None):
         for each in qry.filter(User.id == user.id).all():
             u_table, uf_table, f_table = each
 
+            unread_count = get_unread_count(uf_table.feedid, user)
+
             # add user_feed tag/category/star data here in dictionary:
             feed_data = {'title': f_table.title, 'url': f_table.feed_url,
                          'desc': f_table.description, 'active': uf_table.is_active,
                          'uf_id': uf_table.id, 'feed_id': uf_table.feedid,
-                         'category': uf_table.category}
+                         'category': uf_table.category, 'count': unread_count}
             final_list.append(feed_data)
-            cat_list.append(uf_table.category)
 
+            cat_list.append(uf_table.category)
             feed_list.append(f_table.feed_url)  # is this actually being used at all??
 
         cat_list = set(cat_list)
