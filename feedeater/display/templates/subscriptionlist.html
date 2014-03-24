@@ -41,16 +41,16 @@
 
                     {{ each['title']|truncate_title(amt=40)}}
 
-                    <span class="badge pull-right unreadcount">{{each['count']}}</span>
+                    <span class="badge pull-left unreadcount">{{each['count']}}</span>
            </button>
 
            {% endif %}
 </div>
 
 
-            <div class="catbutton">
+      <div class="catbutton">
 
-        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown">
+        <button type="button" class="sub_menu btn btn-sm dropdown-toggle" data-toggle="dropdown">
         <!--<span class="caret"></span>-->
         <span class="glyphicon glyphicon-chevron-down catchevron"></span>
         <span class="sr-only">Toggle Dropdown</span>

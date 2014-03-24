@@ -12,6 +12,7 @@
 }
 
 
+
 .jum_one {
     padding-bottom: 5px;
 
@@ -219,7 +220,6 @@ sidebar-nav {
     float: left;
     width: 9%;
 
-
 }
 
 .catchevron {
@@ -230,6 +230,8 @@ sidebar-nav {
 .unreadcount {
 
     font-size: 12px;
+    margin-right: 3px;
+    top: 0px;
 
 }
 
@@ -244,11 +246,12 @@ sidebar-nav {
 }
 
 .btn-sm {
-    border-radius: 7px;
+    border-radius: 4px;
     margin-bottom: 2px;
     padding-top: 1px;
     padding-bottom: 1px;
-    padding-right: 6px;
+    padding-right: 2px;
+    padding-left: 2px;
 }
 
 .active-category {
