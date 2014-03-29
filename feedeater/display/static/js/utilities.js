@@ -9,17 +9,22 @@ $(document).keydown(function(event) {
     var ch = event.keyCode || event.which;  //get keypress
 
     if (ch == 37){
-        if ($(".previous").length !== 0){  // if we can go left, go left
-            var h = $(".previous").children('a').attr('href');
+
+        var $prev = $(".previous");
+
+        if ($prev.length !== 0){  // if we can go left, go left
+            var h = $prev.children('a').attr('href');
             window.location = h;
         }
         event.preventDefault();
 
     }
     else if (ch == 39) {
-        console.log('right');
-        if ($(".next").length !== 0){  // if we can go right, go right
-            var h = $(".next").children('a').attr('href');
+
+        var $next = $(".next");
+
+        if ($next.length !== 0){  // if we can go right, go right
+            var h = $next.children('a').attr('href');
             window.location = h;
         }
         event.preventDefault();
@@ -34,25 +39,24 @@ function redrawSublist() {
     return;
 }
 
-
-
-
+//what is this?
 function subClick() {
     pageid = document.getElementById("url");
 }
 
-
+//
 function set_openid_new(openid, pr) {
-    u = openid.search('<username>')
+    var u = openid.search('<username>')
     if (u != -1) {
         // openid requires username
-        user = prompt('Enter your ' + pr + ' username:')
+        var user = prompt('Enter your ' + pr + ' username:')
         openid = openid.substr(0, u) + user
     }
-    form = document.forms['login_form'];
+    var form = document.forms['login_form'];
     form.elements['openid'].value = openid
 }
 
+//
 function tag(tagtext, tagid) {
     // sends post request to view.py
     $.post('/tags', {
@@ -63,7 +67,7 @@ function tag(tagtext, tagid) {
     });
 }
 
-
+//change the star state of an entry
 function startoggle(starid) {
 
     //change to loading, do DB call, then return success, change to star-full
@@ -77,7 +81,6 @@ function startoggle(starid) {
 
 }
 
-
 // toggles hiding/showing category:
 function foldertoggle(folderid, catid) {
 
@@ -86,7 +89,6 @@ function foldertoggle(folderid, catid) {
     $(folderid).toggleClass('glyphicon-folder-open glyphicon-folder-close');
     $(catid).toggle();
 }
-
 
 //change a feed category:
 function change_cat(catid, catnew, uf_id) {
@@ -105,20 +107,18 @@ function change_cat(catid, catnew, uf_id) {
 function all_feeds(page) {
     $.post('/allfeeds').done(function() {
 
-        //make all feeds look active
-        $(".catbtn").removeClass('btn-default');
-        $(".catbtn").removeClass('inactive-category');
+        var $catbtn = $(".catbtn");
 
-        $(".catbtn").addClass('btn-success');
-        $(".catbtn").addClass('active-category');
+        //make all feeds look active
+        $catbtn.removeClass('btn-default');
+        $catbtn.removeClass('inactive-category');
+
+        $catbtn.addClass('btn-success');
+        $catbtn.addClass('active-category');
 
         //$(".catbtn").css("font-weight","Bold");
 
-
         recalculateEntries(page);
-
-
-
 
     }); //needs a fail function here...
 }
@@ -133,15 +133,18 @@ function toggleCategory(catname, page) {
 
         //change active/deactivate state for these categories
 
-        $(".catbtn").removeClass('btn-success');
-        $(".catbtn").removeClass('active-category');
-        $(".catbtn").addClass('inactive-category');
-        $(".catbtn").addClass('btn');
+        var $catbtn = $(".catbtn");
 
+        $catbtn.removeClass('btn-success');
+        $catbtn.removeClass('active-category');
+        $catbtn.addClass('inactive-category');
+        $catbtn.addClass('btn');
 
-        $("."+catname).addClass('btn-success');
-        $("."+catname).removeClass('inactive-category');
-        $("."+catname).addClass('active-category');
+        var $catname = $("."+catname);
+
+        $catname.addClass('btn-success');
+        $catname.removeClass('inactive-category');
+        $catname.addClass('active-category');
 
         recalculateEntries(page);
 
@@ -158,13 +161,17 @@ function oneFeedOnly(uf_id, page) {
     }).done(function() {
 
         //change active states here.
-        $(".catbtn").removeClass('btn-success');
-        $(".catbtn").removeClass('active-category');
-        $(".catbtn").addClass('inactive-category');
-        $(".catbtn").addClass('btn');
+        var $catbtn = $(".catbtn");
 
-        $(".uf_id"+uf_id).toggleClass('btn-success');
-        $(".uf_id"+uf_id).toggleClass('active-category inactive-category');
+        $catbtn.removeClass('btn-success');
+        $catbtn.removeClass('active-category');
+        $catbtn.addClass('inactive-category');
+        $catbtn.addClass('btn');
+
+        var $uf_sel = $(".uf_id"+uf_id);
+
+        $uf_sel.toggleClass('btn-success');
+        $uf_sel.toggleClass('active-category inactive-category');
 
         recalculateEntries(page);
 
@@ -172,57 +179,38 @@ function oneFeedOnly(uf_id, page) {
 
 }
 
-
 //turn a single feed on/off
 function togglefeed(uf_id, page) {
-
-    // sends post request to view.py
-
-    console.log(page);
 
     $.post('/change_active', {
         uf_id: uf_id
     }).done(function() {
 
-    $(".uf_id"+uf_id).toggleClass('btn-success');
-    $(".uf_id"+uf_id).toggleClass('active-category inactive-category');
+        var $uf_sel = $(".uf_id"+uf_id);
+        $uf_sel.toggleClass('btn-success');
+        $uf_sel.toggleClass('active-category inactive-category');
 
-    recalculateEntries(page);
+        recalculateEntries(page);
     });
-
-
-
 
 }
 
-
-
+//recalculate which entries should be displayed
 function recalculateEntries(current_page, star_only) {
 
-    // first remove all entries that exist now
-    // then put up loading sign
-    // then get list, query DB, attempt to return entries
-    // then get rid of loading sign (progress bar?)
-    // then put up new entries
-
-
     //get list of currently active entries
-
     var active_list = [];
 
     $(".active-category").each(function() {
         var classList =$(this).attr('class').split(/\s+/);
         for (var i=0; i<classList.length; i++){
             if (classList[i].indexOf('uf_id') !== -1) {
-                //console.log(classList[i]);
                 active_list.push(classList[i]);
             }
         }
     });
 
-    //console.log('FINAL!');
-    //console.log(active_list);
-
+    //now post to framework:
     $.post('/recalculate_entries', {
         current_page: current_page,
         active_list: active_list,
@@ -230,11 +218,7 @@ function recalculateEntries(current_page, star_only) {
 
     }).done(function(result) {
 
-        //console.log('successfully posted');
-        //console.log(result);
-        //console.log('+++++++');
         console.log(result.e);
-        //console.log('---');
 
         //replacing them is not going to work.
         //i need to erase all existing elements, and redraw completely
@@ -246,7 +230,6 @@ function recalculateEntries(current_page, star_only) {
         if (entry_length == 0) {
 
             $('.paging_div').remove();
-
             $('.entry_container').append('\
             <div class="col-md-8-2 no_entry_alert">\
                 <div class="alert alert-info"><p align="center"><b>There are no entries to display.</b></p></div>\
@@ -254,37 +237,19 @@ function recalculateEntries(current_page, star_only) {
             ');
         }
         else {
+
             $('.no_entry_alert').remove();
 
-            //draw progress bar and update in loop below
-
-            //$('#pbar').width('10%');
-
-            for (i=0; i<entry_length; i++) {
-                //console.log(result.e[i]);
-            //    var amt = 10*(i+1);
-            //    var per = amt+"%";
-
-                //$('#pbar').css("width: ","100%");
-
-                //console.log(per);
-                //console.log(amt+"%");
-                //console.log($('#pbar').width());
+            for (var i=0; i<entry_length; i++) {
                 drawEntries(result.e[i]);
             }
-
             console.log('done!');
-            //$('#pbar').width(0);
         }
-
     });
 }
 
-
+//actually draws out entries. This needs work:
 function drawEntries(entry){
-
-    //console.log(entry);
-    //console.log('-');
 
     var e_head = '\
         <div class="feedid'+entry.feed_id+' entry_list" entryId="'+entry.entry_id+'">\
@@ -301,7 +266,6 @@ function drawEntries(entry){
         </h3>\
         </div>\
     ';
-
 
     //check if we are compressed view or not
     if ($('.viewchange').hasClass('glyphicon-th-list')) {
@@ -334,10 +298,6 @@ function drawEntries(entry){
 //                  title="star: {{entry.id}}" onclick="startoggle('#star{{entry.id}}')">
 //            </span>
 
-
-
-
-
     var e_main = '\
         <div class="well">\
         <div class="row" id="info">\
@@ -357,11 +317,8 @@ function drawEntries(entry){
 
 }
 
-
-
-
+//refresh all feeds:
 function refreshFeeds(p) {
-
 
     $('.unreadcount').text('?');
 
@@ -383,27 +340,11 @@ function refreshFeeds(p) {
                     processProgress(p);
                 }, 500);
 
-    //refresh feeds should send an update whenever a single feed is completed storing,
-    //and it should highlight that entry in sub list with blue
-    //when all are blue, refresh is done.
-    //could always recalculate entries along the way too
-
-
-    //get a list of all feeds
-    //draw a progress bar
-    //iterate through them one by one, calling refresh
-    //as soon as refresh is done, update progress bar by total/num_done*100
-    //call recalc entries?
-    //send next feed for updating...
-    //etc, till done
-    //remove progress bar
-
-
 }
 
+//used for updating the progress bar.  this needs a timeout or it will just keep recursiveing
 function processProgress(p){
     //recursive call to get progress and update
-
     console.log("processProgress is running now...");
 
     $.getJSON($SCRIPT_ROOT + '/get_progress',
@@ -417,19 +358,19 @@ function processProgress(p){
         for (var i=0; i < arraylength; i++) {
 
             //instead of redrawing everytime, let's just do that for new ones
+            var $current_data = $('.f_id'+data.fin[i]);
 
-            if (!$('.f_id'+data.fin[i]).hasClass('btn-info')) {
-                $('.f_id'+data.fin[i]).removeClass('btn-success');
-                $('.f_id'+data.fin[i]).addClass('btn-info');
+            if (!$current_data.hasClass('btn-info')) {
+                $current_data.removeClass('btn-success');
+                $current_data.addClass('btn-info');
                 getUnreadCount(data.fin[i]);
             }
 
-            var total_length = $('.catbtn').length
-            per_length = arraylength/total_length*100
+            var total_length = $('.catbtn').length;
+            var per_length = arraylength/total_length*100;
+
             $('#pbar').width(per_length+'%');
-
         }
-
 
         if(!data.done) {
             setTimeout(function() {
@@ -438,48 +379,38 @@ function processProgress(p){
         }
 
         else {
-
             setTimeout(function() {
 
-                $('.catbtn').removeClass('btn-info');
-                $('.catbtn').addClass('btn-success');
-                $('#pbar').hide();
-                $('#pbar').width('0%');
-                $('#pbar').show();
+                var $cat_btn = $('.catbtn');
+                $cat_btn.removeClass('btn-info');
+                $cat_btn.addClass('btn-success');
+
+                var $p_bar = $('#pbar');
+                $p_bar.hide();
+                $p_bar.width('0%');
+                $p_bar.show();
+
             }, 1000);
         }
+
     }).done(function(data) {
             console.log("process progress has finished");
             recalculateEntries(p)
-
     });
 }
 
-
-
-
+//return the unread count for a feed (currently just the count):
 function getUnreadCount(feed) {
 
     $.getJSON($SCRIPT_ROOT + '/get_unread_count', {
         'feed': feed
 
     }, function(data) {
-        console.log("finished getting unread count");
-        console.log(data);
-
         $('.f_id'+feed+' span').text(data.count);
-
     });
-
-
 }
 
-
-
-
-
-
-
+//add a new feed subscrition.  this needs to hook into processProgress function
 function addFeed(page) {
     console.log('beginning addFeeeeeeed');
 
@@ -503,31 +434,21 @@ function addFeed(page) {
                 recalculateEntries(page);
             }
         }
-
     });
-
-
-
     //this has to display errors and info
     //then it needs to recalculate subs list and entries
-
     return false;
 }
 
-
-
-
-
+//squishing/expanding entry contents:
 function changeView() {
     console.log('beginning changeview');
     $.post('/change_view').done(function () {
-
-        console.log('hey! i actually finished!!');
-        $('.entrycontent').toggleClass('compview fullview');
-        $('.viewchange').toggleClass('glyphicon-th-list glyphicon-align-justify');
-            }
-        );
-
+            console.log('hey! i actually finished!!');
+            $('.entrycontent').toggleClass('compview fullview');
+            $('.viewchange').toggleClass('glyphicon-th-list glyphicon-align-justify');
+       }
+    );
 }
 
 
