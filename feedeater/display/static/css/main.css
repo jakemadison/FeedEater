@@ -2,20 +2,14 @@
     margin: 0px;
     margin-top: 10px;
     margin-bottom: 10px;
-
 }
-
 
 .pbar {
     margin-bottom: 2px;
-
 }
-
-
 
 .jum_one {
     padding-bottom: 5px;
-
 }
 
 #menucolumn {
@@ -26,7 +20,6 @@
 }
 
 #contentcolumn {
-
     height: 100%;
     word-wrap: break-word;
 }
@@ -59,17 +52,13 @@ sidebar-nav {
     padding-right: 2px;
     margin-left: 25%;
    /* margin-right: 15%; */
-
 }
-
 
 .sidebar {
     float: left;
     margin-left: 20px;
     margin-right: 10px;
     padding: 0;
-
-
 }
 
 .foot {
@@ -83,12 +72,10 @@ sidebar-nav {
 .navbar-collapse {
     padding-right: 0;
     padding-left: 0;
-
 }
 
 .brand {
     margin-left: 20px;
-
 }
 
 .sub-btn {
@@ -99,7 +86,6 @@ sidebar-nav {
 
 .col-sm-4 {
     width: 100%
-
 }
 
 .col-sm-2 {
@@ -108,14 +94,10 @@ sidebar-nav {
 
 .navbar-form {
     margin-left: -15px;
-
 }
 
-
 .col-md-8-2 {
-
     margin-left: 0px;
-
 }
 
 .tags {
@@ -126,19 +108,15 @@ sidebar-nav {
 .row {
     margin-left: 0px;
     margin-right: 0px;
-
 }
-
 
 #info {
     height: 30px;
     margin-bottom: 10px;
-
 }
 
 #subtitle {
     width: 50%;
-
 }
 
 .flash {
@@ -159,22 +137,18 @@ sidebar-nav {
 }
 
 #off {
-
     font-size: 15px;
     margin-bottom: -5px;
 }
 
-
 .cat {
     cursor: pointer;
-
 }
 
 .folder {
     cursor: pointer;
     margin-bottom: 8px;
     margin-top: 8px;
-
 }
 
 #chev {
@@ -183,25 +157,18 @@ sidebar-nav {
 }
 
 #cog {
-
     cursor:pointer;
     font-size: 20px;
     float: left;
-
 }
 
 #hand {
-
     cursor:pointer;
     font-size: 20px;
     float: left;
-
 }
 
-
-
 #cogdiv {
-
 
 }
 
@@ -209,9 +176,7 @@ sidebar-nav {
     float:right;
 }
 
-
 .catheader {
-
     float: left;
     width: 90%;
 }
@@ -219,25 +184,20 @@ sidebar-nav {
 .catbutton {
     float: left;
     width: 9%;
-
 }
 
 .catchevron {
-
     font-size: 10px;
 }
 
 .unreadcount {
-
     font-size: 12px;
     margin-right: 3px;
     top: 0px;
-
 }
 
 .catbtn {
     font-size: 12px;
-
 }
 
 .catlabel {
@@ -264,33 +224,26 @@ sidebar-nav {
 
 .compview {
     display: none;
-
 }
 
 .fullview {
-
     display: block;
 }
 
 .avatar {
-
     float:left;
-
 }
 
 .avatar img {
     border-radius: 6px;
-
 }
 
 #error_msg {
     display: none;
-
 }
 
 #info_msg {
     display: none;
-
 }
 
 .bird {
@@ -299,5 +252,4 @@ sidebar-nav {
 
 img {
     max-width: 700px;
-
 }
