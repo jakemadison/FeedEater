@@ -366,8 +366,8 @@ function processProgress(p){
                 getUnreadCount(data.fin[i]);
             }
 
-            var total_length = $('.catbtn').length;
-            var per_length = arraylength/total_length*100;
+            var total_length = $('.catbtn').length;  //how many are there?
+            var per_length = arraylength/total_length*100;  //how many are done?
 
             $('#pbar').width(per_length+'%');
         }
@@ -375,7 +375,7 @@ function processProgress(p){
         if(!data.done) {
             setTimeout(function() {
                 processProgress(p);
-                }, 500);
+                }, 2000);
         }
 
         else {
