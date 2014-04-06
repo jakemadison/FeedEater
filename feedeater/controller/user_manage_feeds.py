@@ -217,10 +217,10 @@ def add_user_feed(user, feed):
 
     if exists:
         print "feed already exists in feed table"
-        already_associated = db_session.query(UserFeeds).filter_by(feedid=exists.id).first()
+        already_associated = db_session.query(UserFeeds).filter_by(feedid=exists.id, userid=user.id).first()
 
         if already_associated:
-            print "this feed is already associated with the current user, return error for info display"
+            print "this feed is already associated with the current user {0}".format(user.nickname)
             return "already_associated"
 
         else:
