@@ -434,6 +434,12 @@ function addFeed(page) {
                 recalculateEntries(page);
             }
         }
+
+        //make info text dissapear after 3 seconds.
+        setTimeout(function() {
+                    $('#info_msg span').hide();
+                }, 3000);
+
     });
     //this has to display errors and info
     //then it needs to recalculate subs list and entries
