@@ -16,28 +16,29 @@
                <h1 class="hi_class">Hi, {{user.nickname}}!</h1>
                 <p>Reinventing the wheel for fun, not profit.</p>
                 {% if not g.user.is_authenticated() %}
-                    <p><a class="btn btn-primary btn-lg" role="button"
-                       onclick="start_login()" id="create_acct">Start Feed Eating &raquo;</a></p>
 
 
                 <div class="row">
+                    <a class="btn btn-primary btn-lg" role="button"
+                       onclick="start_login()" id="create_acct">Start Feed_Eating &raquo;</a>
+
+
+
 
                     <div class="col-md-4" id="login_text" style="display: none;"><h4>Log in with:</h4></div>
                     <div class="col-md-4">
-                <p><a class="login-btns" role="button" style="display: none;"
+                <a class="login-btns" role="button" style="display: none; cursor: pointer; float: left;"
                        onclick="gmail_login('https://www.google.com/accounts/o8/id')" id="gmail_login">
 
-                    <img src="../static/img/social_google_box_new.png" height="47%" width="47%">
+                    <img src="../static/img/social_google_box_new.png" height="60px" width="60px">
 
-                    </a></p>
-                    </div>
+                    </a>
 
-                    <div class="col-md-4">
-                <p><a class="login-btns" role="button" style="display: none;"
+                <a class="login-btns" role="button" style="display: none; cursor: pointer;  float: left;"
                        onclick="fb_login()" id="fb_login">
 
-                    <img src="../static/img/social_facebook_box_blue_new.png" height="47%" width="47%">
-                       </a></p>
+                    <img src="../static/img/social_facebook_box_blue_new.png" height="60px" width="60px">
+                       </a>
                 </div>
                     </div>
 
