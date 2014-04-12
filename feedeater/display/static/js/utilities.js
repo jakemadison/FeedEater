@@ -311,6 +311,9 @@ function drawEntries(entry){
 //refresh all feeds:
 function refreshFeeds(p) {
 
+    $('#pbar').width('10%'); //indicates we have started the request, since there is significant delay
+                             //on the first request.  process progress needs to account for this.
+
     $('.unreadcount').text('?');
 
     $('.refspan').toggleClass('glyphicon-refresh glyphicon-dashboard');
@@ -358,9 +361,12 @@ function processProgress(p){
             }
 
             var total_length = $('.catbtn').length;  //how many are there?
-            var per_length = arraylength/total_length*100;  //how many are done?
+            var per_length = arraylength/total_length*100;  //percentage are done?
+            var prog_length = per_length*0.9; //what is 90% of that value?
+            var final_length = prog_length+10; //add the start length
 
-            $('#pbar').width(per_length+'%');
+            $('#pbar').width(final_length+'%');
+
         }
 
         if(!data.done) {
