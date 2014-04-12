@@ -50,16 +50,33 @@
 
         {% else %}
 
-        <div class="navbar-collapse collapse">
-          <form id="form" class="navbar-form navbar-right" role="form" action="" method="post" name="login">
-            <div class="form-group">
-              <input type="username" placeholder="Username or Email" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success">Sign in</button>
-          </form>
+        <div class="navbar-collapse navbar-right collapse" align="right">
+
+<ul class="nav navbar-nav" align="right">
+            <li class="active"><a href="#">Home</a></li>
+
+
+
+            <li><a href="/logout"><span class="glyphicon glyphicon-off" id="off" title="logout"> </span></a></li>
+          </ul>
+
+
+
+
+
+
+
+          <!--<form id="form" class="navbar-form navbar-right" role="form" action="" method="post" name="login">-->
+
+            <!--<div class="form-group">-->
+              <!--<input type="username" placeholder="Username or Email" class="form-control">-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+              <!--<input type="password" placeholder="Password" class="form-control">-->
+            <!--</div>-->
+
+            <!--<button type="submit" class="btn btn-success">Sign in with Gmail</button>-->
+          <!--</form>-->
         </div><!--/.navbar-collapse -->
 
         {% endif %}

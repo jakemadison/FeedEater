@@ -158,9 +158,24 @@ def build_index(page=1):
                            cats=cats, prefs=prefs)
 
 
+
+@app.route('/f_login', methods=['GET', 'POST'])
+@oid.loginhandler
+def f_login():
+    print 'attempting to login now...'
+
+    url = request.form["url"]
+    return oid.try_login(url, ask_for=['nickname', 'email'])
+
+
+
+
+
 @app.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
 def login():
+
+    print 'running login now....'
     if g.user is not None and g.user.is_authenticated():
         return redirect(url_for('.build_index'))
     form = LoginForm()
@@ -176,6 +191,9 @@ def login():
 
 @oid.after_login
 def after_login(resp):
+
+    print 'running after_login function now...'
+
     if resp.email is None or resp.email == "":
         flash('Invalid login. Please try again.')
         return redirect(url_for('.build_index'))

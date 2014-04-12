@@ -17,8 +17,33 @@
                 <p>Reinventing the wheel for fun, not profit.</p>
                 {% if not g.user.is_authenticated() %}
                     <p><a class="btn btn-primary btn-lg" role="button"
-                       onclick="show_login()" id="create_acct">Create Account &raquo;</a></p>
+                       onclick="start_login()" id="create_acct">Start Feed Eating &raquo;</a></p>
+
+
+                <div class="row">
+
+                    <div class="col-md-4" id="login_text" style="display: none;"><h4>Log in with:</h4></div>
+                    <div class="col-md-4">
+                <p><a class="login-btns" role="button" style="display: none;"
+                       onclick="gmail_login('https://www.google.com/accounts/o8/id')" id="gmail_login">
+
+                    <img src="../static/img/social_google_box_new.png" height="47%" width="47%">
+
+                    </a></p>
+                    </div>
+
+                    <div class="col-md-4">
+                <p><a class="login-btns" role="button" style="display: none;"
+                       onclick="fb_login()" id="fb_login">
+
+                    <img src="../static/img/social_facebook_box_blue_new.png" height="47%" width="47%">
+                       </a></p>
+                </div>
+                    </div>
+
+
                 {% endif %}
+
             </div>
 
             <div id="login_div" style="display:none;">

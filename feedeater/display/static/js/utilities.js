@@ -45,16 +45,7 @@ function subClick() {
 }
 
 //
-function set_openid_new(openid, pr) {
-    var u = openid.search('<username>')
-    if (u != -1) {
-        // openid requires username
-        var user = prompt('Enter your ' + pr + ' username:')
-        openid = openid.substr(0, u) + user
-    }
-    var form = document.forms['login_form'];
-    form.elements['openid'].value = openid
-}
+
 
 //
 function tag(tagtext, tagid) {

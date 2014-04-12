@@ -29,17 +29,26 @@ flaskapp.config.from_object('feedeater.config')
 db = SQLAlchemy(flaskapp)
 import database.models
 
+
 lm = LoginManager()
 lm.init_app(flaskapp)
 lm.login_view = 'login'
 oid = OpenID(flaskapp, os.path.join(basedir, 'tmp'))
 
+
 from feedeater.display.views import main, subscriptions, entries, custom_filters
+
 
 # register blueprints
 flaskapp.register_blueprint(main.app)
 flaskapp.register_blueprint(subscriptions.app)
 flaskapp.register_blueprint(entries.app)
+
+
+
+
+
+
 
 # register custom template filters:
 flaskapp.jinja_env.filters['truncate_title'] = custom_filters.truncate_title
