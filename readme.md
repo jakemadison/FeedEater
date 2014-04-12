@@ -1,5 +1,8 @@
 Feed_Eater Project
 ---
+
+![Alt text](/feedeater/display/static/img/screen1.png "Screenshot")
+
 - A Flask + AJAX rss reader thing.
 - feed detection courtesy of <a href='http://www.aaronsw.com/2002/feedfinder/'>feedfinder</a>
 - network & db concurrency using concurrent.futures
