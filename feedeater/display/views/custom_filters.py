@@ -2,6 +2,9 @@ from datetime import datetime, timedelta
 import urlparse
 
 
+# okay... there should be a way I can hook into these from both the jinja template,
+# and from ajax calls
+
 #the template truncate function doesn't quite do what I want it to.
 def truncate_title(title, amt=50):
 
