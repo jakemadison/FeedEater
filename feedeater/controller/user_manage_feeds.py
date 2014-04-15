@@ -8,6 +8,7 @@ import getfeeds
 import storefeeds
 import parsenewfeed
 from feedeater.config import configs as c
+from feedeater.display.views import custom_filters
 
 db_session = db.session
 
@@ -99,15 +100,22 @@ def recalculate_entries(active_list, user, p, only_star=False):
     for each in qry[start_pos:end_pos]:
         u_table, uf_table, f_table, e_table, ufe_table = each
 
-        entry_data = {'title': f_table.title, 'url': f_table.feed_url,
+
+        #okay, hooked into the custom filters:
+        pub_time = custom_filters.parse_time(e_table.published)
+        pub_title = custom_filters.truncate_title(e_table.title)
+        pub_link = custom_filters.url_base(f_table.feed_url)
+
+        entry_data = {'title': f_table.title, 'url': pub_link,
                       'desc': f_table.description, 'active': uf_table.is_active,
                       'uf_id': uf_table.id, 'feed_id': uf_table.feedid,
                       'entry_id': e_table.id,
                       'category': uf_table.category,
-                      'entry_title': e_table.title,
+                      'entry_title': pub_title,
                       'entry_content': e_table.content,
-                      'entry_published': e_table.published,
+                      'entry_published': pub_time,
                       'entry_link': e_table.link}
+
 
         # there has to be a better way to do this:
         try:
