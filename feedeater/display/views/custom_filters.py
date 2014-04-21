@@ -5,7 +5,8 @@ import urlparse
 # okay... there should be a way I can hook into these from both the jinja template,
 # and from ajax calls
 
-#the template truncate function doesn't quite do what I want it to.
+#the template truncate function doesn't quite do what I want it to,
+#plus, I need to hook in ajax calls which come post-jinja filtering
 def truncate_title(title, amt=50):
 
     if not title:
