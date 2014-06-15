@@ -1,2 +1,4 @@
 #ignore tmp stuff
 /feedeater/tmp
+__pycache__/
+*.py[cod]
