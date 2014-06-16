@@ -103,6 +103,10 @@ function drawEntries(entry){
         </div>\
     ';
 
+    var e_tags='<div class="tags"><a href="#"><span class="label label-default entry_cat_label" id="test1">\
+            '+entry.category+'</span></a></div>';
+
+
     //check if we are compressed view or not
     if ($('.viewchange').hasClass('glyphicon-th-list')) {
         var e_view = '<div class="entrycontent compview">'
@@ -148,7 +152,7 @@ function drawEntries(entry){
         </div>\
        ';
 
-    $('.entry_container').append(e_head, e_view, e_title, e_main);
+    $('.entry_container').append(e_head, e_view, e_title, e_tags, e_main);
 
 
 }

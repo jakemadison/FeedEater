@@ -9,6 +9,7 @@ import storefeeds
 import parsenewfeed
 from feedeater.config import configs as c
 from feedeater.display.views import custom_filters
+from feedeater.database import models
 
 db_session = db.session
 
@@ -535,11 +536,21 @@ def apply_feed_category(category, ufid, remove=False):
 
 def get_user_prefs(user):
 
+    c_view = None
+
     prefs = db_session.query(UserPrefs).filter_by(userid=user.id)
     x = prefs.first()
 
-    return x.compressed_view
+    if x is None:
+        new_prefs = models.UserPrefs(userid=user.id)
+        db_session.add(new_prefs)
+        db_session.commit()
+        c_view = 0
 
+    else:
+        c_view = x.compressed_view
+
+    return c_view
 
 
 def changeview(user):
