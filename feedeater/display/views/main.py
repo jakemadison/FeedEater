@@ -37,9 +37,6 @@ def load_user(id):
 @oid.loginhandler
 def build_index(page=1):
 
-    # really need to decide whether this is all going to be ajax/json
-    # or if we want to use built in flask pagination..
-
     g.page = page
     user = g.user
 
@@ -47,37 +44,19 @@ def build_index(page=1):
     login_form = LoginForm()
 
     prefs = None
+    entries = None
 
     add_feed_form = AddFeedForm(csrf_enabled=False)  # this should maybe be true... :/
 
-    if g.user.is_authenticated():
-        print '- retrieving entries from is_authenticated call...'
-        entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
-        prefs = user_manage_feeds.get_user_prefs(user)
-
-    else:
-        print '- sub_list returns a list of feedIds.. can just use those to get entries..'
-        entries = Entry.query.order_by(Entry.published.desc())[:10]
-        # sub_list = user_manage_feeds.get_guest_feeds()
-        # sl = sub_list['feed_data']
-        # cats = []
-
-    # if login_form.validate_on_submit():
-    #     session['remember_me'] = login_form.remember_me.data
-    #     return oid.try_login(login_form.openid.data, ask_for=['nickname', 'email'])
-
     if user is None or not g.user.is_authenticated():
-        print 'user is none!'
         user = User(nickname="Guest", email="guest@guest.com", role=0)
-        sub_list = user_manage_feeds.get_guest_feeds()
+        sub_list = user_manage_feeds.get_guest_feeds()  # more guest stuff could be added here.
         cats = []
 
     else:
-        print "}}}retrieving sublist here...."
-
+        entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
+        prefs = user_manage_feeds.get_user_prefs(user)
         sub_list = user_manage_feeds.get_user_feeds(user)
-
-        print "sublist received"
 
         cats = sub_list['cat_list']
         cats = sorted(cats)
