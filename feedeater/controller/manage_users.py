@@ -11,6 +11,9 @@ db_session = db.session
 
 
 def add_user(resp):
+
+    # some auths contain a nick, some don't.
+    # if they don't, use first segment of email:
     nickname = resp.nickname
     if nickname is None or nickname == "":
         nickname = resp.email.split('@')[0]
@@ -19,7 +22,12 @@ def add_user(resp):
     db.session.add(user)
     db.session.commit()
 
-    user = db_session.query.filter(User.email == resp.email).first()
-    prefs = UserPrefs({"userid": user.id})
-    db_session.add(prefs)
-    db_session.commit()
+
+
+    # preferences now has a check which will create the pref record
+    # when required.  So i think I can just comment this out..
+    # Ah, this is why the other bug:
+    # user = db_session.query.filter(User.email == resp.email).first()
+    # prefs = UserPrefs({"userid": user.id})
+    # db_session.add(prefs)
+    # db_session.commit()

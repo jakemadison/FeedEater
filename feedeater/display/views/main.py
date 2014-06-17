@@ -206,6 +206,7 @@ def after_login(resp):
         print dir(resp)
 
         manage_users.add_user(resp)
+        user = User.query.filter_by(email=resp.email).first()
 
 
     remember_me = False
