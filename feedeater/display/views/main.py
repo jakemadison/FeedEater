@@ -41,12 +41,11 @@ def build_index(page=1):
     # or if we want to use built in flask pagination..
 
     g.page = page
-
-    print __name__
-
     user = g.user
+
     form = LoginForm(request.form)
     login_form = LoginForm()
+
     prefs = None
 
     add_feed_form = AddFeedForm(csrf_enabled=False)  # this should maybe be true... :/
@@ -59,38 +58,13 @@ def build_index(page=1):
     else:
         print '- sub_list returns a list of feedIds.. can just use those to get entries..'
         entries = Entry.query.order_by(Entry.published.desc())[:10]
-        sub_list = user_manage_feeds.get_guest_feeds()
-        sl = sub_list['feed_data']
-        cats = []
+        # sub_list = user_manage_feeds.get_guest_feeds()
+        # sl = sub_list['feed_data']
+        # cats = []
 
-    # check if we POST'd here: Do we ever actually post??
-    if request.method == 'POST':
-        print '                 **Post Method**'
-        user = g.user
-
-        # if not form.validate():
-        #     print '- maaaade it here:'
-        #     #user = User(nickname="Guest", email="guest@guest.com", role=0)
-        #     # return render_template("index.html", form=form, title='Home',
-        #     #                        user=user, entries=entries, providers=flaskapp.config['OPENID_PROVIDERS'],
-        #     #                        login_form=login_form, subs=sl)  # SL not defined yet...
-        #
-        # if not user:
-        #     print '- made it here...'
-        #     form.errors = True
-        #     form.error_messages = ["The login details provided are not correct."]
-        #     return render_template("index.html", form=form, title='Home', user=user,
-        #                            entries=entries, providers=flaskapp.config['OPENID_PROVIDERS'],
-        #                            login_form=login_form)
-
-        print '!!!!yesssssssssssss!!!!'
-        login_user(user)
-        session['logged_in'] = True
-        # flash("Logged in successfully.")
-
-    if login_form.validate_on_submit():
-        session['remember_me'] = login_form.remember_me.data
-        return oid.try_login(login_form.openid.data, ask_for=['nickname', 'email'])
+    # if login_form.validate_on_submit():
+    #     session['remember_me'] = login_form.remember_me.data
+    #     return oid.try_login(login_form.openid.data, ask_for=['nickname', 'email'])
 
     if user is None or not g.user.is_authenticated():
         print 'user is none!'
@@ -124,6 +98,7 @@ def build_index(page=1):
                            cats=cats, prefs=prefs)
 
 
+# this function is now handling login via js request:
 @app.route('/f_login', methods=['GET', 'POST'])
 @oid.loginhandler
 def f_login():

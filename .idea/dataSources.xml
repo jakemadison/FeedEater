@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="846635470">
+    <data-source source="LOCAL" name="app" uuid="a8d8e02d-f1bb-4af5-a3a6-e97e57b5b695">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/feedeater/database/app.db</jdbc-url>
+      <schema-pattern>*</schema-pattern>
+      <libraries />
+    </data-source>
+  </component>
+</project>
+
