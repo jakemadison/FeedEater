@@ -11,7 +11,7 @@ from feedeater.controller import user_manage_feeds, manage_users
 import sys
 from feedeater.controller import FeedGetter
 
-# This module should handle the main rendering & paging functions as well as login/out and authorization
+# This module should handle the main rendering as well as login/out and authorization
 
 basedir = c.get('basedir')
 app = Blueprint('index', __name__, static_folder=basedir+'/display/static',
@@ -105,7 +105,6 @@ def after_login(resp):
         manage_users.add_user(resp)
         user = User.query.filter_by(email=resp.email).first()
 
-
     remember_me = False
 
     if 'remember_me' in session:
@@ -120,22 +119,11 @@ def after_login(resp):
 @app.route('/logout')
 def logout():
     logout_user()
-    print "successful logout"
-    print g.user
+    print "successful logout for user: ", g.user
     return redirect(url_for('.build_index'))
 
 
 
 
-# this json hook crap needs to be moved to a different file.
-@app.route('/change_view', methods=['POST'])
-def change_view():
 
-    user = g.user
-    print 'user: ', user.nickname, user.id
-    user_manage_feeds.changeview(user)
-
-    print "done! changeview!"
-
-    return jsonify(success=True)
 

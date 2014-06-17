@@ -190,5 +190,18 @@ def only_starred():
 
     # result = user_manage_feeds.recalculate_entries()
 
-
     return False
+
+
+
+# this json hook crap needs to be moved to a different file.
+@app.route('/change_view', methods=['POST'])
+def change_view():
+
+    user = g.user
+    print 'user: ', user.nickname, user.id
+    user_manage_feeds.changeview(user)
+
+    print "done! changeview!"
+
+    return jsonify(success=True)
