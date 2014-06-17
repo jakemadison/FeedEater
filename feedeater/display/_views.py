@@ -11,6 +11,8 @@ import sys
 from feedeater.controller import FeedGetter
 
 
+# is this file still used?
+
 @app.before_request
 def before_request():
     g.user = current_user
