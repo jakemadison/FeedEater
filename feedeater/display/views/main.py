@@ -21,9 +21,9 @@ app = Blueprint('index', __name__, static_folder=basedir+'/display/static',
 
 @app.before_request
 def before_request():
-    print "\n\n\nNEW MAIN.PY REQUEST:"
+    print "\n\n\n- NEW MAIN.PY REQUEST:"
     g.user = current_user
-    # print "\n        ->user: ", g.user, dir(g.user), g.user.nickname, g.user.id, "\n\n..."
+
 
 
 @lm.user_loader
@@ -40,55 +40,48 @@ def build_index(page=1):
     # really need to decide whether this is all going to be ajax/json
     # or if we want to use built in flask pagination..
 
-    # print app
-
-    # will this work??
     g.page = page
 
-
     print __name__
-    #print dir(app)
-    user = None
+
     user = g.user
-    # print "\n        ->user: ", user, dir(user), user.nickname, "\n\n..."
     form = LoginForm(request.form)
     login_form = LoginForm()
     prefs = None
 
-    add_feed_form = AddFeedForm(csrf_enabled=False)
+    add_feed_form = AddFeedForm(csrf_enabled=False)  # this should maybe be true... :/
 
     if g.user.is_authenticated():
-        print '!!!!! - retrieving entries from is_authenticated call...'
+        print '- retrieving entries from is_authenticated call...'
         entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
         prefs = user_manage_feeds.get_user_prefs(user)
 
-        # user_entry_list = user_manage_feeds.get_user_entry_records(user, entries)
-        # okay, so now I just need to add these entries to our entry list...
-
     else:
-        print 'thiiiisssss..... is failing. move all this to user_man_feeds? ...actually, '
-        print 'sub_list returns a list of feedIds.. can just use those to get entries..'
+        print '- sub_list returns a list of feedIds.. can just use those to get entries..'
         entries = Entry.query.order_by(Entry.published.desc())[:10]
         sub_list = user_manage_feeds.get_guest_feeds()
         sl = sub_list['feed_data']
         cats = []
 
+    # check if we POST'd here: Do we ever actually post??
     if request.method == 'POST':
+        print '                 **Post Method**'
         user = g.user
-        if not form.validate():
-            print 'maaaade it here:'
-            #user = User(nickname="Guest", email="guest@guest.com", role=0)
-            # return render_template("index.html", form=form, title='Home',
-            #                        user=user, entries=entries, providers=flaskapp.config['OPENID_PROVIDERS'],
-            #                        login_form=login_form, subs=sl)  # SL not defined yet...
 
-        if not user:
-            print 'made it here...'
-            form.errors = True
-            form.error_messages = ["The login details provided are not correct."]
-            return render_template("index.html", form=form, title='Home', user=user,
-                                   entries=entries, providers=flaskapp.config['OPENID_PROVIDERS'],
-                                   login_form=login_form)
+        # if not form.validate():
+        #     print '- maaaade it here:'
+        #     #user = User(nickname="Guest", email="guest@guest.com", role=0)
+        #     # return render_template("index.html", form=form, title='Home',
+        #     #                        user=user, entries=entries, providers=flaskapp.config['OPENID_PROVIDERS'],
+        #     #                        login_form=login_form, subs=sl)  # SL not defined yet...
+        #
+        # if not user:
+        #     print '- made it here...'
+        #     form.errors = True
+        #     form.error_messages = ["The login details provided are not correct."]
+        #     return render_template("index.html", form=form, title='Home', user=user,
+        #                            entries=entries, providers=flaskapp.config['OPENID_PROVIDERS'],
+        #                            login_form=login_form)
 
         print '!!!!yesssssssssssss!!!!'
         login_user(user)
@@ -107,46 +100,19 @@ def build_index(page=1):
 
     else:
         print "}}}retrieving sublist here...."
-        # something here is causing OS to kill with OOM error.
 
         sub_list = user_manage_feeds.get_user_feeds(user)
 
         print "sublist received"
-        # print sub_list
 
         cats = sub_list['cat_list']
         cats = sorted(cats)
-        # print "cats cats cats ------- ", cats
 
         print "categories loaded and sorted"
 
-        #print "================>", cats
-
-
-    #print user
-
     sl = sub_list['feed_data']  # sl needs to send count data as well. or send it from entries?
 
-    print "sl loaded"
-    # print sl
-
-    # wow, this was causing an OOM error apparently.
-    # test_entries = user.get_userentries().first()
-    # print '------->', test_entries
-    # jsonify and paginate, easy as that!
-    # print dir(test_entries.remote_id)
-
-
-    print "\n"
-
-    # test = user_manage_feeds.test_get_entires(user)
-    # for each in test:
-    #     print each
-
-    if not prefs:
-        prefs = {"compressed_view": False}
-
-
+    print "sl loaded \n"
     print "finished all loading.. rendering template now."
 
     # with either json, or render, this should actually be returning the user_entry table joined with entry
@@ -158,7 +124,6 @@ def build_index(page=1):
                            cats=cats, prefs=prefs)
 
 
-
 @app.route('/f_login', methods=['GET', 'POST'])
 @oid.loginhandler
 def f_login():
@@ -166,9 +131,6 @@ def f_login():
 
     url = request.form["url"]
     return oid.try_login(url, ask_for=['nickname', 'email'])
-
-
-
 
 
 @app.route('/login', methods=['GET', 'POST'])
