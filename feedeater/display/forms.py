@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form, SubmitField
 from wtforms import TextField, BooleanField, RadioField
-from wtforms.validators import Required, url, ValidationError
+from wtforms.validators import Required, url  #, ValidationError
 
 
 class LoginForm(Form):
