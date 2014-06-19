@@ -6,7 +6,7 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 #from feedeater import lm, oid
 #from feedeater.display.forms import LoginForm, AddFeedForm
 from feedeater.config import configs as c
-f#rom feedeater.database.models import User, ROLE_USER, Entry, UserEntry
+#from feedeater.database.models import User, ROLE_USER, Entry, UserEntry
 from feedeater.controller import user_manage_feeds
 #import sys
 #from feedeater.controller import FeedGetter
