@@ -27,7 +27,7 @@ flaskapp.config.from_object('feedeater.config')
 
 
 db = SQLAlchemy(flaskapp)
-import database.models
+#import database.models
 
 
 lm = LoginManager()
