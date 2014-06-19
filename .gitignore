@@ -1,5 +1,8 @@
-#ignore tmp stuff
+#Ignore temp stuff
 /feedeater/tmp
 __pycache__/
 *.py[cod]
+
+#Ignore IDE stuff
 .idea
+*.nja
