@@ -45,11 +45,6 @@ flaskapp.register_blueprint(subscriptions.app)
 flaskapp.register_blueprint(entries.app)
 
 
-
-
-
-
-
 # register custom template filters:
 flaskapp.jinja_env.filters['truncate_title'] = custom_filters.truncate_title
 flaskapp.jinja_env.filters['parse_time'] = custom_filters.parse_time
