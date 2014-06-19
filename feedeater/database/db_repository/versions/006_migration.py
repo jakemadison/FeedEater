@@ -2,7 +2,7 @@ from sqlalchemy import *
 from migrate import *
 
 
-from migrate.changeset import schema
+#from migrate.changeset import schema
 pre_meta = MetaData()
 post_meta = MetaData()
 user = Table('user', post_meta,

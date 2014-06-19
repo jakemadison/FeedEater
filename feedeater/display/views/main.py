@@ -8,8 +8,8 @@ from feedeater.display.forms import LoginForm, AddFeedForm
 from feedeater.config import configs as c
 from feedeater.database.models import User, ROLE_USER, Entry, UserEntry
 from feedeater.controller import user_manage_feeds, manage_users
-import sys
-from feedeater.controller import FeedGetter
+#import sys
+#from feedeater.controller import FeedGetter
 
 # This module should handle the main rendering as well as login/out and authorization
 

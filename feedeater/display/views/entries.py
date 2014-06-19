@@ -1,15 +1,15 @@
 from flask import *
 from flask import render_template, flash, redirect, session, url_for, request, g, jsonify
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from flask import Markup
-from feedeater import flaskapp
-from feedeater import lm, oid
-from feedeater.display.forms import LoginForm, AddFeedForm
+#from flask import Markup
+#from feedeater import flaskapp
+#from feedeater import lm, oid
+#from feedeater.display.forms import LoginForm, AddFeedForm
 from feedeater.config import configs as c
-from feedeater.database.models import User, ROLE_USER, Entry, UserEntry
+#from feedeater.database.models import User, ROLE_USER, Entry, UserEntry
 from feedeater.controller import user_manage_feeds
-import sys
-from feedeater.controller import FeedGetter
+#import sys
+#from feedeater.controller import FeedGetter
 import time
 
 

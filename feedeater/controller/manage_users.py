@@ -1,11 +1,11 @@
-import FeedGetter
+#import FeedGetter
 from feedeater.database.models import User, UserFeeds, Feed, Entry, UserEntryTags, UserEntry, UserPrefs, ROLE_USER
 from feedeater import db
 # from feedeater.debugger import debugging_suite as ds
-import getfeeds
-import storefeeds
-import parsenewfeed
-from feedeater.config import configs as c
+#import getfeeds
+#import storefeeds
+#import parsenewfeed
+#from feedeater.config import configs as c
 
 db_session = db.session
 
