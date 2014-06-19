@@ -1,17 +1,16 @@
 from flask import *
-from flask import render_template, flash, redirect, session, url_for, request, g, jsonify
-from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask import redirect, url_for, request, g, jsonify  # , render_template, flash, session
+from flask.ext.login import current_user  # , login_user, logout_user, login_required
+from feedeater.config import configs as c
+from feedeater.controller import user_manage_feeds
+import time
 #from flask import Markup
 #from feedeater import flaskapp
 #from feedeater import lm, oid
 #from feedeater.display.forms import LoginForm, AddFeedForm
-from feedeater.config import configs as c
-#from feedeater.database.models import User, ROLE_USER, Entry, UserEntry
-from feedeater.controller import user_manage_feeds
 #import sys
 #from feedeater.controller import FeedGetter
-import time
-
+#from feedeater.database.models import User, ROLE_USER, Entry, UserEntry
 
 basedir = c.get('basedir')
 app = Blueprint('entries', __name__, static_folder=basedir+'/display/static',
