@@ -35,9 +35,7 @@
 
 
 <!--ahhh jquery... fun fun fun-->
-    <script type=text/javascript>
-        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-    </script>
+
 
 
 
@@ -46,14 +44,21 @@
 </head>
 <body>
 
+
+
+
+
 <div id='content' ng-app='FeedEaterApp' ng-controller='MainController'>
 
+<div ng-include src="'angular_entry.html'">entry...</div>
 
         Neat0!
-
+    <!--<div ng-include src=" 'angular_entry.html' "></div>-->
     <div><b>{{message}}</b></div>
 	</div>
 
+
+<!--<div ng-include src=" 'angular_entry.html' "></div>-->
 
 
 

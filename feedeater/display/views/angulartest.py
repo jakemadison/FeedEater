@@ -20,4 +20,6 @@ def ang_test():
 
     print 'testing angular'
 
-    return make_response(open(basedir+'/display/angular_templates/index.html').read())
+    return make_response(open(basedir+'/display/angulartemplates/index.html').read())
+
+
