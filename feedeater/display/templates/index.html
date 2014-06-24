@@ -11,6 +11,9 @@
 
 {% include 'header.html' %}
 
+
+
+
 <div class="navbar-collapse collapse"> {% include 'messagebar.html' %} </div>
 
     <!--main content: -->
@@ -31,6 +34,17 @@
                     <!--&lt;!&ndash;<span class="sr-only">40% Complete (success)</span>&ndash;&gt;-->
                 <!--</div>-->
                 <!--</div>-->
+
+            {% raw %}
+
+                <div id='content' ng-app='FeedEaterApp' ng-controller='MainController'>
+                    <div ng-include src="'/static/angulartemplates/angularentries.html'"></div>
+                </div>
+
+            {% endraw %}
+
+
+
 
                 <div class="entry_container">
 

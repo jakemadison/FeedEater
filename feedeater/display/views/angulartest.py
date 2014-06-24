@@ -22,7 +22,7 @@ def ang_test():
 
     # return send_file('./display/static/angulartemplates/angulartest.html')
     #
-    return make_response(open(basedir+'/display/static/angulartemplates/angulartest.html').read())
+    return make_response(open(basedir+'/display/static/angulartemplates/index.html').read())
     #
     # return app.send_static_file('angular_test.html')
 

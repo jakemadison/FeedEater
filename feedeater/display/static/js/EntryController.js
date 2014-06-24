@@ -10,18 +10,3 @@ app.controller("MainController", function($scope){
 
 });
 
-
-
-app.controller("EntriesController", function($scope){
-
-    $scope.message = 'this is the entries controller...';
-
-});
-
-
-
-app.controller("EntryController", function($scope){
-
-    $scope.message2 = 'this is the entrY! controller...';
-
-});

@@ -1,1 +1,89 @@
-foo
+<div id='content' ng-app='FeedEaterApp' ng-controller='EntryController'>
+
+    {{message2}}
+    </div>
+
+
+
+
+<div class="feedid{{ entry.feed_id }} entry_list" entryId="{{entry.id}}">
+<div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">
+
+    <h3><b><a  href="{{entry.link}}" target="_blank"
+               data-toggle="tooltip" data-original-title="{{entry.title}}" class="entry_title"
+               title="{{entry.title}}">{{entry.title|truncate_title}}</a></b></h3>
+
+
+
+    <!--tags per entry-->
+
+<div class="tags">
+    <!--tag list for drop down-->
+    <div class="btn-group dropup">
+        <span class="glyphicon glyphicon-plus" id="tagplus"
+                      data-toggle="dropdown"></span>
+
+        <ul class="dropdown-menu" role="menu">
+
+            <li><a href="#"><h6>New Tag...</h6></a></li>
+            <li class="divider"></li>
+            <li><a href="javascript:tag('User Defined Whatever', '15');">
+
+                <span class="label label-info">User Defined Tag</span></a></li>
+                         <li><a href="#"><span class="label label-info">Pets</span></a></li>
+                         <li><a href="#"><span class="label label-info">Funny</span></a></li>
+                         <li><a href="#"><span class="label label-default">Dogs</span></a></li>
+                    </ul>
+    </div>
+
+<!--actual tags here:-->
+        <a href="javascript:tag('User Defined Whatever', '15');">
+            <span class="label label-info">User Defined Tag</span></a>
+        <a href="#"><span class="label label-info">Pets</span></a>
+        <a href="#"><span class="label label-info">Funny</span></a>
+        <a href="#"><span class="label label-default entry_cat_label" id="test1">
+            {{entry.get_user_cat(current_user.id)}}</span></a>
+
+    </div>
+
+</div>
+
+    {% if prefs.compressed_view %}
+    <div class="entrycontent compview">
+    {% else %}
+    <div class="entrycontent fullview">
+    {% endif %}
+
+
+    <div class="well">
+        <div class="row" id="info">
+
+            <span class="glyphicon glyphicon-info-sign" style="float:left"></span>
+
+            {% if entry.get_user_star(current_user.id) %}
+
+            <span class="glyphicon star glyphicon-star" id="star{{entry.id}}"
+                  title="star: {{entry.id}}" onclick="startoggle('#star{{entry.id}}')"></span>
+
+            {% else %}
+            <span class="glyphicon star glyphicon-star-empty" id="star{{entry.id}}"
+                  title="star: {{entry.id}}" onclick="startoggle('#star{{entry.id}}')">
+            </span>
+
+            {% endif %}
+
+            <!--this would look nice as a: <h6></h6>-->
+
+<p align="right"><span class="brand"><i>{{entry.remote_id|url_base}}</i> @ {{entry.published|parse_time}}</span></p>
+
+
+        </span>
+    </div>
+
+        <p align="center">{{entry.content|safe}}</p>
+
+    </div>
+
+    </div>
+
+</div>

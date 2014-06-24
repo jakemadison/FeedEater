@@ -1,0 +1,23 @@
+<div class="entry_container">
+
+    {% if entries.items|length == 0 %}
+        <div class="col-md-8-2 no_entry_alert">
+        <div class="alert alert-info"><p align="center"><b>There are no entries to display.</b></p></div>
+        </div>
+
+    {% endif %}
+
+     <div id='content' ng-app='FeedEaterApp' ng-controller='EntriesController'>
+
+         {{message}}
+                <div ng-include src="'/static/angulartemplates/angularentry.html'"></div>
+        </div>
+
+
+
+        {% for entry in entries.items %}
+            {% include 'entry.html' %}
+        {% endfor %}
+
+
+</div>
