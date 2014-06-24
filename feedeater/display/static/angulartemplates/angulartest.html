@@ -46,16 +46,22 @@
 
 
 
-
-
 <div id='content' ng-app='FeedEaterApp' ng-controller='MainController'>
 
-<div ng-include src="'angular_entry.html'">entry...</div>
 
-        Neat0!
-    <!--<div ng-include src=" 'angular_entry.html' "></div>-->
-    <div><b>{{message}}</b></div>
-	</div>
+
+    <select ng-model="template" ng-options="t.name for t in templates">
+        <option value="">(blank)</option>
+    </select>
+  url of the template: <tt>{{template.url}}</tt>
+
+    <hr/>
+
+    this one?
+<div ng-include src="'/static/angulartemplates/angularentry.html'"></div>
+1
+
+</div>
 
 
 <!--<div ng-include src=" 'angular_entry.html' "></div>-->

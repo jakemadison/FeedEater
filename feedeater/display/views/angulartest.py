@@ -15,11 +15,15 @@ def before_blueprint_request():
 app.before_request(before_blueprint_request)
 
 
-@app.route('/angular_test', methods=['GET'])
+@app.route('/ang', methods=['GET'])
 def ang_test():
 
     print 'testing angular'
 
-    return make_response(open(basedir+'/display/angulartemplates/index.html').read())
+    # return send_file('./display/static/angulartemplates/angulartest.html')
+    #
+    return make_response(open(basedir+'/display/static/angulartemplates/angulartest.html').read())
+    #
+    # return app.send_static_file('angular_test.html')
 
 
