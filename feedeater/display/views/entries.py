@@ -66,17 +66,25 @@ def toggle_star():
     return jsonify({"result": result})
 
 
-@app.route('/recalculate_entries', methods=['POST'])
+@app.route('/recalculate_entries', methods=['POST', 'GET'])
 def recalculate_entries():
 
     # time.sleep(5)
 
     print "recalculating entries...."
     user = g.user
-    active_list = request.form.getlist('active_list[]')
-    page = request.form['current_page']
 
-    star = request.form.get('star_only', False)
+    print request
+    print dir(request)
+
+    # active_list = request.form.getlist('active_list[]')
+    # page = request.form['current_page']
+    #
+    # star = request.form.get('star_only', False)
+
+    active_list = request.args.get('active_list', None)
+    page = request.args.get('current_page', 1)
+    star = request.args.get('star_only', False)
 
     active_list = [int(a.replace('uf_id', '')) for a in active_list]
     print 'active list......', active_list

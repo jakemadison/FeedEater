@@ -1,1 +1,2 @@
-var app = angular.module('FeedEaterApp',[]);
+var FeedEaterApp = angular.module('FeedEaterApp',[]);
+

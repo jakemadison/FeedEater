@@ -1,23 +1,68 @@
-<div class="entry_container">
+<div class="entry_container" ng-controller="EntriesCtrl">
+<!-- our 'no entries' popup: -->
+    <div class="col-md-8-2 no_entry_alert" ng-show="no_entries">
+        <div class="alert alert-info"><p align="center">
+            <b>There are no entries to display.</b></p></div>
+    </div>
 
-    {% if entries.items|length == 0 %}
-        <div class="col-md-8-2 no_entry_alert">
-        <div class="alert alert-info"><p align="center"><b>There are no entries to display.</b></p></div>
+<!-- loop over our entries: -->
+    HEY ----> {{ entries }}
+
+    <button ng-click="myData.doClick(item, $event)">Send AJAX Request</button>
+    <br/>
+    Data from server: {{myData.fromServer}}
+
+
+    <div ng-repeat="entry in entries">
+        <div class="feedid{{ entry.feed_id }} entry_list" entryId="{{entry.id}}">
+            <div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">
+                <h3><b><a  href="{{entry.link}}" target="_blank"
+               data-toggle="tooltip" data-original-title="{{entry.title}}"
+                class="entry_title"
+                title="{{entry.title}}">{{entry.title}}</a></b></h3>
+
+                <div class="tags">
+                    <div class="btn-group dropup">
+                        <span class="glyphicon glyphicon-plus" id="tagplus"
+                              data-toggle="dropdown"></span>
+
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#"><h6>New Tag...</h6></a></li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:tag('User Defined Whatever', '15');">
+
+                            <span class="label label-info">User Defined Tag</span></a></li>
+                            <li><a href="#"><span class="label label-info">Pets</span></a></li>
+                            <li><a href="#"><span class="label label-info">Funny</span></a></li>
+                            <li><a href="#"><span class="label label-default">Dogs</span></a></li>
+                        </ul>
+                    </div>
+
+                    <a href="javascript:tag('User Defined Whatever', '15');">
+                        <span class="label label-info">User Defined Tag</span></a>
+                    <a href="#"><span class="label label-info">Pets</span></a>
+                    <a href="#"><span class="label label-info">Funny</span></a>
+                    <a href="#"><span class="label label-default entry_cat_label" id="test1">
+                        {{entry.get_user_cat(current_user.id)}}</span></a>
+                </div>
+            </div>
+
+            <div class="{{compressed}}">
+                <div class="well">
+                    <div class="row" id="info">
+                        <span class="glyphicon glyphicon-info-sign" style="float:left"></span>
+
+                        <span class="glyphicon star glyphicon-star" id="star{{entry.id}}"
+                              title="star: {{entry.id}}" onclick="startoggle('#star{{entry.id}}')"></span>
+
+                        <p align="right">
+                            <span class="brand">
+                                <i>{{entry.remote_id}}</i> @ {{entry.published}}</span></p>
+                    </div> <!--end of row-->
+
+                    <p align="center">{{entry.content}}</p>
+                </div>
+            </div>
         </div>
-
-    {% endif %}
-
-     <div id='content' ng-app='FeedEaterApp' ng-controller='EntriesController'>
-
-         {{message}}
-                <div ng-include src="'/static/angulartemplates/angularentry.html'"></div>
-        </div>
-
-
-
-        {% for entry in entries.items %}
-            {% include 'entry.html' %}
-        {% endfor %}
-
-
+    </div>
 </div>
