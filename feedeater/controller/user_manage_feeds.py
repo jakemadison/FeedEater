@@ -41,14 +41,14 @@ def get_unread_count(feed_id, user):
 
 
 
-def recalculate_entries(active_list, user, p, only_star=False):
+def recalculate_entries(user, p, only_star=False):
 
     # i need to add a bit of logic here that checks current page, length of entries, and
     # if no entries are going to be drawn, redirect us somewhere.. last page of them maybe
 
-    feed_list = []
+    # feed_list = []
     final_list = []
-    cat_list = []
+    # cat_list = []
 
     per_page = int(c['POSTS_PER_PAGE'])
     page = int(p)
@@ -59,7 +59,7 @@ def recalculate_entries(active_list, user, p, only_star=False):
     end_pos = start_pos + per_page
 
     print start_pos, end_pos
-    print active_list, user
+    print user
 
     # get all feed entries for user where UserFeeds.id in active_list
     # okay, so really this should be the only query used everywhere
@@ -87,7 +87,8 @@ def recalculate_entries(active_list, user, p, only_star=False):
     qry = qry.filter(Entry.feed_id == Feed.id)
 
     qry = qry.filter(User.id == user.id)
-    qry = qry.filter(UserFeeds.id.in_(active_list))
+    # qry = qry.filter(UserFeeds.id.in_(active_list))
+    qry = qry.filter(UserFeeds.is_active == True)
     qry = qry.outerjoin(UserEntry, UserEntry.entryid == Entry.id)
 
     if only_star:

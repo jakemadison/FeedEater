@@ -52,14 +52,15 @@ FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $htt
     $scope.myData = {};
     $scope.myData.doClick = function(item, event) {
         var responsePromise = $http.get("/recalculate_entries", {params: {
-                user_id: USER_ID,
                 page_id: PAGE_ID,
                 star_only: false
             }});
 
         responsePromise.success(function(data, status, headers, config) {
-            $scope.myData.fromServer = data.title;
+            $scope.myData.fromServer = data;
+            console.log(data);
         });
+
         responsePromise.error(function(data, status, headers, config) {
             alert("AJAX failed!");
         });

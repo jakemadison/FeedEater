@@ -82,25 +82,11 @@ def recalculate_entries():
 
     print 'page: ', page
 
-    return jsonify(success=True)
-
     print request
-    print dir(request)
 
-
-
-    print 'active list......', active_list
-
-
-
-
-    if active_list:
-        entries = user_manage_feeds.recalculate_entries(active_list, user, page, star)
-
-    else:
-        entries = []
-
+    entries = user_manage_feeds.recalculate_entries(user, page)
     prefs = user_manage_feeds.get_user_prefs(user)
+
     print prefs
 
     return jsonify(success=True, e=entries, compressed_view=prefs)

@@ -13,16 +13,14 @@
 
     <button ng-click="myData.doClick(item, $event)">Send AJAX Request</button>
     <br/>
-    Data from server: {{myData.fromServer}}
 
-
-    <div ng-repeat="entry in entries">
-        <div class="feedid{{ entry.feed_id }} entry_list" entryId="{{entry.id}}">
+    <div ng-repeat="entry in myData.fromServer.e">
+        <div class="feedid{{ entry.feed_id }} entry_list" entryId="{{entry.entry_id}}">
             <div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">
-                <h3><b><a  href="{{entry.link}}" target="_blank"
-               data-toggle="tooltip" data-original-title="{{entry.title}}"
+                <h3><b><a  href="{{entry.entry_link}}" target="_blank"
+               data-toggle="tooltip" data-original-title="{{entry.entry_title}}"
                 class="entry_title"
-                title="{{entry.title}}">{{entry.title}}</a></b></h3>
+                title="{{entry.entry_title}}">{{entry.entry_title}}</a></b></h3>
 
                 <div class="tags">
                     <div class="btn-group dropup">
@@ -46,7 +44,7 @@
                     <a href="#"><span class="label label-info">Pets</span></a>
                     <a href="#"><span class="label label-info">Funny</span></a>
                     <a href="#"><span class="label label-default entry_cat_label" id="test1">
-                        {{entry.get_user_cat(current_user.id)}}</span></a>
+                        {{entry.category}}</span></a>
                 </div>
             </div>
 
@@ -55,17 +53,22 @@
                     <div class="row" id="info">
                         <span class="glyphicon glyphicon-info-sign" style="float:left"></span>
 
-                        <span class="glyphicon star glyphicon-star" id="star{{entry.id}}"
-                              title="star: {{entry.id}}" onclick="startoggle('#star{{entry.id}}')"></span>
+                        <span class="glyphicon star glyphicon-star" id="star{{entry.entry_id}}"
+                              title="star: {{entry.entry_id}}" onclick="startoggle({{entry.entry_id}})"></span>
 
                         <p align="right">
                             <span class="brand">
-                                <i>{{entry.remote_id}}</i> @ {{entry.published}}</span></p>
+                                <i>{{entry.url}}</i> @ {{entry.entry_published}}</span></p>
                     </div> <!--end of row-->
 
-                    <p align="center">{{entry.content}}</p>
+                    <p align="center">{{entry.entry_content}}</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<hr>
+<hr>
+<hr>
+<hr>
