@@ -50,7 +50,7 @@ FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $htt
     $scope.compressed = "entrycontent fullview";  // "entrycontent compview"
 
     $scope.myData = {};
-    $scope.myData.doClick = function(item, event) {
+    $scope.myData.doClick = function() {
         var responsePromise = $http.get("/recalculate_entries", {params: {
                 page_id: PAGE_ID,
                 star_only: false

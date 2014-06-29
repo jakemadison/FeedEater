@@ -11,7 +11,7 @@
     page: {{ page }} <br>
     HEY ----> {{ entries }} <br>
 
-    <button ng-click="myData.doClick(item, $event)">Send AJAX Request</button>
+    <button ng-click="myData.doClick()">Send AJAX Request</button>
     <br/>
 
     <div ng-repeat="entry in myData.fromServer.e">
@@ -53,15 +53,16 @@
                     <div class="row" id="info">
                         <span class="glyphicon glyphicon-info-sign" style="float:left"></span>
 
-                        <span class="glyphicon star glyphicon-star" id="star{{entry.entry_id}}"
-                              title="star: {{entry.entry_id}}" onclick="startoggle({{entry.entry_id}})"></span>
+                        <span class="glyphicon star glyphicon-star-empty" id="star{{entry.entry_id}}"
+                              title="star: {{entry.entry_id}}"></span>
 
                         <p align="right">
                             <span class="brand">
                                 <i>{{entry.url}}</i> @ {{entry.entry_published}}</span></p>
                     </div> <!--end of row-->
 
-                    <p align="center">{{entry.entry_content}}</p>
+                    <p ng-bind-html="entry.entry_content">loading...</p>
+
                 </div>
             </div>
         </div>

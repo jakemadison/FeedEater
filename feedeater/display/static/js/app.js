@@ -1,2 +1,2 @@
-var FeedEaterApp = angular.module('FeedEaterApp',[]);
+var FeedEaterApp = angular.module('FeedEaterApp',['ngSanitize']);
 
