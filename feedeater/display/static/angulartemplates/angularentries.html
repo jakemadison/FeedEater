@@ -11,7 +11,7 @@
     page: {{ page }} <br>
     HEY ----> {{ entries }} <br>
 
-    <button ng-click="myData.doClick()">Send AJAX Request</button>
+    <button ng-click="myData.getEntries()">Send AJAX Request</button>
     <br/>
 
     <div ng-repeat="entry in myData.fromServer.e">
@@ -68,8 +68,3 @@
         </div>
     </div>
 </div>
-
-<hr>
-<hr>
-<hr>
-<hr>

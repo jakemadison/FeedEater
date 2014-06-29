@@ -10,34 +10,6 @@ FeedEaterApp.controller("MainController", function($scope){
 
 });
 
-FeedEaterApp.factory('generateEntries', ['$http', function($http) {
-
-    var getEntries = function() {
-
-        return {e: "entry!"};
-    }
-
-    return function(item, event) {
-
-        var responsePromise = $http.post("/recalculate_entries", {
-            current_page: 1,
-            active_list: [1],
-            star_only: false
-        });
-
-        responsePromise.success(function(data, status, headers, config) {
-            return data;
-
-            });
-
-        responsePromise.error(function(data, status, headers, config) {
-            alert("AJAX failed!");
-            });
-        }
-
-    }]);
-
-
 
 
 FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $http){
@@ -50,7 +22,7 @@ FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $htt
     $scope.compressed = "entrycontent fullview";  // "entrycontent compview"
 
     $scope.myData = {};
-    $scope.myData.doClick = function() {
+    $scope.myData.getEntries = function() {
         var responsePromise = $http.get("/recalculate_entries", {params: {
                 page_id: PAGE_ID,
                 star_only: false
@@ -58,6 +30,7 @@ FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $htt
 
         responsePromise.success(function(data, status, headers, config) {
             $scope.myData.fromServer = data;
+            $scope.no_entries = data.e.length == 0;
             console.log(data);
         });
 
@@ -65,6 +38,8 @@ FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $htt
             alert("AJAX failed!");
         });
     }
+
+    $scope.myData.getEntries();  // initialize entries on load
 
 
 }]);
