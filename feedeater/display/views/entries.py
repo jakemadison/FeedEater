@@ -74,20 +74,25 @@ def recalculate_entries():
     print "recalculating entries...."
     user = g.user
 
+    print 'do I need to even pass in user?', user.id
+    page = int(request.args.get('page_id', None))
+
+    if page is None:
+        page = 1
+
+    print 'page: ', page
+
+    return jsonify(success=True)
+
     print request
     print dir(request)
 
-    # active_list = request.form.getlist('active_list[]')
-    # page = request.form['current_page']
-    #
-    # star = request.form.get('star_only', False)
 
-    active_list = request.args.get('active_list', None)
-    page = request.args.get('current_page', 1)
-    star = request.args.get('star_only', False)
 
-    active_list = [int(a.replace('uf_id', '')) for a in active_list]
     print 'active list......', active_list
+
+
+
 
     if active_list:
         entries = user_manage_feeds.recalculate_entries(active_list, user, page, star)

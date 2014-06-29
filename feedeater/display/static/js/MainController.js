@@ -42,6 +42,9 @@ FeedEaterApp.factory('generateEntries', ['$http', function($http) {
 
 FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $http){
 
+    $scope.user = USER_ID;
+    $scope.page = PAGE_ID;
+
     $scope.message = 'this is the entries controller...';
     $scope.no_entries = false;
     $scope.compressed = "entrycontent fullview";  // "entrycontent compview"
@@ -49,8 +52,8 @@ FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $htt
     $scope.myData = {};
     $scope.myData.doClick = function(item, event) {
         var responsePromise = $http.get("/recalculate_entries", {params: {
-                current_page: 1,
-                active_list: ['uf_id1'],
+                user_id: USER_ID,
+                page_id: PAGE_ID,
                 star_only: false
             }});
 

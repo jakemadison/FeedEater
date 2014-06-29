@@ -47,7 +47,6 @@ def recalculate_entries(active_list, user, p, only_star=False):
     # if no entries are going to be drawn, redirect us somewhere.. last page of them maybe
 
     feed_list = []
-    #feed_data = {}
     final_list = []
     cat_list = []
 
@@ -60,8 +59,6 @@ def recalculate_entries(active_list, user, p, only_star=False):
     end_pos = start_pos + per_page
 
     print start_pos, end_pos
-
-
     print active_list, user
 
     # get all feed entries for user where UserFeeds.id in active_list
@@ -101,7 +98,6 @@ def recalculate_entries(active_list, user, p, only_star=False):
     for each in qry[start_pos:end_pos]:
         u_table, uf_table, f_table, e_table, ufe_table = each
 
-
         #okay, hooked into the custom filters:
         pub_time = custom_filters.parse_time(e_table.published)
         pub_title = custom_filters.truncate_title(e_table.title)
@@ -128,12 +124,6 @@ def recalculate_entries(active_list, user, p, only_star=False):
             entry_data['entry_unread'] = True
 
         final_list.append(entry_data)
-
-    # for each in final_list:
-    #     for k, v in each.iteritems():
-    #         # print k, '---', v
-    #         pass
-    #     print '-----------'
 
     return final_list
 

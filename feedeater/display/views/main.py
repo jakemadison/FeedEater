@@ -22,6 +22,7 @@ app = Blueprint('index', __name__, static_folder=basedir+'/display/static',
 def before_request():
     print "\n\n\n- NEW MAIN.PY REQUEST:"
     g.user = current_user
+    print 'user:    ', g.user
 
 
 @lm.user_loader
@@ -53,6 +54,9 @@ def build_index(page=1):
         cats = []
 
     else:
+        print 'getting entry, sublist, etc for: ', user.id
+        print dir(user)
+        print 'type: ', type(user)
         entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
         prefs = user_manage_feeds.get_user_prefs(user)
         sub_list = user_manage_feeds.get_user_feeds(user)

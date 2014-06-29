@@ -189,6 +189,7 @@ class User(Model):
     def get_entries_new(self):
 
         print "----------------------------------------------running get entries new!!!"
+        print "where the hell am I getting: ", self.id, "from????"
         qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
                          UserFeeds.userid == self.id,
                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
@@ -199,7 +200,7 @@ class User(Model):
         #                          UserFeeds.userid == User.id,
         #                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
 
-        print '----------------', qry.first()
+        # print '----------------', qry.first()
 
         # print '_______________', dir(qry.first())
 
