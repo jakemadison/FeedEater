@@ -37,17 +37,35 @@ FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $htt
         responsePromise.error(function(data, status, headers, config) {
             alert("AJAX failed!");
         });
-    }
+    };
 
     $scope.myData.getEntries();  // initialize entries on load
-
 
 }]);
 
 
 
-FeedEaterApp.controller("EntryController", function($scope){
+FeedEaterApp.controller("SubCtrl", ['$scope', '$http', function($scope, $http){
 
     $scope.message_new = 'this is the entrY! controller...';
+    $scope.user = USER_ID;
+    $scope.page = PAGE_ID;
 
-});
+    $scope.subData = {};
+    $scope.subData.getSubs = function() {
+        var responsePromise = $http.get("/get_user_subs", {params: {
+            }});
+
+        responsePromise.success(function(data, status, headers, config) {
+            $scope.subData.fromServer = data;
+            console.log(data);
+        });
+
+        responsePromise.error(function(data, status, headers, config) {
+            alert("AJAX failed!");
+        });
+    };
+
+    $scope.subData.getSubs();
+
+}]);

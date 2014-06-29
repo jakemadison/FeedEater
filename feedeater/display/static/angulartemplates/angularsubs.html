@@ -1,0 +1,51 @@
+this is angular subs.
+
+<button ng-click="subData.getSubs()">Send AJAX Request</button>
+
+<div ng-repeat="cat in subData.fromServer.cats">
+
+    <span class="glyphicon glyphicon-folder-open folder" id="cat{{cat}}"
+              onclick=""></span>
+
+    <span onclick="" class="label label-default catlabel">{{ cat }}</span>
+
+    <div ng-repeat="sub in subData.fromServer.subs" ng-if="sub.category==cat">
+        <div class="btn-group sub-btn btn-group-sm catlist{{cat}}">
+            <div class="catheader">
+               <button type="button"
+                       class="btn active-category btn-sm btn-success sub-btn catbtn {{cat}}
+                       uf_id{{sub.uf_id}} f_id{{sub.feed_id}}"
+                       title="{{ sub.desc }}"
+                       data-toggle="tooltip" data-placement="right"
+                       onclick="">
+
+                        <span class="badge pull-right unreadcount">{{sub.count}}</span>
+                       {{ sub.title }}
+               </button>
+            </div>
+
+            <div class="catbutton">
+
+                <button type="button" class="sub_menu btn btn-sm dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-chevron-down catchevron"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li><a onclick="">Show only this feed</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/favs/">Add to Favorites</a></li>
+                    <li><a href="#">Edit Feed Info...</a></li>
+                    <li><a href="#" title="Automatically tag entries from this feed">Auto Tag Entries...</a></li>
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Set Category</li>
+                    <li class="divider"></li>
+                    <li><a class="unsub" href=#>Unsubscribe</a></li>
+                </ul>
+            </div>
+
+        </div><!-- /btn-group -->
+    </div> <!--end of dropdown menu-->
+</div>
+
+<hr>
+<hr>

@@ -6,7 +6,11 @@
 {% if form.errors.openid %}
   <body onload="show_login()">
 {% else %}
-  <body>
+
+    {% raw %}
+  <body ng-app="FeedEaterApp">
+    {% endraw %}
+
 {% endif %}
 
 {% include 'header.html' %}
@@ -41,7 +45,7 @@
             <br> USER, Flask: {{ user }} <br>
             {% raw %}
 
-                <div id='content' ng-app='FeedEaterApp' ng-controller='MainController'>
+                <div id='content' ng-controller='MainController'>
                     <div ng-include src="'/static/angulartemplates/angularentries.html'"></div>
                 </div>
 
