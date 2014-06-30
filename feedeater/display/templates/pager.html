@@ -1,14 +1,16 @@
+
+<!--this needs to be replaced with a new controller in angular, otherwise won't work. -->
+
 <ul class="pager">
-    {% if entries.has_prev %}
 
-        <li class="previous"><a href="{{ url_for('.build_index', page = entries.prev_num) }}">
-            <b>&laquo; Previous page</b></a></li>
+    <li class="previous"><a href="{{ url_for('.build_index', page = 1) }}">
+        <b>&laquo; Previous page</b></a></li>
 
-    {% endif %}
 
-    {% if entries.has_next %}
-        <li class="next"><a href="{{ url_for('.build_index', page = entries.next_num) }}">
-            <b>Next page &raquo;</b></a></li>
 
-    {% endif %}
+
+    <li class="next"><a href="{{ url_for('.build_index', page = 2) }}">
+        <b>Next page &raquo;</b></a></li>
+
+
 </ul>

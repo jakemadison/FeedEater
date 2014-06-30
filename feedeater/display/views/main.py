@@ -43,39 +43,18 @@ def build_index(page=1):
     form = LoginForm(request.form)
     login_form = LoginForm()
 
-    prefs = None
-    entries = None
-
     add_feed_form = AddFeedForm(csrf_enabled=False)  # this should maybe be true... :/
 
     if user is None or not g.user.is_authenticated():
         user = user_manage_feeds.get_guest_user()
         login_user(user)
 
-    print 'getting entry, sublist, etc for: ', user.id
-    print dir(user)
-    print 'type: ', type(user)
-    entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
-    prefs = user_manage_feeds.get_user_prefs(user)
-    sub_list = user_manage_feeds.get_user_feeds(user)
-
-    cats = sub_list['cat_list']
-    cats = sorted(cats)
-
-    print "categories loaded and sorted"
-
-    sl = sub_list['feed_data']  # sl needs to send count data as well. or send it from entries?
-
-    print "sl loaded \n"
-    print "finished all loading.. rendering template now."
-
     # with either json, or render, this should actually be returning the user_entry table joined with entry
     # so we get a full list of user entries, tags, categories, stars, etc.
     return render_template("index.html", title='Home',
-                           user=user, entries=entries, form=form,
+                           user=user, form=form,
                            providers=flaskapp.config['OPENID_PROVIDERS'],
-                           login_form=login_form, subs=sl, add_feed_form=add_feed_form,
-                           cats=cats, prefs=prefs)
+                           login_form=login_form, add_feed_form=add_feed_form, prefs=1)
 
 
 # this function is now handling login via js request:
