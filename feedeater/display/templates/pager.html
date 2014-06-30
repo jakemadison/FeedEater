@@ -3,13 +3,14 @@
 
 <ul class="pager">
 
-    <li class="previous"><a href="{{ url_for('.build_index', page = 1) }}">
+    {% set next_page=g.page + 1  %}
+    {% set prev_page=g.page - 1  %}
+
+    <li class="previous"><a href="{{ url_for('.build_index', page=prev_page) }}">
         <b>&laquo; Previous page</b></a></li>
 
 
-
-
-    <li class="next"><a href="{{ url_for('.build_index', page = 2) }}">
+    <li class="next"><a href="{{ url_for('.build_index', page=next_page) }}">
         <b>Next page &raquo;</b></a></li>
 
 
