@@ -66,6 +66,30 @@ FeedEaterApp.controller("SubCtrl", ['$scope', '$http', function($scope, $http){
         });
     };
 
+    $scope.subData.toggleFeed = function(userFeedId) {
+
+        var responsePromise = $http.get("/change_active", {params: {
+                uf_id: userFeedId
+            }});
+
+        responsePromise.success(function(data, status, headers, config) {
+
+            var sub_array = $scope.subData.fromServer.subs;
+
+            for (var i=0; i<sub_array.length; i++) {
+                if (sub_array[i].uf_id == userFeedId) {
+                    sub_array[i].active = !sub_array[i].active;
+                }
+            }
+        });
+
+        responsePromise.error(function(data, status, headers, config) {
+            alert("AJAX failed!");
+        });
+
+    };
+
+
     $scope.subData.getSubs();
 
 }]);

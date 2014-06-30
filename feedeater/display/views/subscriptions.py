@@ -76,11 +76,12 @@ def show_all_feeds():
     return jsonify(success=True)
 
 
-@app.route('/change_active', methods=['POST'])
+@app.route('/change_active', methods=['GET', 'POST'])
 def change_active():
 
     print "----- entering change active"
-    uf_id = request.form['uf_id']
+    uf_id = request.args.get('uf_id')
+    print uf_id
     user_manage_feeds.update_is_active(uf_id)
 
     print 'finished change_active.'
