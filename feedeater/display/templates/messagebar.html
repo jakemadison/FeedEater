@@ -15,7 +15,7 @@
 
                <h1 class="hi_class">Hi, {{user.nickname}}!</h1>
                 <p>Reinventing the wheel for fun, not profit.</p>
-                {% if not g.user.is_authenticated() %}
+                {% if g.user.role == 1 %}
 
 
                 <div class="row">

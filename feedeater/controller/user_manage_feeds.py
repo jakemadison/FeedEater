@@ -290,6 +290,14 @@ def get_guest_feeds():
     return final_res
 
 
+def get_guest_user():
+    qry = db_session.query(User).filter(User.email == 'guest@noemail.com')
+    u = qry.first()
+    print u, dir(u), u.nickname
+    return u
+
+
+
 def get_user_feeds(user=None):
 
     feed_list = []

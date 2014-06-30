@@ -74,6 +74,9 @@ def recalculate_entries():
     print "recalculating entries...."
     user = g.user
 
+    if user.id is None:
+        pass
+
     print 'do I need to even pass in user?', user.id
     page = int(request.args.get('page_id', None))
 

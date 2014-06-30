@@ -49,22 +49,20 @@ def build_index(page=1):
     add_feed_form = AddFeedForm(csrf_enabled=False)  # this should maybe be true... :/
 
     if user is None or not g.user.is_authenticated():
-        user = User(nickname="Guest", email="guest@guest.com", role=0)
-        sub_list = user_manage_feeds.get_guest_feeds()  # more guest stuff could be added here.
-        cats = []
+        user = user_manage_feeds.get_guest_user()
+        login_user(user)
 
-    else:
-        print 'getting entry, sublist, etc for: ', user.id
-        print dir(user)
-        print 'type: ', type(user)
-        entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
-        prefs = user_manage_feeds.get_user_prefs(user)
-        sub_list = user_manage_feeds.get_user_feeds(user)
+    print 'getting entry, sublist, etc for: ', user.id
+    print dir(user)
+    print 'type: ', type(user)
+    entries = user.get_entries_new().paginate(page, c['POSTS_PER_PAGE'], False)
+    prefs = user_manage_feeds.get_user_prefs(user)
+    sub_list = user_manage_feeds.get_user_feeds(user)
 
-        cats = sub_list['cat_list']
-        cats = sorted(cats)
+    cats = sub_list['cat_list']
+    cats = sorted(cats)
 
-        print "categories loaded and sorted"
+    print "categories loaded and sorted"
 
     sl = sub_list['feed_data']  # sl needs to send count data as well. or send it from entries?
 
