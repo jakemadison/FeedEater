@@ -106,5 +106,15 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', function($scope, 
         $scope.pager = makeRequest.getPager();
     })
 
+    $scope.pager_functions = {};
+
+//    $scope.pager_functions.advance_page = function() {
+//
+//        console.log('this is page id: ')
+//        console.log(PAGE_ID);
+//        PAGE_ID = PAGE_ID.parseInt() + 1;
+//        makeRequest.notifyPageChange();
+//    }
+
 
 }]);

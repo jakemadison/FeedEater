@@ -29,7 +29,10 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         });
 
         return (promise.then(handleFeedSuccess));
+    }
 
+    var notifyPageChange = function() {
+        $rootScope.$broadcast("feedChange");
     }
 
 
@@ -74,7 +77,9 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         pullEntryData: getEntries,
         getPager: getPager,
         getUpdatedEntries: getUpdatedEntries,
-        toggleFeed: toggleFeed
+        toggleFeed: toggleFeed,
+        notifyPageChange: notifyPageChange
+
     });
 
 }]);

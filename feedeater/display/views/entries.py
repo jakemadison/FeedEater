@@ -84,6 +84,7 @@ def recalculate_entries():
         page = 1
 
     print 'page: ', page
+    g.page = page
 
     print request
 
