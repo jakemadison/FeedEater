@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 
   <head> {% include 'head.html' %} </head>
 
@@ -7,9 +9,9 @@
   <body onload="show_login()">
 {% else %}
 
-    {% raw %}
-  <body ng-app="FeedEaterApp">
-    {% endraw %}
+{% raw %}
+<body ng-app="FeedEaterApp">
+{% endraw %}
 
 {% endif %}
 
@@ -40,7 +42,7 @@
 
             <br> USER, Flask: {{ user }} <br>
             {% raw %}
-                <div id='content' ng-controller='MainController'>
+                <div id='content'>
                     <div ng-include src="'/static/angulartemplates/angularentries.html'"></div>
                 </div>
             {% endraw %}
@@ -49,7 +51,7 @@
             </div>
 
                 {% raw %}
-                <div class="col-md-8-2 paging_div" ng-controller='MainController'>
+                <div class="col-md-8-2 paging_div" ng-controller='PagerCtrl'>
                     <div ng-include src="'/static/angulartemplates/angularpager.html'"></div>
                 </div>
                 {% endraw %}

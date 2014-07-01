@@ -1,4 +1,8 @@
-FeedEaterApp.controller("MainController", function($scope){
+
+var fControllers = angular.module('fControllers', ['ngSanitize']);
+
+
+fControllers.controller("MainController", function($scope){
 
     $scope.message = 'this is a message from scope!~';
 
@@ -12,7 +16,7 @@ FeedEaterApp.controller("MainController", function($scope){
 
 
 
-FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $http){
+fControllers.controller("EntriesCtrl", ['$scope', '$http', function($scope, $http){
 
     $scope.user = USER_ID;
     $scope.page = PAGE_ID;
@@ -46,7 +50,7 @@ FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $htt
 
 
 
-FeedEaterApp.controller("SubCtrl", ['$scope', '$http', function($scope, $http){
+fControllers.controller("SubCtrl", ['$scope', '$http', function($scope, $http){
 
     $scope.message_new = 'this is the entrY! controller...';
     $scope.user = USER_ID;
@@ -92,5 +96,12 @@ FeedEaterApp.controller("SubCtrl", ['$scope', '$http', function($scope, $http){
 
 
     $scope.subData.getSubs();
+
+}]);
+
+
+fControllers.controller("PagerCtrl", ['$scope', function($scope){
+
+    $scope.f_message = 'i am f_message!';
 
 }]);
