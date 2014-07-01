@@ -40,15 +40,19 @@
 
             <br> USER, Flask: {{ user }} <br>
             {% raw %}
-
                 <div id='content' ng-controller='MainController'>
                     <div ng-include src="'/static/angulartemplates/angularentries.html'"></div>
                 </div>
-
             {% endraw %}
 
 
             </div>
+
+                {% raw %}
+                <div class="col-md-8-2 paging_div" ng-controller='MainController'>
+                    <div ng-include src="'/static/angulartemplates/angularpager.html'"></div>
+                </div>
+                {% endraw %}
 
             <div class="col-md-8-2 paging_div">
                 <hr>

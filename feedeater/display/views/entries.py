@@ -87,12 +87,13 @@ def recalculate_entries():
 
     print request
 
-    entries = user_manage_feeds.recalculate_entries(user, page)
+    entries, pager = user_manage_feeds.recalculate_entries(user, page)
     prefs = user_manage_feeds.get_user_prefs(user)
 
     print prefs
+    print pager
 
-    return jsonify(success=True, e=entries, compressed_view=prefs)
+    return jsonify(success=True, e=entries, compressed_view=prefs, pager=pager)
 
 
 @app.route('/sleep_data', methods=['POST'])

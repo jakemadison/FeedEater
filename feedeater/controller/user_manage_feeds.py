@@ -50,13 +50,21 @@ def recalculate_entries(user, p, only_star=False):
     final_list = []
     # cat_list = []
 
+
     per_page = int(c['POSTS_PER_PAGE'])
     page = int(p)
 
     print '----> current page:', page, '----> posts per page:', per_page
 
+    pager_indicator = {"has_prev": None, "has_next": None}
+
     start_pos = ((page-1)*per_page)
     end_pos = start_pos + per_page
+
+    if start_pos == 0:
+        pager_indicator["has_prev"] = False
+    else:
+        pager_indicator["has_prev"] = True
 
     print start_pos, end_pos
     print user
@@ -96,6 +104,14 @@ def recalculate_entries(user, p, only_star=False):
 
     qry = qry.order_by(Entry.published.desc())
 
+    total_records = qry.count()
+    print "count of records: ", total_records
+
+    if total_records > end_pos:
+        pager_indicator["has_next"] = True
+    else:
+        pager_indicator["has_next"] = False
+
     for each in qry[start_pos:end_pos]:
         u_table, uf_table, f_table, e_table, ufe_table = each
 
@@ -126,7 +142,7 @@ def recalculate_entries(user, p, only_star=False):
 
         final_list.append(entry_data)
 
-    return final_list
+    return final_list, pager_indicator
 
 
 def change_user_tags(user, entries):

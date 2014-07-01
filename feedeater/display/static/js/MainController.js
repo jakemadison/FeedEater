@@ -31,6 +31,7 @@ FeedEaterApp.controller("EntriesCtrl", ['$scope', '$http', function($scope, $htt
         responsePromise.success(function(data, status, headers, config) {
             $scope.myData.fromServer = data;
             $scope.no_entries = data.e.length == 0;
+            $scope.pager = data.pager;
             console.log(data);
         });
 
