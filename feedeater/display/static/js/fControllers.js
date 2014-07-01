@@ -16,20 +16,28 @@ fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', functi
         makeRequest.pullEntryData(PAGE_ID, false)
             .then(function(data){
                 console.log(data);
-                $scope.myData.fromServer = data;
-                $scope.no_entries = data.e.length == 0;
-                $scope.pager = data.pager;
             });
     };
+
+    $scope.$on('entriesUpdated', function(){
+                var Edata = makeRequest.getUpdatedEntries();
+                $scope.myData.fromServer = Edata;
+                $scope.no_entries = Edata.e.length == 0;
+                $scope.pager = Edata.pager;
+    })
+
+    $scope.$on('feedChange', function(){
+                $scope.myData.getEntries();
+    })
+
 
     $scope.myData.getEntries();  // initialize entries on load
 
 }]);
 
 
-fControllers.controller("SubCtrl", ['$scope', '$http', function($scope, $http){
+fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($scope, $http, makeRequest){
 
-    $scope.message_new = 'this is the entrY! controller...';
     $scope.user = USER_ID;
     $scope.page = PAGE_ID;
 
@@ -50,24 +58,38 @@ fControllers.controller("SubCtrl", ['$scope', '$http', function($scope, $http){
 
     $scope.subData.toggleFeed = function(userFeedId) {
 
-        var responsePromise = $http.get("/change_active", {params: {
-                uf_id: userFeedId
-            }});
+        makeRequest.toggleFeed(userFeedId)
+            .then(function(data){
+                console.log(data);
 
-        responsePromise.success(function(data, status, headers, config) {
+                var sub_array = $scope.subData.fromServer.subs;
 
-            var sub_array = $scope.subData.fromServer.subs;
-
-            for (var i=0; i<sub_array.length; i++) {
-                if (sub_array[i].uf_id == userFeedId) {
-                    sub_array[i].active = !sub_array[i].active;
+                for (var i=0; i<sub_array.length; i++) {
+                    if (sub_array[i].uf_id == userFeedId) {
+                        sub_array[i].active = !sub_array[i].active;
+                    }
                 }
-            }
-        });
+            });
 
-        responsePromise.error(function(data, status, headers, config) {
-            alert("AJAX failed!");
-        });
+
+//        var responsePromise = $http.get("/change_active", {params: {
+//                uf_id: userFeedId
+//            }});
+//
+//        responsePromise.success(function(data, status, headers, config) {
+//
+//            var sub_array = $scope.subData.fromServer.subs;
+//
+//            for (var i=0; i<sub_array.length; i++) {
+//                if (sub_array[i].uf_id == userFeedId) {
+//                    sub_array[i].active = !sub_array[i].active;
+//                }
+//            }
+//        });
+//
+//        responsePromise.error(function(data, status, headers, config) {
+//            alert("AJAX failed!");
+//        });
 
     };
 

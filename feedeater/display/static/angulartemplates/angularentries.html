@@ -6,13 +6,6 @@
     </div>
 
 <!-- loop over our entries: -->
-    message: {{ message }} <br>
-    user: {{ user }} <br>
-    page: {{ page }} <br>
-    HEY ----> {{ entries }} <br>
-
-    <button ng-click="myData.getEntries()">Send AJAX Request</button>
-    <br/>
 
     <div ng-repeat="entry in myData.fromServer.e">
         <div class="feedid{{ entry.feed_id }} entry_list" entryId="{{entry.entry_id}}">

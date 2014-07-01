@@ -3,6 +3,7 @@ var eServices = angular.module('eServices', []);
 eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootScope) {
 
     var current_paging = {'has_next': false, 'has_prev': false};
+    var entries = {};
 
     //public methods:
     var getEntries = function(page_id, star_only) {
@@ -17,16 +18,42 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         return (promise.then(handleSuccess));
     }
 
+
+    var toggleFeed = function(feed_id) {
+        console.log('toggleFeed method of makeRequest function running');
+
+        var promise = $http({
+            method: 'GET',
+            url: '/change_active',
+            params: {uf_id: feed_id}
+        });
+
+        return (promise.then(handleFeedSuccess));
+
+    }
+
+
+    // getters:
     var getPager = function() {
         console.log('getting pager');
         return current_paging;
     }
 
+    var getUpdatedEntries = function() {
+        console.log('getting updated entries');
+        return entries;
+    }
+
 
 
     //private methods:
-    function handleSuccess(data) {
+    function handleFeedSuccess(data) {
+        console.log('i am firing a feedChange broadcast!');
+        $rootScope.$broadcast("feedChange");
+        return data.data;
+    }
 
+    function handleSuccess(data) {
         var paging_response = data.data.pager;
 
         if (paging_response.has_next != current_paging.has_next ||
@@ -35,14 +62,19 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
                 console.log('i am firing a pagerUpdated broadcast!');
                 $rootScope.$broadcast("pagerUpdated");
         }
-
+        entries = data.data;
+        console.log('i am firing a entriesUpdated broadcast!');
+        $rootScope.$broadcast("entriesUpdated");
         return data.data;
     }
+
 
     //public API of service:
     return({
         pullEntryData: getEntries,
-        getPager: getPager
+        getPager: getPager,
+        getUpdatedEntries: getUpdatedEntries,
+        toggleFeed: toggleFeed
     });
 
 }]);
