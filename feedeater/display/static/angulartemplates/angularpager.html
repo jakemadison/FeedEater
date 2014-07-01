@@ -1,13 +1,10 @@
 
 <ul class="pager">
 
-    this is something: {{ f_message }}
-
-    <li class="previous"><a href="#">
+    <li ng-show="pager.has_prev" class="previous"><a href="#">
         <b>&laquo; Previous page</b></a></li>
 
-    <li class="next"><a href="#">
+    <li ng-show="pager.has_next" class="next"><a href="#">
         <b>Next page &raquo;</b></a></li>
-
 
 </ul>

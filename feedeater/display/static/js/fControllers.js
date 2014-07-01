@@ -1,22 +1,7 @@
-
 var fControllers = angular.module('fControllers', ['ngSanitize']);
 
 
-fControllers.controller("MainController", function($scope){
-
-    $scope.message = 'this is a message from scope!~';
-
-    $scope.templates =
-    [ { name: 'template1.html', url: '/static/angulartemplates/angularentries.html'},
-      { name: 'template2.html', url: 'template2.html'} ];
-    $scope.template = $scope.templates[0];
-
-
-});
-
-
-
-fControllers.controller("EntriesCtrl", ['$scope', '$http', function($scope, $http){
+fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', function($scope, $http, makeRequest){
 
     $scope.user = USER_ID;
     $scope.page = PAGE_ID;
@@ -27,27 +12,19 @@ fControllers.controller("EntriesCtrl", ['$scope', '$http', function($scope, $htt
 
     $scope.myData = {};
     $scope.myData.getEntries = function() {
-        var responsePromise = $http.get("/recalculate_entries", {params: {
-                page_id: PAGE_ID,
-                star_only: false
-            }});
 
-        responsePromise.success(function(data, status, headers, config) {
-            $scope.myData.fromServer = data;
-            $scope.no_entries = data.e.length == 0;
-            $scope.pager = data.pager;
-            console.log(data);
-        });
-
-        responsePromise.error(function(data, status, headers, config) {
-            alert("AJAX failed!");
-        });
+        makeRequest.pullEntryData(PAGE_ID, false)
+            .then(function(data){
+                console.log(data);
+                $scope.myData.fromServer = data;
+                $scope.no_entries = data.e.length == 0;
+                $scope.pager = data.pager;
+            });
     };
 
     $scope.myData.getEntries();  // initialize entries on load
 
 }]);
-
 
 
 fControllers.controller("SubCtrl", ['$scope', '$http', function($scope, $http){
@@ -100,8 +77,12 @@ fControllers.controller("SubCtrl", ['$scope', '$http', function($scope, $http){
 }]);
 
 
-fControllers.controller("PagerCtrl", ['$scope', function($scope){
+fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', function($scope, makeRequest){
 
-    $scope.f_message = 'i am f_message!';
+    $scope.$on('pagerUpdated', function() {
+        console.log('i detected that the pager was updated!');
+        $scope.pager = makeRequest.getPager();
+    })
+
 
 }]);
