@@ -36,7 +36,10 @@
                         <span class="label label-info">User Defined Tag</span></a>
                     <a href="#"><span class="label label-info">Pets</span></a>
                     <a href="#"><span class="label label-info">Funny</span></a>
-                    <a href="#"><span class="label label-default entry_cat_label" id="test1">
+
+                    <a href="#"><span class="label label-default entry_cat_label" id="test1"
+                            title="Only this category"
+                            ng-click="myData.requestCategoryFeed(entry.category)">
                         {{entry.category}}</span></a>
                 </div>
             </div>

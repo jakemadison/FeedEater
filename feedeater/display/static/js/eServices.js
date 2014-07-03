@@ -20,6 +20,11 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         return (promise.then(handleSuccess));
     };
 
+    var requestCategoryFeed = function(category) {
+        console.log('i am firing a requestCategory broadcast because of entries! data: ', category);
+        $rootScope.$broadcast("requestCategoryFeed", category);
+    };
+
 
 
     //Feed Methods:
@@ -113,7 +118,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         toggleFeed: toggleFeed,
         notifyPageChange: notifyPageChange,
         singleFeed: singleFeed,
-        categoryFeed: categoryFeed
+        categoryFeed: categoryFeed,
+        requestCategoryFeed: requestCategoryFeed
 
     });
 

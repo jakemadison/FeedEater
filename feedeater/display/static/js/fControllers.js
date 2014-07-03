@@ -19,18 +19,27 @@ fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', functi
             });
     };
 
+
+    $scope.myData.requestCategoryFeed = function(category) {
+        console.log('-- request for category initiated, data: ', category);
+        makeRequest.requestCategoryFeed(category);
+    };
+
+
+    //listeners:
     $scope.$on('entriesUpdated', function(){
                 var Edata = makeRequest.getUpdatedEntries();
                 $scope.myData.fromServer = Edata;
                 $scope.no_entries = Edata.e.length == 0;
                 $scope.pager = Edata.pager;
-    })
+    });
 
     $scope.$on('feedChange', function(){
                 $scope.myData.getEntries();
-    })
+    });
 
 
+    //init our entries:
     $scope.myData.getEntries();  // initialize entries on load
 
 }]);
@@ -94,13 +103,13 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
 
     $scope.subData.categoryFeed = function(category) {
 
-        console.log(category)
+        console.log('categoryFeed function started: ', category);
 
         var sub_array = $scope.subData.fromServer.subs;
 
         makeRequest.categoryFeed(category)
             .then(function(data){
-                console.log(data);
+                console.log('categoryFeed request finished: ', data);
 
                 for (var i=0; i<sub_array.length; i++) {
                     if (sub_array[i].category == category) {
@@ -112,6 +121,13 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
                 }
             });
     };
+
+
+    //listeners:
+    $scope.$on("requestCategoryFeed", function(event, c) {
+       console.log("i detect a requestCategory broadcast! data: ", c);
+        $scope.subData.categoryFeed(c);
+    });
 
 
     //init our subs:
