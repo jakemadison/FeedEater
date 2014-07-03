@@ -90,7 +90,27 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
                     }
                 }
             });
+    };
 
+    $scope.subData.categoryFeed = function(category) {
+
+        console.log(category)
+
+        var sub_array = $scope.subData.fromServer.subs;
+
+        makeRequest.categoryFeed(category)
+            .then(function(data){
+                console.log(data);
+
+                for (var i=0; i<sub_array.length; i++) {
+                    if (sub_array[i].category == category) {
+                        sub_array[i].active = true;
+                    }
+                    else {
+                        sub_array[i].active = false;
+                    }
+                }
+            });
     };
 
 

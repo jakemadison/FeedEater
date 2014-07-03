@@ -47,6 +47,19 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         return (promise.then(handleFeedSuccess));
     };
 
+    var categoryFeed = function(category) {
+        console.log('toggleFeed method of makeRequest function running');
+
+        console.log(category);
+        var promise = $http({
+            method: 'GET',
+            url: '/activatecategory',
+            params: {catname: category}
+        });
+
+        return (promise.then(handleFeedSuccess));
+    };
+
 
 
     //Pager Methods:
@@ -99,7 +112,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         getUpdatedEntries: getUpdatedEntries,
         toggleFeed: toggleFeed,
         notifyPageChange: notifyPageChange,
-        singleFeed: singleFeed
+        singleFeed: singleFeed,
+        categoryFeed: categoryFeed
 
     });
 

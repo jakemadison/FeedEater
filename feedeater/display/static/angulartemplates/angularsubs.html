@@ -3,7 +3,7 @@
     <span class="glyphicon glyphicon-folder-open folder" id="cat{{cat}}"
               onclick=""></span>
 
-    <span onclick="" class="label label-default catlabel">{{ cat }}</span>
+    <span onclick="" ng-click="subData.categoryFeed(cat)" class="label label-default catlabel">{{ cat }}</span>
 
     <div ng-repeat="sub in subData.fromServer.subs" ng-if="sub.category==cat">
         <div class="btn-group sub-btn btn-group-sm catlist{{cat}}">

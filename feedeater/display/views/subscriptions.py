@@ -41,15 +41,24 @@ def change_cats():
     return redirect(url_for('/'))
 
 
-@app.route('/activatecategory', methods=['POST'])
+@app.route('/activatecategory', methods=['POST', 'GET'])
 def activate_category():
 
     print 'entering activate_category function'
     user = g.user
     print user
 
-    cat = request.form['catname']
+    cat = request.args.get('catname', None)
+
+    print 'this is category: ', cat
+
+    if not cat:
+        print 'I do not have a category for some reason'
+        return jsonify(success=False)
+
     user_manage_feeds.activate_category(user, cat)
+
+    print 'done activating category'
     # return redirect(request.args.get('next') or url_for('index'))
     return jsonify(success=True)
 
