@@ -32,6 +32,7 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     }
 
     var notifyPageChange = function() {
+        console.log('i am firing a feedChange broadcast because of the pager!');
         $rootScope.$broadcast("feedChange");
     }
 
