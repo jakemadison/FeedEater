@@ -6,6 +6,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     var entries = {};
 
     //public methods:
+
+    //Entry Methods:
     var getEntries = function(page_id, star_only) {
         console.log('getEntries method of makeRequest function running');
 
@@ -16,9 +18,11 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         });
 
         return (promise.then(handleSuccess));
-    }
+    };
 
 
+
+    //Feed Methods:
     var toggleFeed = function(feed_id) {
         console.log('toggleFeed method of makeRequest function running');
 
@@ -29,24 +33,39 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         });
 
         return (promise.then(handleFeedSuccess));
-    }
+    };
 
+    var singleFeed = function(feed_id) {
+        console.log('toggleFeed method of makeRequest function running');
+
+        var promise = $http({
+            method: 'GET',
+            url: '/onefeedonly',
+            params: {uf_id: feed_id}
+        });
+
+        return (promise.then(handleFeedSuccess));
+    };
+
+
+
+    //Pager Methods:
     var notifyPageChange = function() {
         console.log('i am firing a feedChange broadcast because of the pager!');
         $rootScope.$broadcast("feedChange");
-    }
+    };
 
 
     // getters:
     var getPager = function() {
         console.log('getting pager');
         return current_paging;
-    }
+    };
 
     var getUpdatedEntries = function() {
         console.log('getting updated entries');
         return entries;
-    }
+    };
 
 
 
@@ -79,7 +98,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         getPager: getPager,
         getUpdatedEntries: getUpdatedEntries,
         toggleFeed: toggleFeed,
-        notifyPageChange: notifyPageChange
+        notifyPageChange: notifyPageChange,
+        singleFeed: singleFeed
 
     });
 
