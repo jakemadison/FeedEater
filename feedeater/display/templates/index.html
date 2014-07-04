@@ -20,10 +20,25 @@
 
 <div class="navbar-collapse collapse"> {% include 'messagebar.html' %} </div>
 
-    <!--main content: -->
+<!--main content: -->
 
-    <div class="sidebar"> {% include 'sublist.html' %} </div>
+<!-- Subscription toolbar & List of Subscribed feeds: -->
+<div class="col-sm-4" id="subscription_list" xmlns="http://www.w3.org/1999/html">
+{% raw %}
+    <div class='sidebar'>
 
+        <div ng-controller="ToolbarCtrl"
+                ng-include src="'/static/angulartemplates/angularsubtoolbar.html'"></div>
+
+        <div id='sub_list' ng-controller='SubCtrl'>
+            <div ng-include src="'/static/angulartemplates/angularsubs.html'"></div>
+        </div>
+    </div>
+</div>
+{% endraw %}
+
+
+<!--Actual Entry content: -->
     <div class="container"> <!--was class="container"-->
         <div class="row">
             <!--here's an idea.. what if this progress bar was (during rest periods) an indicator of how many

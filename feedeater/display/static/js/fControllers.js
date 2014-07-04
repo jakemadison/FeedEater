@@ -45,6 +45,28 @@ fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', functi
 }]);
 
 
+
+fControllers.controller("ToolbarCtrl", ['$scope', 'makeRequest', function($scope, makeRequest){
+
+    $scope.message = "I am the toolbar Ctrl!";
+
+    $scope.$on("entriesUpdated", function() {
+
+        console.log("toolbar heard about entries!");
+        $scope.user_preferences = makeRequest.getUserPreferences();
+        console.log("view status: ", $scope.user_preferences.compressed);
+
+    });
+
+
+
+}]);
+
+
+
+
+
+
 fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($scope, $http, makeRequest){
 
     $scope.user = USER_ID;

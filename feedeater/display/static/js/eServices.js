@@ -4,8 +4,14 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
 
     var current_paging = {'has_next': false, 'has_prev': false};
     var entries = {};
+    var user_preferences = {"compressed": false};
 
     //public methods:
+
+    //toolbar methods:
+    var getUserPreferences = function() {
+      return user_preferences;
+    };
 
     //Entry Methods:
     var getEntries = function(page_id, star_only) {
@@ -104,6 +110,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
                 $rootScope.$broadcast("pagerUpdated");
         }
         entries = data.data;
+        user_preferences.compressed = data.data.compressed_view;
+
         console.log('i am firing a entriesUpdated broadcast!');
         $rootScope.$broadcast("entriesUpdated");
         return data.data;
@@ -119,7 +127,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         notifyPageChange: notifyPageChange,
         singleFeed: singleFeed,
         categoryFeed: categoryFeed,
-        requestCategoryFeed: requestCategoryFeed
+        requestCategoryFeed: requestCategoryFeed,
+        getUserPreferences: getUserPreferences
 
     });
 
