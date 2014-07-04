@@ -71,12 +71,12 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     };
 
     var categoryFeed = function(category) {
-        console.log('toggleFeed method of makeRequest function running');
+        console.log('categoryFeed method of makeRequest function running');
 
         console.log(category);
         var promise = $http({
             method: 'GET',
-            url: '/activatecategory',
+            url: '/togglecategory',
             params: {catname: category}
         });
 

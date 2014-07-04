@@ -151,10 +151,7 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
 
                 for (var i=0; i<sub_array.length; i++) {
                     if (sub_array[i].category == category) {
-                        sub_array[i].active = true;
-                    }
-                    else {
-                        sub_array[i].active = false;
+                        sub_array[i].active = data.all;
                     }
                 }
             });

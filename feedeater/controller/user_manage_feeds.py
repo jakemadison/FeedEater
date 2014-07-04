@@ -462,25 +462,29 @@ def all_active(user):
         db_session.rollback()
 
 
-def activate_category(user, cat):
+def toggle_category(user, cat):
 
     try:
-        db_session.query(UserFeeds).filter_by(userid=user.id).update(
-            {
-                "is_active": False
-            })
+        qry = db_session.query(UserFeeds).filter_by(userid=user.id, category=cat)
+        existing = qry.all()
 
-        db_session.query(UserFeeds).filter_by(category=cat).update(
-            {
-                "is_active": True
-            })
+        # check if any are False, if so: set all to true, otherwise, set all to False.
+        if any([x.is_active is False for x in existing]):
+            qry.update({"is_active": True})
+            all_on = True
+        else:
+            qry.update({"is_active": False})
+            all_on = False
 
         db_session.commit()
+        return all_on
 
     except Exception, e:
         print 'errrror with existing is_active record'
         print str(e)
         db_session.rollback()
+
+
 
 
 def update_is_active(uf_id):
