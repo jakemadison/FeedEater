@@ -207,6 +207,12 @@ sidebar-nav {
     cursor: pointer;
 }
 
+.catlabel:hover {
+    border-color: #398439;
+    background-color: #47a447;
+}
+
+
 .btn-sm {
     border-radius: 4px;
     margin-bottom: 2px;

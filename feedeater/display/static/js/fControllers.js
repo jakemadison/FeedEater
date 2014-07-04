@@ -89,6 +89,7 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
     $scope.page = PAGE_ID;
 
     $scope.subData = {};
+
     $scope.subData.getSubs = function() {
         var responsePromise = $http.get("/get_user_subs", {params: {
             }});
@@ -102,6 +103,38 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
             alert("AJAX failed!");
         });
     };
+
+
+    $scope.isOn = function(cat) {
+
+        var sub_array = $scope.subData.fromServer.subs;
+        var category_on = false;
+        var result;
+
+        if (typeof sub_array === 'undefined') {
+            result = 'label-default';
+            return result;
+        }
+
+        for (var i=0; i<sub_array.length; i++) {
+            if (sub_array[i].category == cat) {
+                if (sub_array[i].active === true) {
+                    category_on = true;
+                    break;
+                }
+            }
+        }
+
+        if (category_on) {
+            result = 'label-success';
+        }
+
+        return result;
+
+    };
+
+
+
 
     $scope.subData.toggleFeed = function(userFeedId) {
 
