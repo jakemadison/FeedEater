@@ -63,6 +63,17 @@ fControllers.controller("ToolbarCtrl", ['$scope', 'makeRequest', function($scope
     };
 
 
+    $scope.all_feeds = function() {
+      console.log("allFeeds activated, page: ", PAGE_ID);
+
+        makeRequest.allFeeds()
+        .then(function(){
+                console.log("all feeds completed! Let's update Entries!");
+            });
+
+    };
+
+
 
 
     // listeners:
@@ -135,7 +146,6 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
 
 
 
-
     $scope.subData.toggleFeed = function(userFeedId) {
 
         makeRequest.toggleFeed(userFeedId)
@@ -195,6 +205,14 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
     $scope.$on("requestCategoryFeed", function(event, c) {
        console.log("i detect a requestCategory broadcast! data: ", c);
         $scope.subData.categoryFeed(c);
+    });
+
+    $scope.$on("toolbarFeedChange", function() {
+
+        var sub_array = $scope.subData.fromServer.subs;
+        for (var i=0; i<sub_array.length; i++) {
+            sub_array[i].active = true;
+        }
     });
 
 

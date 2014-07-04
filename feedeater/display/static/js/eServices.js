@@ -58,6 +58,19 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         return (promise.then(handleFeedSuccess));
     };
 
+    var allFeeds = function() {
+            var promise = $http({
+            method: 'GET',
+            url: '/allfeeds'
+        });
+
+        $rootScope.$broadcast("toolbarFeedChange");
+
+        return (promise.then(handleFeedSuccess));
+    };
+
+
+
     var singleFeed = function(feed_id) {
         console.log('toggleFeed method of makeRequest function running');
 
@@ -147,7 +160,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         categoryFeed: categoryFeed,
         requestCategoryFeed: requestCategoryFeed,
         getUserPreferences: getUserPreferences,
-        refreshFeeds: refreshFeeds
+        refreshFeeds: refreshFeeds,
+        allFeeds: allFeeds
 
     });
 

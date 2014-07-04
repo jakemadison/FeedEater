@@ -80,13 +80,14 @@ def one_feed_only():
     return jsonify(success=True)
 
 
-@app.route('/allfeeds', methods=['POST'])
+@app.route('/allfeeds', methods=['GET'])
 def show_all_feeds():
 
     print "entered all feeds method==========================="
     user = g.user
     user_manage_feeds.all_active(user)
     # return redirect(request.args.get('next') or url_for('index'))
+
     return jsonify(success=True)
 
 
