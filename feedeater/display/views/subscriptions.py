@@ -104,7 +104,7 @@ def change_active():
 
 
 
-@app.route('/refreshfeeds', methods=['POST'])
+@app.route('/refreshfeeds', methods=['POST', 'GET'])
 def ref_feeds():
     user = g.user
     user_manage_feeds.main(user)

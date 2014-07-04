@@ -13,6 +13,18 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
       return user_preferences;
     };
 
+    var refreshFeeds = function() {
+      var promise = $http({
+            method: 'GET',
+            url: '/refreshfeeds'
+      });
+
+        return(promise.then(handleRefreshSuccess));
+
+    };
+
+
+
     //Entry Methods:
     var getEntries = function(page_id, star_only) {
         console.log('getEntries method of makeRequest function running');
@@ -94,6 +106,12 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
 
 
     //private methods:
+    function handleRefreshSuccess() {
+        console.log("refresh has been successful!");
+        $rootScope.$broadcast("feedChange");
+    }
+
+
     function handleFeedSuccess(data) {
         console.log('i am firing a feedChange broadcast!');
         $rootScope.$broadcast("feedChange");
@@ -128,7 +146,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         singleFeed: singleFeed,
         categoryFeed: categoryFeed,
         requestCategoryFeed: requestCategoryFeed,
-        getUserPreferences: getUserPreferences
+        getUserPreferences: getUserPreferences,
+        refreshFeeds: refreshFeeds
 
     });
 

@@ -50,6 +50,22 @@ fControllers.controller("ToolbarCtrl", ['$scope', 'makeRequest', function($scope
 
     $scope.message = "I am the toolbar Ctrl!";
 
+    $scope.refreshFeeds = function() {
+      console.log("refreshFeeds activated, page: ", PAGE_ID);
+
+        makeRequest.refreshFeeds()
+        .then(function(){
+                console.log("refresh feeds completed! Let's update Entries!");
+            });
+
+
+
+    };
+
+
+
+
+    // listeners:
     $scope.$on("entriesUpdated", function() {
 
         console.log("toolbar heard about entries!");

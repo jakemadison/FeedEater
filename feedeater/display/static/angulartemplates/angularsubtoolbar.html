@@ -21,9 +21,12 @@
 
 <div class="btn-toolbar" role="toolbar">
     <div class="btn-group">
-        <button type="button" class="btn btn-default" id="refbtn" onclick="refreshFeeds('{{g.page}}')">
+        <button type="button" class="btn btn-default" id="refbtn"
+                ng-click="refreshFeeds()">
+
             <span class="glyphicon glyphicon-refresh refspan" id="cog" title="refresh feeds"></span>
         </button>
+
 
         <button type="button" class="btn btn-default">
             <span class="glyphicon glyphicon-cog" id="cog"
