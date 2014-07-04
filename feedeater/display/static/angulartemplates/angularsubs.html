@@ -1,12 +1,15 @@
 <div ng-repeat="cat in subData.fromServer.cats">
 
-    <span class="glyphicon glyphicon-folder-open folder" id="cat{{cat}}"
+    <span class="glyphicon folder" id="cat{{cat}}"
+          ng-class="{'glyphicon-folder-open': isActive, 'glyphicon-folder-close': !isActive}"
+          ng-init="isActive=true"
+          ng-click="isActive=!isActive"
               onclick=""></span>
 
     <span onclick="" ng-click="subData.categoryFeed(cat)" class="label label-default catlabel">{{ cat }}</span>
 
     <div ng-repeat="sub in subData.fromServer.subs" ng-if="sub.category==cat">
-        <div class="btn-group sub-btn btn-group-sm catlist{{cat}}">
+        <div class="btn-group sub-btn btn-group-sm catlist{{cat}}" ng-if="isActive">
             <div class="catheader">
                <button type="button"
                        ng-class="sub.active ? 'btn-success active-category' : 'inactive-category'"
