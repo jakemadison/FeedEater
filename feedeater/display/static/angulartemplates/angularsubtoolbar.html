@@ -1,16 +1,19 @@
 
 <h4>Subscriptions</h4>
 
+
+<!--input box: -->
 <form name="add feed" class="navbar-form navbar-left input_thing"
           action="." onsubmit="">
 
     <div class="form-group">
-        <!--{{ add_feed_form.feed(class="form-control input_thing", placeholder="Add Feed") }}-->
-        <input type="text" id="add_feed_text" class="form-control input_thing"/>
+
+        <input type="text" id="add_feed_text" class="form-control input_thing" placeholder="Add Feed"/>
     </div>
 
     <input type="button" id="add_btn" name="submit" value="Add"
-           onclick="addFeed('{{g.page}}');" class="btn btn-default"/>
+           ng-click="add_feed()"
+           class="btn btn-default"/>
 
         <!--error/info messages-->
     <div class="flash" id="error_msg"><span class="label label-danger"> </span></div>
@@ -19,6 +22,8 @@
 </form>
 
 
+
+<!--control buttons: -->
 <div class="btn-toolbar" role="toolbar">
     <div class="btn-group">
         <button type="button" class="btn btn-default" id="refbtn"
@@ -37,50 +42,37 @@
             <li><a href="javascript:tag('User Defined Whatever', '15');">
             <span class="label label-info">User Defined Tag</span></a></li>
                           <li><a href="#">
-                              <span onclick="recalculateEntries('{{g.page}}', 'true')" class="">Starred</span></a></li>
+                              <span class="">Starred <!-- was recalculateEntries with true for starred -->
+                              </span></a></li>
                           <li><a href="#">
                               <span class="">Edit Categories</span></a></li>
-                          <li><a href="/allfeeds">
-                              <span class="">Show All Feeds</span></a></li>
         </ul></button>
 
 
 
 
-<button type="button" class="btn btn-default" onclick="">
-   <span ng-class="{'glyphicon-align-justify': user_preferences.compressed,
-                    'glyphicon-th-list': !user_preferences.compressed}"
-           class="viewchange glyphicon" id="cog" title="compressed view">
-   </span>
-</button>
-
-
-
-
-
-
+    <button type="button" class="btn btn-default" onclick="">
+       <span ng-class="{'glyphicon-align-justify': user_preferences.compressed,
+                        'glyphicon-th-list': !user_preferences.compressed}"
+               class="viewchange glyphicon" id="cog" title="compressed view">
+       </span>
+    </button>
 
     <button type="button" class="btn btn-default" ng-click="all_feeds()">
-       <span class="glyphicon glyphicon-globe" id="hand" title="show all feeds"></span></button>
-
-
+       <span class="glyphicon glyphicon-globe" id="hand" title="show all feeds"></span>
+    </button>
 
 
     <button type="button" class="btn btn-default">
        <span class="glyphicon glyphicon-star" id="starred_btn"
-             onclick="recalculateEntries('{{g.page}}', 'true')"
-             title="show starred posts"></span></button>
+                 ng-click=""
+                 title="show starred posts"></span>
+    </button>
 
 
-   <button type="button" class="btn btn-default">
+    <button type="button" class="btn btn-default">
        <span class="glyphicon glyphicon-hand-left" id="hand" title="push left"></span></button>
     </div>
-
- </div>
-
 <br>
 
 </div>
-
-
-

@@ -74,6 +74,10 @@ fControllers.controller("ToolbarCtrl", ['$scope', 'makeRequest', function($scope
     };
 
 
+    $scope.add_feed = function() {
+      console.log("add_feed has begun!");
+    };
+
 
 
     // listeners:
