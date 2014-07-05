@@ -158,15 +158,18 @@ def add_feed():
 
     print "........]]]]] add_feed has been activated"
 
-    # add_feed_form = AddFeedForm(csrf_enabled=False)
     user = g.user
 
-    data = request.form["data"]
+    try:
+        data = request.form["url"]
+        print '...............', data
 
-    print '...............', data
+    except Exception, e:
+        print e
+        return jsonify(msg="add_feed failure")
 
     # this doesn't check for bad input..
-    # need to validate if URL / if empty here
+    # need to validate if URL / if empty here (or on client side?)
 
     result = user_manage_feeds.add_user_feed(user, data)
 
@@ -191,8 +194,6 @@ def add_feed():
         msg = "Unknown error ????"
         category = "error"
     return jsonify(msg=msg, category=category)
-
-        # return redirect(url_for('index.build_index'))
 
 
 @app.route('/starred_only', methods=['POST'])

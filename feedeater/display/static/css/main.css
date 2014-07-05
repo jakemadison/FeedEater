@@ -246,14 +246,6 @@ sidebar-nav {
     border-radius: 6px;
 }
 
-#error_msg {
-    display: none;
-}
-
-#info_msg {
-    display: none;
-}
-
 .bird {
     float: right;
 }

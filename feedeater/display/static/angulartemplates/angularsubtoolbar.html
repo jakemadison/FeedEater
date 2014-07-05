@@ -4,20 +4,23 @@
 
 <!--input box: -->
 <form name="add feed" class="navbar-form navbar-left input_thing"
-          action="." onsubmit="">
+          ng-submit="add_feed()">
 
     <div class="form-group">
 
-        <input type="text" id="add_feed_text" class="form-control input_thing" placeholder="Add Feed"/>
+        <!-- input type should be URL down the line.. -->
+        <input type="text" id="add_feed_text" ng-model="inputText" name="inputText"
+               class="form-control input_thing" placeholder="Add Feed"/>
     </div>
 
-    <input type="button" id="add_btn" name="submit" value="Add"
-           ng-click="add_feed()"
+    <input type="submit" id="add_btn" name="submit" value="Add"
            class="btn btn-default"/>
 
         <!--error/info messages-->
-    <div class="flash" id="error_msg"><span class="label label-danger"> </span></div>
-    <div class="flash" id="info_msg"><span class="label label-primary"> </span></div>
+    <div class="flash" id="error_msg" ng-show="errorMessage || infoMessage || successMessage">
+        <span ng-class="{'label-danger': errorMessage,
+        'label-primary': infoMessage, 'label-success': successMessage}"
+              class="label">{{ messageText }}</span></div>
 
 </form>
 

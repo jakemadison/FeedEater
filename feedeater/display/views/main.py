@@ -43,7 +43,7 @@ def build_index(page=1):
     form = LoginForm(request.form)
     login_form = LoginForm()
 
-    add_feed_form = AddFeedForm(csrf_enabled=False)  # this should maybe be true... :/
+    # add_feed_form = AddFeedForm(csrf_enabled=False)  # this should maybe be true... :/
 
     if user is None or not g.user.is_authenticated():
         user = user_manage_feeds.get_guest_user()
@@ -54,7 +54,9 @@ def build_index(page=1):
     return render_template("index.html", title='Home',
                            user=user, form=form,
                            providers=flaskapp.config['OPENID_PROVIDERS'],
-                           login_form=login_form, add_feed_form=add_feed_form, prefs=1)
+                           login_form=login_form,
+                           # add_feed_form=add_feed_form,
+                           prefs=1)
 
 
 # this function is now handling login via js request:

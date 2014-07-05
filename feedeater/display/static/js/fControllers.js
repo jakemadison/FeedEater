@@ -46,7 +46,7 @@ fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', functi
 
 
 
-fControllers.controller("ToolbarCtrl", ['$scope', 'makeRequest', function($scope, makeRequest){
+fControllers.controller("ToolbarCtrl", ['$scope', '$timeout', 'makeRequest', function($scope, $timeout, makeRequest){
 
     $scope.message = "I am the toolbar Ctrl!";
 
@@ -73,9 +73,49 @@ fControllers.controller("ToolbarCtrl", ['$scope', 'makeRequest', function($scope
 
     };
 
+    $scope.inputText = '';
+    $scope.errorMessage = false;
+    $scope.infoMessage = false;
+    $scope.successMessage = false;
+    $scope.messageText = '';
 
     $scope.add_feed = function() {
       console.log("add_feed has begun!");
+      console.log('input text: ', this.inputText);
+
+        makeRequest.addFeed(this.inputText)
+            .then(function(result) {
+                console.log("controller received: ", result);
+
+                switch (result.category){
+                    case "error":
+                        $scope.errorMessage = true;
+                        $scope.messageText = result.msg;
+                        break;
+
+                    case "info":
+                        $scope.infoMessage = true;
+                        $scope.messageText = result.msg;
+                        break;
+
+                    case "success":
+                        $scope.successMessage = true;
+                        $scope.messageText = result.msg;
+                        break;
+
+                    default:
+                        console.log("message type was not understood by controller");
+                }
+
+                $timeout(function() {
+                    $scope.errorMessage = false;
+                    $scope.infoMessage = false;
+                    $scope.successMessage = false;
+                    $scope.messageText = '';
+                }, 3000);
+
+            });
+
     };
 
 

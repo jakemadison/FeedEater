@@ -23,6 +23,20 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
 
     };
 
+    var addFeed = function(url) {
+        console.log("addFeed service with url: ", url);
+
+        var promise = $http({
+            method: 'POST',
+            url: '/add_feed',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            data: $.param({url: url})
+        });
+
+        return(promise.then(handleAddFeedResult));
+
+    };
+
 
 
     //Entry Methods:
@@ -119,6 +133,13 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
 
 
     //private methods:
+
+    function handleAddFeedResult(result) {
+        console.log("addFeed result happened!");
+        console.log("result: ", result);
+        return result.data;
+    }
+
     function handleRefreshSuccess() {
         console.log("refresh has been successful!");
         $rootScope.$broadcast("feedChange");
@@ -161,7 +182,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         requestCategoryFeed: requestCategoryFeed,
         getUserPreferences: getUserPreferences,
         refreshFeeds: refreshFeeds,
-        allFeeds: allFeeds
+        allFeeds: allFeeds,
+        addFeed: addFeed
 
     });
 
