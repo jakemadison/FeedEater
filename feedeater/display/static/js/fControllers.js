@@ -276,11 +276,6 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
 
 fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', function($scope, makeRequest){
 
-    $scope.$on('pagerUpdated', function() {
-        console.log('i detected that the pager was updated!');
-        $scope.pager = makeRequest.getPager();
-    });
-
     $scope.pager_functions = {};
 
     $scope.pager_functions.advance_page = function(amount) {
@@ -291,6 +286,26 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', function($scope, 
         makeRequest.notifyPageChange();
         $("html, body").animate({ scrollTop: 0 }, "fast");  // this might get annoying..
     };
+
+
+    //listeners:
+    $scope.$on('pagerUpdated', function() {
+        console.log('i detected that the pager was updated!');
+        $scope.pager = makeRequest.getPager();
+    });
+
+
+    $scope.$on('keypress', function(e, type){
+        console.log("detected keypress: ", type);
+
+        if (type === "left" && $scope.pager.has_prev) {
+            $scope.pager_functions.advance_page(-1);
+        }
+        else if (type === "right" && $scope.pager.has_next) {
+            $scope.pager_functions.advance_page(1);
+        }
+
+    });
 
 
 }]);
