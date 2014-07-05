@@ -48,6 +48,8 @@ fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', functi
 
 fControllers.controller("ToolbarCtrl", ['$scope', '$timeout', 'makeRequest', function($scope, $timeout, makeRequest){
 
+    $scope.userId = parseInt(USER_ID);
+
     $scope.message = "I am the toolbar Ctrl!";
 
     $scope.refreshFeeds = function() {
