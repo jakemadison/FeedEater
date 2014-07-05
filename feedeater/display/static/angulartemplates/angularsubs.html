@@ -24,7 +24,7 @@
                        ng-click="subData.toggleFeed(sub.uf_id)">
 
                             <span class="badge pull-right unreadcount">{{sub.count}}</span>
-                       {{ sub.title }}
+                       {{ sub.title | limitTo: 40 }}
                </button>
             </div>
 

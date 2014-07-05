@@ -18,8 +18,8 @@ def get_unread_count(feed_id, user):
 
     # first just get the uf_id
 
-    uf_res = db_session.query(UserFeeds).filter(UserFeeds.userid == user.id, UserFeeds.feedid == feed_id).first()
-    uf_id = uf_res.id
+    # uf_res = db_session.query(UserFeeds).filter(UserFeeds.userid == user.id, UserFeeds.feedid == feed_id).first()
+    # uf_id = uf_res.id
 
     entry_count = db_session.query(Entry).filter(Entry.feed_id == feed_id).count()
     # qry = qry.outerjoin(UserEntry, UserEntry.entryid == Entry.id)
@@ -35,7 +35,7 @@ def get_unread_count(feed_id, user):
     # left join user_feed_entry ufe on ufe.entryid = e.id
     # where uf.userid = 3 and (ufe.unread = 1 or ufe.unread is null)
 
-    print feed_id
+    # print feed_id
     return entry_count
 
 
