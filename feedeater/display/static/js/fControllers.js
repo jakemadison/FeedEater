@@ -87,6 +87,7 @@ fControllers.controller("ToolbarCtrl", ['$scope', '$timeout', 'makeRequest', fun
             .then(function(result) {
                 console.log("controller received: ", result);
 
+
                 switch (result.category){
                     case "error":
                         $scope.errorMessage = true;
@@ -101,6 +102,8 @@ fControllers.controller("ToolbarCtrl", ['$scope', '$timeout', 'makeRequest', fun
                     case "success":
                         $scope.successMessage = true;
                         $scope.messageText = result.msg;
+                        makeRequest.requestSubUpdate();  //notify subs that feeds have changed
+                        makeRequest.notifyPageChange();  //notify entries that feeds have updated
                         break;
 
                     default:
@@ -257,6 +260,11 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
         for (var i=0; i<sub_array.length; i++) {
             sub_array[i].active = true;
         }
+    });
+
+    $scope.$on("requestSubUpdate", function() {
+       console.log("sub update was requested");
+        $scope.subData.getSubs();
     });
 
 

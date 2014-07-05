@@ -37,6 +37,10 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
 
     };
 
+    var requestSubUpdate = function() {
+      $rootScope.$broadcast("requestSubUpdate");
+    };
+
 
 
     //Entry Methods:
@@ -183,7 +187,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         getUserPreferences: getUserPreferences,
         refreshFeeds: refreshFeeds,
         allFeeds: allFeeds,
-        addFeed: addFeed
+        addFeed: addFeed,
+        requestSubUpdate: requestSubUpdate
 
     });
 
