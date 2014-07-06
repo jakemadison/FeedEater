@@ -13,6 +13,41 @@ fControllers.controller("messagebarCtrl", ['$scope', '$http', 'makeRequest', fun
     $scope.avatar_size = '150';
 
     $scope.gravatar = 'http://www.gravatar.com/avatar/' + USER_HASH + '?d=mm&s=' + $scope.avatar_size;
+    $scope.entry_progress = 0;
+    $scope.total_entry = 0;
+
+    //progress bar stuff:
+    $scope.bar = {'progress': 50, 'remaining': 50};
+
+    $scope.$on('progressbarUpdate', function(e, data) {
+       console.log("received progressbarupdate notice", data);
+
+        var portion = (parseInt(PAGE_ID))*data.page_len;
+        var left_section = (portion/data.total_entry_count)*100;
+
+        if (left_section >= 100) {
+            $scope.bar.progress = 100;
+            $scope.bar.remaining = 0;
+        }
+        else {
+            $scope.bar.progress = left_section;
+            $scope.bar.remaining = 100 - $scope.bar.progress;
+        }
+
+
+        $scope.total_entry = data.total_entry_count;
+        $scope.entry_progress = portion;
+
+        //page*len = number of total entries we've looked at
+        //total = total number of entries
+
+        //(page*len)/total * 100 = left side
+        //100 - left side = right side
+        //
+
+    });
+
+
 
 
 }]);

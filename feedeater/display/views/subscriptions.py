@@ -228,7 +228,7 @@ def change_view():
 def get_user_subs():
     print 'getting user subs and cats'
     user = g.user
-    sub_list = user_manage_feeds.get_user_feeds(user)
+    sub_list, unread = user_manage_feeds.get_user_feeds(user)
     cats = sub_list['cat_list']
     feed_data = sub_list['feed_data']
     cats = [str(x) for x in (sorted(cats))]

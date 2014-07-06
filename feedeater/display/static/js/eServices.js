@@ -6,7 +6,16 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     var entries = {};
     var user_preferences = {"compressed": false};
 
+    var progress_data = {'total_entry_count': 0, 'current_offset': 0, 'page_len': 0};
+
+
     //public methods:
+
+
+    //messageBar methods:
+
+
+
 
     //toolbar methods:
     var getUserPreferences = function() {
@@ -120,6 +129,7 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     var notifyPageChange = function() {
         console.log('i am firing a feedChange broadcast because of the pager!');
         $rootScope.$broadcast("feedChange");
+        $rootScope.$broadcast('progressbarUpdate', progress_data);
     };
 
 
@@ -141,6 +151,7 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     function handleAddFeedResult(result) {
         console.log("addFeed result happened!");
         console.log("result: ", result);
+
         return result.data;
     }
 
@@ -148,7 +159,6 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         console.log("refresh has been successful!");
         $rootScope.$broadcast("feedChange");
     }
-
 
     function handleFeedSuccess(data) {
         console.log('i am firing a feedChange broadcast!');
@@ -167,9 +177,12 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         }
         entries = data.data;
         user_preferences.compressed = data.data.compressed_view;
+        progress_data.total_entry_count = data.data.total_records;
+        progress_data.page_len = data.data.e.length;
 
         console.log('i am firing a entriesUpdated broadcast!');
         $rootScope.$broadcast("entriesUpdated");
+        $rootScope.$broadcast('progressbarUpdate', progress_data);
         return data.data;
     }
 

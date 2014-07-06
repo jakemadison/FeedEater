@@ -1,2 +1,2 @@
-angular.module('FeedEaterApp', ['fControllers', 'eServices']);
+angular.module('FeedEaterApp', ['fControllers', 'eServices', 'ui.bootstrap']);
 

@@ -142,7 +142,7 @@ def recalculate_entries(user, p, only_star=False):
 
         final_list.append(entry_data)
 
-    return final_list, pager_indicator
+    return final_list, pager_indicator, total_records
 
 
 def change_user_tags(user, entries):
@@ -351,7 +351,7 @@ def get_user_feeds(user=None):
 
         # print final_res
 
-        return final_res
+        return final_res, unread_count
 
     else:
         feed_list = Feed.query.all()
