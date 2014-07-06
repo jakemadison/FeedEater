@@ -18,10 +18,14 @@
 {% include 'header.html' %}
 
 
-<div class="navbar-collapse collapse"> {% include 'messagebar.html' %} </div>
+<div class="navbar-collapse collapse">
+    {% raw %}
+    <div ng-controller="messagebarCtrl"
+                ng-include src="'/static/angulartemplates/angularmessagebar.html'"></div>
+    {% endraw %}
+</div>
 
 <!--main content: -->
-
 <!-- Subscription toolbar & List of Subscribed feeds: -->
 
 {% raw %}

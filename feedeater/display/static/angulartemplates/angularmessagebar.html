@@ -1,0 +1,53 @@
+<div class="jumbotron jum_one">
+    <div class="avatar"><a href="http://gravatar.com/emails/" target="_blank">
+        <img ng-src="{{ gravatar }}"
+             title="Change your avatar at gravatar.com"></a>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <div id="welcome-msg" style="display:block;">
+            <h1 class="hi_class">Hi, {{nickname}}!</h1>
+            <p>Reinventing the wheel for fun, not profit.</p>
+
+<!--login crap: -->
+<div class="row"  ng-if="role === 1">
+    <button class="btn btn-primary btn-lg" ng-hide="!pre_login"
+           ng-click="pre_login=false" id="create_acct">Start Feed_Eating &raquo;</button>
+
+    <div class="col-md-8 row" id="login_text" ng-show="!pre_login">
+        <div class="row">
+            <h4 style="float:left;">Log in with:</h4>
+            <a class="login-btns" role="button" style="cursor: pointer; float:left;"
+               onclick="gmail_login('https://www.google.com/accounts/o8/id')" id="gmail_login">
+                <img src="../static/img/social_google_box_new.png" height="60px" width="60px">
+            </a>
+
+            <a class="login-btns" role="button" style="cursor: pointer; float:left;"
+               onclick="fb_login()" id="fb_login">
+                <img src="../static/img/social_facebook_box_blue_new.png" height="60px" width="60px">
+            </a>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+        <div class="col-md-3 bird" align="right">
+            <p><img src="../static/img/bird-main.png"
+                    height="47%" width="47%" title="Because internet loves birds"></p>
+        </div>
+
+
+        </div>
+
+        <div class="progress progress-striped active pbar">
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="10"
+                         aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="pbar">
+
+                </div>
+        </div>
+    </div>
+</div>

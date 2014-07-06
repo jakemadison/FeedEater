@@ -1,6 +1,25 @@
 var fControllers = angular.module('fControllers', ['ngSanitize']);
 
 
+fControllers.controller("messagebarCtrl", ['$scope', '$http', 'makeRequest', function($scope, $http, makeRequest){
+
+    $scope.pre_login = true;
+
+    $scope.user = USER_ID;
+    $scope.nickname = USER_NICKNAME;
+    $scope.page = PAGE_ID;
+    $scope.hash = USER_HASH;
+    $scope.role = parseInt(USER_ROLE);
+    $scope.avatar_size = '150';
+
+    $scope.gravatar = 'http://www.gravatar.com/avatar/' + USER_HASH + '?d=mm&s=' + $scope.avatar_size;
+
+
+}]);
+
+
+
+
 fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', function($scope, $http, makeRequest){
 
     $scope.user = USER_ID;

@@ -7,6 +7,7 @@ from feedeater.display.forms import LoginForm, AddFeedForm
 from feedeater.config import configs as c
 from feedeater.database.models import User  # , ROLE_USER, Entry, UserEntry
 from feedeater.controller import user_manage_feeds, manage_users
+from hashlib import md5
 #from flask import Markup
 #import sys
 #from feedeater.controller import FeedGetter
@@ -40,6 +41,9 @@ def build_index(page=1):
     g.page = page
     user = g.user
 
+    print 'user info: .......................'
+    print dir(user)
+
     form = LoginForm(request.form)
     login_form = LoginForm()
 
@@ -48,6 +52,8 @@ def build_index(page=1):
     if user is None or not g.user.is_authenticated():
         user = user_manage_feeds.get_guest_user()
         login_user(user)
+
+    g.hash = md5(user.email).hexdigest()
 
     # with either json, or render, this should actually be returning the user_entry table joined with entry
     # so we get a full list of user entries, tags, categories, stars, etc.
