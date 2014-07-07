@@ -17,7 +17,7 @@ fControllers.controller("messagebarCtrl", ['$scope', '$http', 'makeRequest', fun
     $scope.total_entry = 0;
 
     //progress bar stuff:
-    $scope.bar = {'progress': 50, 'remaining': 50};
+    $scope.bar = {'progress': 100, 'remaining': 0};
 
     $scope.$on('progressbarUpdate', function(e, data) {
        console.log("received progressbarupdate notice", data);
