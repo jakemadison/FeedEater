@@ -351,7 +351,7 @@ def get_user_feeds(user=None):
 
         # print final_res
 
-        return final_res, unread_count
+        return final_res
 
     else:
         feed_list = Feed.query.all()
@@ -607,7 +607,10 @@ def main(user):
     xx = get_user_feeds(user)
     send_feed = []
 
+    print 'xx:', xx
+
     for f in xx['feed_data']:
+
         unit = {'feed_id': f['feed_id'], 'url': f['url']}
         send_feed.append(unit)
 
