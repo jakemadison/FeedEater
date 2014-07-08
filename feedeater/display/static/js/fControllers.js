@@ -1,7 +1,8 @@
 var fControllers = angular.module('fControllers', ['ngSanitize']);
 
 
-fControllers.controller("messagebarCtrl", ['$scope', '$http', 'makeRequest', function($scope, $http, makeRequest){
+fControllers.controller("messagebarCtrl", ['$scope', '$http', '$timeout', 'makeRequest',
+                                                function($scope, $timeout, $http, makeRequest){
 
     $scope.pre_login = true;
 
@@ -44,6 +45,19 @@ fControllers.controller("messagebarCtrl", ['$scope', '$http', 'makeRequest', fun
         //(page*len)/total * 100 = left side
         //100 - left side = right side
         //
+
+    });
+
+
+
+
+    $scope.$on('entryRefreshInit', function() {
+
+        console.log('messagebar: I have detected a refresh occurring.  I should probably deal with it.');
+
+//        $timeout(function() {
+//            console.log('I am a timeout!!');
+//        }, 1000);
 
     });
 

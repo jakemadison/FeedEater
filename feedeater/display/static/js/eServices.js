@@ -13,7 +13,19 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
 
 
     //messageBar methods:
+    var checkProgress = function() {
 
+        var promise = $http({
+           method: 'GET',
+            url: '/get_progress'
+        });
+
+        return promise.then(
+            function(data) {
+              return data;
+            }
+        );
+    };
 
 
 
@@ -31,6 +43,7 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         return(promise.then(handleRefreshSuccess));
 
     };
+
 
     var addFeed = function(url) {
         console.log("addFeed service with url: ", url);
@@ -158,6 +171,7 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     function handleRefreshSuccess() {
         console.log("refresh has been successful!");
         $rootScope.$broadcast("feedChange");
+        $rootScope.$broadcast("entryRefreshInit")
     }
 
     function handleFeedSuccess(data) {
@@ -201,7 +215,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         refreshFeeds: refreshFeeds,
         allFeeds: allFeeds,
         addFeed: addFeed,
-        requestSubUpdate: requestSubUpdate
+        requestSubUpdate: requestSubUpdate,
+        checkProgress: checkProgress
 
     });
 
