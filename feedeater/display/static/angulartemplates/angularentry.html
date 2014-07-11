@@ -55,8 +55,11 @@
     <div class="entrycontent fullview">
     {% endif %}
 
+    <!-- add in read/unread stuff here -->
+    <div class="well"
+         ng-class="'unread_entry': entry.entry_unread, 'read_entry': !entry.entry_unread">
+entry: {{ entry.entry_unread }}
 
-    <div class="well">
         <div class="row" id="info">
 
             <span class="glyphicon glyphicon-info-sign" style="float:left"></span>

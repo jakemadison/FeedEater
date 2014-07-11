@@ -258,3 +258,15 @@ img {
     margin-left: 5px;
     margin-right: 5px;
 }
+
+.unread_entry {
+    border-color: #A3A1E9;
+}
+
+.read_entry {
+
+}
+
+.reading_entry {
+    border-color: #EC0404;
+}

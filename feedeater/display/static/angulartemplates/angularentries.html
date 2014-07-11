@@ -45,7 +45,9 @@
             </div>
 
             <div class="{{compressed}}">
-                <div class="well">
+                <div class="well"
+                        ng-class="{'unread_entry': entry.entry_unread}">
+                    something here {{ entry.entry_unread }}
                     <div class="row" id="info">
                         <span class="glyphicon glyphicon-info-sign" style="float:left"></span>
 

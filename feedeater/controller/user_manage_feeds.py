@@ -93,7 +93,6 @@ def recalculate_entries(user, p, only_star=False):
     qry = qry.filter(UserFeeds.userid == User.id)
     qry = qry.filter(Feed.id == UserFeeds.feedid)
     qry = qry.filter(Entry.feed_id == Feed.id)
-
     qry = qry.filter(User.id == user.id)
     # qry = qry.filter(UserFeeds.id.in_(active_list))
     qry = qry.filter(UserFeeds.is_active == True)
@@ -113,7 +112,13 @@ def recalculate_entries(user, p, only_star=False):
         pager_indicator["has_next"] = False
 
     for each in qry[start_pos:end_pos]:
+
         u_table, uf_table, f_table, e_table, ufe_table = each
+
+        if ufe_table is None:
+            ufe = {'id': None, 'unread': True, 'starred': False}
+        else:
+            ufe = {'id': ufe_table.id, 'unread': ufe_table.unread, 'starred': ufe_table.starred}
 
         #okay, hooked into the custom filters:
         pub_time = custom_filters.parse_time(e_table.published)
@@ -128,17 +133,10 @@ def recalculate_entries(user, p, only_star=False):
                       'entry_title': pub_title,
                       'entry_content': e_table.content,
                       'entry_published': pub_time,
-                      'entry_link': e_table.link}
-
-
-        # there has to be a better way to do this:
-        try:
-            entry_data['entry_starred'] = ufe_table.starred
-            entry_data['entry_unread'] = ufe_table.unread
-
-        except AttributeError:
-            entry_data['entry_starred'] = False
-            entry_data['entry_unread'] = True
+                      'entry_link': e_table.link,
+                      'user_entry_id': ufe.get('id'),
+                      'entry_unread': ufe.get('unread'),
+                      'entry_starred': ufe.get('starred')}
 
         final_list.append(entry_data)
 
