@@ -170,7 +170,7 @@ fControllers.controller("ToolbarCtrl", ['$scope', '$modal', '$timeout', 'makeReq
         $scope.choice = function(item) {
             console.log('user chose', item);
             $modalInstance.close(item);
-        }
+        };
     };
 
 
