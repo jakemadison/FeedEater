@@ -114,7 +114,8 @@ fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', functi
 
 
 
-fControllers.controller("ToolbarCtrl", ['$scope', '$timeout', 'makeRequest', function($scope, $timeout, makeRequest){
+fControllers.controller("ToolbarCtrl", ['$scope', '$modal', '$timeout', 'makeRequest',
+                                            function($scope, $modal, $timeout, makeRequest){
 
     $scope.userId = parseInt(USER_ID);
 
@@ -149,14 +150,38 @@ fControllers.controller("ToolbarCtrl", ['$scope', '$timeout', 'makeRequest', fun
     $scope.successMessage = false;
     $scope.messageText = '';
 
-    $scope.add_feed = function() {
-      console.log("add_feed has begun!");
-      console.log('input text: ', this.inputText);
+    $scope.modal_many_feeds = function() {
 
-        makeRequest.addFeed(this.inputText)
+        var modalInstance = $modal.open({
+            templateUrl: 'modalContent.html',
+            controller: modalInstanceCtrl,
+            resolve: {feeds: function() {return $scope.feeds;}}
+        });
+
+        modalInstance.result.then(function(item){
+            console.log('result receieved: ', item, 'adding feed...');
+            $scope.add_feed(item);
+        });
+
+    };
+
+    var modalInstanceCtrl = function($scope, $modalInstance, feeds) {
+        $scope.feeds = feeds;
+        $scope.choice = function(item) {
+            console.log('user chose', item);
+            $modalInstance.close(item);
+        }
+    };
+
+
+    $scope.add_feed = function(item) {
+      console.log("add_feed has begun!");
+      var feed_item = item || this.inputText;
+      console.log('input text: ', feed_item);
+
+        makeRequest.addFeed(feed_item)
             .then(function(result) {
                 console.log("controller received: ", result);
-
 
                 switch (result.category){
                     case "error":
@@ -174,6 +199,17 @@ fControllers.controller("ToolbarCtrl", ['$scope', '$timeout', 'makeRequest', fun
                         $scope.messageText = result.msg;
                         makeRequest.requestSubUpdate();  //notify subs that feeds have changed
                         makeRequest.notifyPageChange();  //notify entries that feeds have updated
+                        break;
+
+                    //I guess here is where angular should present a pop-up with possible
+                    //feed options from a multiple response situation
+
+                    case "multi":
+                        $scope.infoMessage = true;
+                        $scope.messageText = result.msg;
+                        $scope.feeds = result.f;
+                        $scope.modal_many_feeds();
+
                         break;
 
                     default:

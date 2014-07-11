@@ -152,9 +152,11 @@ def unsubscribe():
     return redirect(request.args.get('next') or url_for('index'))
 
 
-# this needs to be jsonifyied: or at least for the invalid responses...
 @app.route('/add_feed', methods=['POST'])
 def add_feed():
+
+    # this could be a lot smarter.  What if user is already subscribed to one of the feeds returned
+    # in a multiple feed response scenario?
 
     print "........]]]]] add_feed has been activated"
 
@@ -171,33 +173,46 @@ def add_feed():
     # this doesn't check for bad input..
     # need to validate if URL / if empty here (or on client side?)
 
+    # result should always return a "message", "data" dict
     result = user_manage_feeds.add_user_feed(user, data)
 
     print result
 
-    if result == "already_associated":
+    # here, if multiple results, return as such, with list of possible feeds
+    # down the line, might be nice to show a preview or at least get the title/desc
+    # of the feeds.  Anyways, client side does a popup, and then we just post back here with
+    # the feed URL. er, well, iteratively... (client side? server side?)
+
+    if result['message'] == "already_associated":
         msg = "Already Subscribed  :)"
         category = "info"
 
-    elif result == "success":
+    elif result['message'] == "success":
         msg = "Successfully added new feed  :D"
         category = "success"
 
-    elif result == "error_adding_feed":
+    elif result['message'] == "error_adding_feed":
         msg = "Unknown error adding feed  :o"
         category = "error"
 
-    elif result == "no_feed_found":
+    elif result['message'] == "no_feed_found":
         msg = "No rss feed found at that url  :("
         category = "error"
+
+    elif result['message'] == "multiple_feeds_found":
+        msg = "Many feeds were found!"
+        category = "multi"
+
     else:
         msg = "Unknown error ????"
         category = "error"
-    return jsonify(msg=msg, category=category)
+
+    return jsonify(msg=msg, category=category, f=result['data'])
 
 
 @app.route('/starred_only', methods=['POST'])
 def only_starred():
+
     user = g.user
 
     # this should run recalc entries.. but with all feeds considered active (?)

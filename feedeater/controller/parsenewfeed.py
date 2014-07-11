@@ -10,12 +10,20 @@ def parsefeed(url):
 
     try:
         print 'using feed finder'
-        res = feedfinder.feed(url)
+        res = feedfinder.feeds(url)
+        feed_len = len(res)
+
         if res:
-            # feed = test_url(res)
-            return res
+            print '#', feed_len, 'feeds found: ',
+            for each in res:
+                print each,
+            print
+
+            return res, feed_len
+
         else:
             print "no results found..."
+            return False, 0
 
     except Exception, e:
         print "error!", str(e)

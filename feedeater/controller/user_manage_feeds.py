@@ -214,19 +214,27 @@ def add_user_feed(user, feed):
             print "error associating feed!"
             print str(e)
             db_session.rollback()
-            return "error_adding_feed"
+            return {'message': "error_adding_feed", 'data': False}
 
         else:
             # we should probably go get entries for that new feed here...
-            return "success"
+            return {'message': "success", 'data': False}
 
     # first get the actual feed from user's input: maybe it's worth checking if exists first before going
     # through the hassle of feedfinder... meh, whatever.
-    returned_feed = parsenewfeed.parsefeed(feed)
+    returned_feed, feeds_len = parsenewfeed.parsefeed(feed)
+
     if returned_feed:
+        returned_feed = [str(r) for r in returned_feed]
+
+        if feeds_len > 1:
+            return {'message': 'multiple_feeds_found', 'data': returned_feed}
+
         print "found valid rss", returned_feed
+        returned_feed = returned_feed[0]
+
     else:
-        return 'no_feed_found'
+        return {'message': 'no_feed_found', 'data': False}
 
     # check to see if this feed already exist in user table
     exists = db_session.query(Feed).filter_by(feed_url=returned_feed).first()
@@ -237,19 +245,20 @@ def add_user_feed(user, feed):
 
         if already_associated:
             print "this feed is already associated with the current user {0}".format(user.nickname)
-            return "already_associated"
+            return {'message': "already_associated", 'data': False}
 
         else:
             # add this feed to user_feed table
             result = associate_feed_with_user()
             # should probably update entries after adding...
-            return result
+            return {'message': result, 'data': False}
 
     else:
         print "totally new feed, adding everything"
 
         get_result = getfeeds.get_feed_meta(returned_feed)
         print get_result
+
         storefeeds.store_feed_data(get_result)
         exists = db_session.query(Feed).filter_by(feed_url=returned_feed).first()
         associate_feed_with_user()
@@ -264,7 +273,7 @@ def add_user_feed(user, feed):
         # add to feed table, add to userfeed table, get new entries.
         # later: add to cache?
 
-        return "success"
+        return {'message': "success", 'data': False}
 
 
 def remove_user_feed(user, uf_id):
