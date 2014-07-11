@@ -173,60 +173,54 @@ fControllers.controller("ToolbarCtrl", ['$scope', '$modal', '$timeout', 'makeReq
         };
     };
 
+    $scope.userNotifications = function(result) {
+        console.log("controller received: ", result);
+        switch (result.category){
+            case "error":
+                $scope.errorMessage = true;
+                $scope.messageText = result.msg;
+                break;
+
+            case "info":
+                $scope.infoMessage = true;
+                $scope.messageText = result.msg;
+                break;
+
+            case "success":
+                $scope.successMessage = true;
+                $scope.messageText = result.msg;
+                makeRequest.requestSubUpdate();  //notify subs that feeds have changed
+                makeRequest.notifyPageChange();  //notify entries that feeds have updated
+                break;
+
+            // deal with multiple feeds returned
+            case "multi":
+                $scope.infoMessage = true;
+                $scope.messageText = result.msg;
+                $scope.feeds = result.f;
+                $scope.modal_many_feeds();
+                break;
+
+            default:
+                console.log("message type was not understood by controller");
+            }
+
+            $timeout(function() {
+                $scope.errorMessage = false;
+                $scope.infoMessage = false;
+                $scope.successMessage = false;
+                $scope.messageText = '';
+            }, 3000);
+
+    };
 
     $scope.add_feed = function(item) {
       console.log("add_feed has begun!");
       var feed_item = item || this.inputText;
       console.log('input text: ', feed_item);
-
-        makeRequest.addFeed(feed_item)
-            .then(function(result) {
-                console.log("controller received: ", result);
-
-                switch (result.category){
-                    case "error":
-                        $scope.errorMessage = true;
-                        $scope.messageText = result.msg;
-                        break;
-
-                    case "info":
-                        $scope.infoMessage = true;
-                        $scope.messageText = result.msg;
-                        break;
-
-                    case "success":
-                        $scope.successMessage = true;
-                        $scope.messageText = result.msg;
-                        makeRequest.requestSubUpdate();  //notify subs that feeds have changed
-                        makeRequest.notifyPageChange();  //notify entries that feeds have updated
-                        break;
-
-                    //I guess here is where angular should present a pop-up with possible
-                    //feed options from a multiple response situation
-
-                    case "multi":
-                        $scope.infoMessage = true;
-                        $scope.messageText = result.msg;
-                        $scope.feeds = result.f;
-                        $scope.modal_many_feeds();
-
-                        break;
-
-                    default:
-                        console.log("message type was not understood by controller");
-                }
-
-                $timeout(function() {
-                    $scope.errorMessage = false;
-                    $scope.infoMessage = false;
-                    $scope.successMessage = false;
-                    $scope.messageText = '';
-                }, 3000);
-
-            });
+      makeRequest.addFeed(feed_item);
 
     };
-
 
 
     // listeners:
@@ -238,12 +232,13 @@ fControllers.controller("ToolbarCtrl", ['$scope', '$modal', '$timeout', 'makeReq
 
     });
 
+    $scope.$on('notificationBroadcast', function(e, result){
+        $scope.userNotifications(result);
+    });
+
 
 
 }]);
-
-
-
 
 
 
@@ -351,6 +346,11 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
                     }
                 }
             });
+    };
+
+    $scope.subData.unsubscribeFeed = function(userFeedId){
+        console.log('unsubscribing feed...', userFeedId);
+        makeRequest.unsubscribeFeed(userFeedId);
     };
 
 

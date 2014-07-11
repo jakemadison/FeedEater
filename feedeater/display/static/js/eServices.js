@@ -64,7 +64,6 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     };
 
 
-
     //Entry Methods:
     var getEntries = function(page_id, star_only) {
         console.log('getEntries method of makeRequest function running');
@@ -84,8 +83,20 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     };
 
 
-
     //Feed Methods:
+    var unsubscribeFeed = function(feed_id) {
+      var promise = $http({
+          method: 'POST',
+          url: '/unsubscribe',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          data:$.param({ufid: feed_id})
+      });
+
+      return(promise.then(handleAddFeedResult))
+
+    };
+
+
     var toggleFeed = function(feed_id) {
         console.log('toggleFeed method of makeRequest function running');
 
@@ -108,8 +119,6 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
 
         return (promise.then(handleFeedSuccess));
     };
-
-
 
     var singleFeed = function(feed_id) {
         console.log('toggleFeed method of makeRequest function running');
@@ -160,12 +169,10 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
 
 
     //private methods:
-
     function handleAddFeedResult(result) {
-        console.log("addFeed result happened!");
+        console.log("addFeed/remove result happened!");
         console.log("result: ", result);
-
-        return result.data;
+        $rootScope.$broadcast('notificationBroadcast', result.data);
     }
 
     function handleRefreshSuccess() {
@@ -216,7 +223,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         allFeeds: allFeeds,
         addFeed: addFeed,
         requestSubUpdate: requestSubUpdate,
-        checkProgress: checkProgress
+        checkProgress: checkProgress,
+        unsubscribeFeed: unsubscribeFeed
 
     });
 

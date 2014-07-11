@@ -133,23 +133,31 @@ def get_progress():
 
 
 
-@app.route('/unsubscribe')
+@app.route('/unsubscribe', methods=['POST'])
 def unsubscribe():
     print "removing feed from user_feeds"
+
     user = g.user
-    feedid = request.args.get('ufid')
+    feedid = request.form['ufid']
     result = user_manage_feeds.remove_user_feed(user, feedid)
 
     if result == "successfully deleted":
-        flash("Successfully removed  :D", "info")
+        msg = "Successfully removed  :D"
+        category = "success"
     elif result == "error_deleting_feed":
-        flash("Unknown error removing feed  :(", "error")
+        msg = "Unknown error removing feed  :("
+        category = "error"
+
     elif result == "feed_id not found":
-        flash("Feed Id Not found  :(", "error")
+        msg = "Feed Id Not found  :("
+        category = "error"
+    else:
+        msg = "I'm not sure what happened there.."
+        category = "error"
 
     print "finished removing feed"
 
-    return redirect(request.args.get('next') or url_for('index'))
+    return jsonify(msg=msg, category=category, f=None)
 
 
 @app.route('/add_feed', methods=['POST'])
