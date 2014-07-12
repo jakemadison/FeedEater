@@ -45,7 +45,7 @@
             </div>
 
             <div class="{{compressed}}">
-                <div class="well" scroll-active=""
+                <div class="well" scroll-active="{{ entry.entry_unread }}, {{entry.entry_id }}"
                         ng-class="{'unread_entry': entry.entry_unread}">
                      entry unread status: {{ entry.entry_unread }}
                     <div class="row" id="info">

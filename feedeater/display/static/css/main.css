@@ -261,6 +261,7 @@ img {
 
 .unread_entry {
     border-color: #A3A1E9;
+    opacity: .75;
 }
 
 .read_entry {
@@ -268,5 +269,7 @@ img {
 }
 
 .reading_entry {
-    border-color: #EC0404;
+    border-color: #6359D8;
+    border-width: 2px;
+    opacity: 1;
 }
