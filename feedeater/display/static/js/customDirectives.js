@@ -51,15 +51,15 @@ customDirectives.directive('scrollActive', function($window, $document) {
 
             function onScroll() {
 
-              var top = elm[0].offsetTop,
-                  extra = elm[0].offsetParent.scrollHeight;
+              var top = elm[0].offsetTop;
+//                  extra = elm[0].offsetParent.scrollHeight;
 
                 var offset = $window.pageYOffset;
 
 //                console.log('offset: ', top, extra);
 
                 if (!elm.hasClass('reading_entry') && offset > (top-300)) {
-                    console.log(offset, top, extra);
+                    console.log(offset, top);
                     elm.addClass('reading_entry');
                 }
 
