@@ -260,17 +260,19 @@ img {
 }
 
 .unread_entry {
-    border-color: #A3A1E9;
-    opacity: .60;
+    border-color: #6160e9;
+    opacity: .95;
     /*opacity: .75;    */
 }
 
 .read_entry {
-    border-color: #0b0b10;
+    /*border-color: #0b0b10;*/
+    opacity: .60;
+    border-width: 0px;
 }
 
 .reading_entry {
     border-color: #9F9BD6;
-    border-width: 2px;
+    border-width: 3px;
     opacity: 1;
 }

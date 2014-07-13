@@ -91,6 +91,15 @@ fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', functi
         makeRequest.markAsRead(id);
 
         //and when complete, probably change the entry object unread status of the entry.
+        //loop over entries array and find out e_id; - set to unread-false.
+//        console.log($scope.myData.fromServer);
+        var entry_array = $scope.myData.fromServer.e;
+
+        for (var i=0; i< entry_array.length; i++) {
+            if (entry_array[i].entry_id == id) {
+                entry_array[i].entry_unread = false;
+            }
+        }
     };
 
 
