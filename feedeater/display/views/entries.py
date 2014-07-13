@@ -3,6 +3,7 @@ from flask import redirect, url_for, request, g, jsonify  # , render_template, f
 from flask.ext.login import current_user  # , login_user, logout_user, login_required
 from feedeater.config import configs as c
 from feedeater.controller import user_manage_feeds
+from feedeater.controller import user_manage_entries
 import time
 #from flask import Markup
 #from feedeater import flaskapp
@@ -102,6 +103,18 @@ def sleep_data():
 
     print "sleeeeeeep, data"
     time.sleep(5)
+    return jsonify(success=True)
+
+
+@app.route('/mark_as_read', methods=['POST'])
+def markAsRead():
+    user = g.user
+    entry_id = request.form['entry_id']
+    print 'marking entry: {e} as read for user: {u}'.format(e=entry_id, u=user.nickname)
+
+    user_manage_entries.mark_entry_read(entry_id, user.id)
+
+
     return jsonify(success=True)
 
 

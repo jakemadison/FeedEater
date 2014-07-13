@@ -65,9 +65,7 @@ customDirectives.directive('scrollActive', function($window, $document) {
 //                console.log('offset: ', offset, (top-300), bottom);
 
                 if (!elm.hasClass('reading_entry') && (offset+300) > top && (offset+300) < bottom) {
-                    console.log(offset, top);
                     elm.addClass('reading_entry');
-                    console.log(id, unread);
 
                     if (unread === true) {
                         scope.$apply("markAsRead("+id+")");  //this is ugly...

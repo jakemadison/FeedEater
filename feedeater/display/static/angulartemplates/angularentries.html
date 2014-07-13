@@ -47,7 +47,7 @@
             <div class="{{compressed}}">
                 <div class="well"
                      scroll-active="{id: {{ entry.entry_id }}, unread: {{ entry.entry_unread }} }"
-                        ng-class="{'unread_entry': entry.entry_unread}">
+                        ng-class="{'unread_entry': entry.entry_unread, 'read_entry': !entry.entry_unread}">
                      entry unread status: {{ entry.entry_unread }}
                     <div class="row" id="info">
                         <span class="glyphicon glyphicon-info-sign" style="float:left"></span>

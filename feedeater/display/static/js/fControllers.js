@@ -88,9 +88,8 @@ fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', functi
     };
 
     $scope.markAsRead = function(id) {
-        console.log('i did something!!!!!', id);
+        makeRequest.markAsRead(id);
 
-        //this now just needs to fire something to the DB, changing the "unread" status
         //and when complete, probably change the entry object unread status of the entry.
     };
 

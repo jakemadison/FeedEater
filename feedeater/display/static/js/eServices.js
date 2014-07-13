@@ -82,6 +82,16 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         $rootScope.$broadcast("requestCategoryFeed", category);
     };
 
+    var markAsRead = function(entry_id) {
+        console.log('make request received entry id: ', entry_id);
+        var promise = $http({
+          method: 'POST',
+          url: '/mark_as_read',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          data:$.param({entry_id: entry_id})
+      }); //do we really care if this returns?  could be extra overhead..
+
+    };
 
     //Feed Methods:
     var unsubscribeFeed = function(feed_id) {
@@ -224,7 +234,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         addFeed: addFeed,
         requestSubUpdate: requestSubUpdate,
         checkProgress: checkProgress,
-        unsubscribeFeed: unsubscribeFeed
+        unsubscribeFeed: unsubscribeFeed,
+        markAsRead: markAsRead
 
     });
 
