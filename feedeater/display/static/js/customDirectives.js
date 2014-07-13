@@ -49,21 +49,26 @@ customDirectives.directive('scrollActive', function($window, $document) {
 
             var $target = uiScrollfixTarget && uiScrollfixTarget.$element || angular.element($window);
 
+
+
             function onScroll() {
 
+
               var top = elm[0].offsetTop;
+              var bottom = top + elm[0].offsetHeight;
 //                  extra = elm[0].offsetParent.scrollHeight;
 
                 var offset = $window.pageYOffset;
 
-//                console.log('offset: ', top, extra);
+                console.log('offset: ', offset, (top-300), bottom);
 
-                if (!elm.hasClass('reading_entry') && offset > (top-300)) {
+                if (!elm.hasClass('reading_entry') && (offset+300) > top && (offset+300) < bottom) {
                     console.log(offset, top);
                     elm.addClass('reading_entry');
+
                 }
 
-                else if (elm.hasClass('reading_entry') && offset < (top-300)) {
+                else if (elm.hasClass('reading_entry') && ((offset+300) < top) || (offset+300) > bottom) {
                     elm.removeClass('reading_entry');
                  }
             }
