@@ -53,6 +53,8 @@ customDirectives.directive('scrollActive', function($window, $document) {
 
             function onScroll() {
 
+              var id = scope.$eval(attrs['scrollActive']).id;
+              var unread = scope.$eval(attrs['scrollActive']).unread;
 
               var top = elm[0].offsetTop;
               var bottom = top + elm[0].offsetHeight;
@@ -60,11 +62,19 @@ customDirectives.directive('scrollActive', function($window, $document) {
 
                 var offset = $window.pageYOffset;
 
-                console.log('offset: ', offset, (top-300), bottom);
+//                console.log('offset: ', offset, (top-300), bottom);
 
                 if (!elm.hasClass('reading_entry') && (offset+300) > top && (offset+300) < bottom) {
                     console.log(offset, top);
                     elm.addClass('reading_entry');
+                    console.log(id, unread);
+
+                    if (unread === true) {
+                        scope.$apply("markAsRead("+id+")");  //this is ugly...
+                    }
+
+
+
 
                 }
 
