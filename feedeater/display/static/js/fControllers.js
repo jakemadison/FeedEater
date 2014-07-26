@@ -11,7 +11,8 @@ fControllers.controller("messagebarCtrl", ['$scope', '$http', '$timeout', 'makeR
     $scope.page = PAGE_ID;
     $scope.hash = USER_HASH;
     $scope.role = parseInt(USER_ROLE);
-    $scope.avatar_size = '150';
+//    $scope.avatar_size = '150';
+    $scope.avatar_size = '50';
 
     $scope.gravatar = 'http://www.gravatar.com/avatar/' + USER_HASH + '?d=mm&s=' + $scope.avatar_size;
     $scope.entry_progress = 0;
