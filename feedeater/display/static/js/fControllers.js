@@ -4,6 +4,9 @@ var fControllers = angular.module('fControllers', ['ngSanitize']);
 fControllers.controller("messagebarCtrl", ['$scope', '$http', '$timeout', 'makeRequest',
                                                 function($scope, $timeout, $http, makeRequest){
 
+
+    $scope.min_bar = false;
+
     $scope.pre_login = true;
 
     $scope.user = USER_ID;
@@ -12,7 +15,21 @@ fControllers.controller("messagebarCtrl", ['$scope', '$http', '$timeout', 'makeR
     $scope.hash = USER_HASH;
     $scope.role = parseInt(USER_ROLE);
 //    $scope.avatar_size = '150';
-    $scope.avatar_size = '50';
+    $scope.avatar_size = $scope.min_bar ? '50' : '150';
+
+
+    $scope.min_barToggle = function() {
+        console.log("anything?");
+        $scope.min_bar = !$scope.min_bar;
+        if ($scope.min_bar) {
+            $scope.avatar_size = 50;
+            $scope.gravatar = 'http://www.gravatar.com/avatar/' + USER_HASH + '?d=mm&s=' + $scope.avatar_size;
+        }
+        else {
+            $scope.avatar_size = 150;
+            $scope.gravatar = 'http://www.gravatar.com/avatar/' + USER_HASH + '?d=mm&s=' + $scope.avatar_size;
+        }
+    };
 
     $scope.gravatar = 'http://www.gravatar.com/avatar/' + USER_HASH + '?d=mm&s=' + $scope.avatar_size;
     $scope.entry_progress = 0;

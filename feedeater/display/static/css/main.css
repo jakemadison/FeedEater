@@ -280,3 +280,9 @@ img {
 .msgbarmin {
     background-color: #eeeeee;
 }
+
+.pbar_min {
+    width: 100%;
+    align-content: center;
+    margin-left: 30px;
+}

@@ -1,6 +1,13 @@
  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
+     <div class="avatar"><a href="http://gravatar.com/emails/" target="_blank" ng-show="min_bar">
+        <img ng-src="{{ gravatar }}"
+             title="Change your avatar at gravatar.com"></a>
+    </div>
+
+
      <div class="brand"> <a class="navbar-brand" href="/"># The Feed_Eater Project</a> </div>
-      <!--<div class="container">-->
+
         <div class="navbar-header">
 
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -12,9 +19,7 @@
 
         </div>
 
-
-            <!--<div class="navbar-collapse collapse">-->
-          <div class="navbar-collapse navbar-right collapse" align="right">
+      <div class="navbar-right" align="right">
 
           <ul class="nav navbar-nav" align="right">
             <li class="active"><a href="#">Home</a></li>
@@ -37,7 +42,17 @@
       <!--</div> <----->
           <!--</div>-->
 
+     <div class="container row pbar_min" ng-show="min_bar">
+        <progress style="margin-top: 10px;"><bar value="bar.progress" type="success"></bar>
+          <bar value="bar.remaining" type="info"></bar></progress>
 
 
-      </div>
+</div>
+
+
+
+
+
+            <!--<div class="navbar-collapse collapse">-->
+
     </div>
