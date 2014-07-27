@@ -4,14 +4,6 @@ from flask.ext.login import current_user  # , login_user, logout_user, login_req
 from feedeater.config import configs as c
 from feedeater.controller import user_manage_feeds
 from feedeater.controller import user_manage_entries
-import time
-#from flask import Markup
-#from feedeater import flaskapp
-#from feedeater import lm, oid
-#from feedeater.display.forms import LoginForm, AddFeedForm
-#import sys
-#from feedeater.controller import FeedGetter
-#from feedeater.database.models import User, ROLE_USER, Entry, UserEntry
 
 basedir = c.get('basedir')
 app = Blueprint('entries', __name__, static_folder=basedir+'/display/static',
