@@ -36,14 +36,13 @@ lm.login_view = 'login'
 oid = OpenID(flaskapp, os.path.join(basedir, 'tmp'))
 
 
-from feedeater.display.views import main, subscriptions, entries, custom_filters, angulartest
+from feedeater.display.views import main, subscriptions, entries, custom_filters
 
 
 # register blueprints
 flaskapp.register_blueprint(main.app)
 flaskapp.register_blueprint(subscriptions.app)
 flaskapp.register_blueprint(entries.app)
-flaskapp.register_blueprint(angulartest.app)
 
 
 # register custom template filters:

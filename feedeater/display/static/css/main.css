@@ -275,6 +275,16 @@ img {
     border-color: #9F9BD6;
     border-width: 3px;
     opacity: 1;
+
+}
+
+.title_read_entry {
+    color: #000000;
+    opacity: .60;
+}
+
+.title_unread_entry {
+    color: #000000;
 }
 
 .msgbarmin {

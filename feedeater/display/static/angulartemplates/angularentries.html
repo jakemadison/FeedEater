@@ -10,7 +10,8 @@
     <div ng-repeat="entry in myData.fromServer.e">
         <div class="feedid{{ entry.feed_id }} entry_list" entryId="{{entry.entry_id}}">
             <div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">
-                <h3><b><a  href="{{entry.entry_link}}" target="_blank"
+                <h3 ng-class="{'title_unread_entry': entry.entry_unread, 'title_read_entry': !entry.entry_unread}">
+                    <b><a  href="{{entry.entry_link}}" target="_blank"
                data-toggle="tooltip" data-original-title="{{entry.entry_title}}"
                 class="entry_title"
                 title="{{entry.entry_title}}">{{entry.entry_title}}</a></b></h3>
