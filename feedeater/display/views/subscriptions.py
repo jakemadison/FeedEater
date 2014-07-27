@@ -3,107 +3,21 @@ from flask import flash, redirect, url_for, request, g, jsonify  # render_templa
 from flask.ext.login import current_user  # login_user, logout_user, , login_required
 from feedeater.config import configs as c
 from feedeater.controller import user_manage_feeds
-#import sys
-#from feedeater.controller import FeedGetter
-#from feedeater.database.models import User, ROLE_USER, Entry, UserEntry
-#from flask import Markup
-#from feedeater import flaskapp
-#from feedeater import lm, oid
-#from feedeater.display.forms import LoginForm, AddFeedForm
-
 
 basedir = c.get('basedir')
 app = Blueprint('subscriptions', __name__, static_folder=basedir+'/display/static',
                 template_folder=basedir+'/display/templates')
 
 
-# all of these methods need to now be json instead of redirect. fun.
-
+@app.before_request
 def before_blueprint_request():
+    print "NEW SUBSCRIPTIONS.PY REQUEST"
     g.user = current_user
 
-app.before_request(before_blueprint_request)
 
-
-@app.route('/changecat', methods=['POST'])
-def change_cats():
-
-    print "++++++++++++++++++++++++"
-    cat_old = request.form['current_cat_name']
-    cat_new = request.form['cat_new']
-    uf_id = request.form['uf_id']
-    print cat_old
-    print cat_new
-    print uf_id
-    result = user_manage_feeds.apply_feed_category(cat_new, uf_id, remove=False)
-    print result
-    flash(result, "info")
-    return redirect(url_for('/'))
-
-
-@app.route('/togglecategory', methods=['POST', 'GET'])
-def toggle_category():
-
-    print 'entering toggle_category function'
-    user = g.user
-    print user
-
-    cat = request.args.get('catname', None)
-
-    print 'this is category: ', cat
-
-    if not cat:
-        print 'I do not have a category for some reason'
-        return jsonify(success=False)
-
-    all_on = user_manage_feeds.toggle_category(user, cat)
-
-    print 'done toggling category'
-    # return redirect(request.args.get('next') or url_for('index'))
-    return jsonify(success=True, all=all_on)
-
-
-
-@app.route('/onefeedonly', methods=['GET'])
-def one_feed_only():
-    print 'changing to one feed only'
-
-    uf_id = request.args.get('uf_id', None)
-
-    if not uf_id:
-        print 'i failed to get an Id!'
-        return jsonify(success=False)
-
-    user = g.user
-    user_manage_feeds.single_active(user, uf_id)
-
-    return jsonify(success=True)
-
-
-@app.route('/allfeeds', methods=['GET'])
-def show_all_feeds():
-
-    print "entered all feeds method==========================="
-    user = g.user
-    user_manage_feeds.all_active(user)
-    # return redirect(request.args.get('next') or url_for('index'))
-
-    return jsonify(success=True)
-
-
-@app.route('/change_active', methods=['GET', 'POST'])
-def change_active():
-
-    print "----- entering change active"
-    uf_id = request.args.get('uf_id')
-    print uf_id
-    user_manage_feeds.update_is_active(uf_id)
-
-    print 'finished change_active.'
-
-    return jsonify(success=True)
-
-
+#####
+# Functions for all subscriptions:
+#####
 
 @app.route('/refreshfeeds', methods=['POST', 'GET'])
 def ref_feeds():
@@ -132,33 +46,23 @@ def get_progress():
     return jsonify(fin=fin_list, done=done)
 
 
-
-@app.route('/unsubscribe', methods=['POST'])
-def unsubscribe():
-    print "removing feed from user_feeds"
-
+@app.route('/get_user_subs', methods=['GET'])
+def get_user_subs():
+    print 'getting user subs and cats'
     user = g.user
-    feedid = request.form['ufid']
-    result = user_manage_feeds.remove_user_feed(user, feedid)
+    sub_list = user_manage_feeds.get_user_feeds(user)
+    cats = sub_list['cat_list']
+    feed_data = sub_list['feed_data']
+    cats = [str(x) for x in (sorted(cats))]
 
-    if result == "successfully deleted":
-        msg = "Successfully removed  :D"
-        category = "success"
-    elif result == "error_deleting_feed":
-        msg = "Unknown error removing feed  :("
-        category = "error"
+    print "categories loaded and sorted from get request.."
 
-    elif result == "feed_id not found":
-        msg = "Feed Id Not found  :("
-        category = "error"
-    else:
-        msg = "I'm not sure what happened there.."
-        category = "error"
+    return jsonify(subs=feed_data, cats=cats, success=True)
 
-    print "finished removing feed"
 
-    return jsonify(msg=msg, category=category, f=None)
-
+#####
+# Functions for editing single subscriptions:
+#####
 
 @app.route('/add_feed', methods=['POST'])
 def add_feed():
@@ -218,6 +122,125 @@ def add_feed():
     return jsonify(msg=msg, category=category, f=result['data'])
 
 
+@app.route('/changecat', methods=['POST'])
+def change_cats():
+
+    print "++++++++++++++++++++++++"
+    cat_old = request.form['current_cat_name']
+    cat_new = request.form['cat_new']
+    uf_id = request.form['uf_id']
+    print cat_old
+    print cat_new
+    print uf_id
+    result = user_manage_feeds.apply_feed_category(cat_new, uf_id, remove=False)
+    print result
+    flash(result, "info")
+    return redirect(url_for('/'))
+
+
+@app.route('/unsubscribe', methods=['POST'])
+def unsubscribe():
+    print "removing feed from user_feeds"
+
+    user = g.user
+    feedid = request.form['ufid']
+    result = user_manage_feeds.remove_user_feed(user, feedid)
+
+    if result == "successfully deleted":
+        msg = "Successfully removed  :D"
+        category = "success"
+    elif result == "error_deleting_feed":
+        msg = "Unknown error removing feed  :("
+        category = "error"
+
+    elif result == "feed_id not found":
+        msg = "Feed Id Not found  :("
+        category = "error"
+    else:
+        msg = "I'm not sure what happened there.."
+        category = "error"
+
+    print "finished removing feed"
+
+    return jsonify(msg=msg, category=category, f=None)
+
+
+#####
+# Functions for changing subscription display:
+#####
+
+@app.route('/togglecategory', methods=['POST', 'GET'])
+def toggle_category():
+
+    print 'entering toggle_category function'
+    user = g.user
+    print user
+
+    cat = request.args.get('catname', None)
+
+    print 'this is category: ', cat
+
+    if not cat:
+        print 'I do not have a category for some reason'
+        return jsonify(success=False)
+
+    all_on = user_manage_feeds.toggle_category(user, cat)
+
+    print 'done toggling category'
+    return jsonify(success=True, all=all_on)
+
+
+@app.route('/onefeedonly', methods=['GET'])
+def one_feed_only():
+    print 'changing to one feed only'
+
+    uf_id = request.args.get('uf_id', None)
+
+    if not uf_id:
+        print 'i failed to get an Id!'
+        return jsonify(success=False)
+
+    user = g.user
+    user_manage_feeds.single_active(user, uf_id)
+
+    return jsonify(success=True)
+
+
+@app.route('/allfeeds', methods=['GET'])
+def show_all_feeds():
+
+    print "entered all feeds function"
+    user = g.user
+    user_manage_feeds.all_active(user)
+
+    return jsonify(success=True)
+
+
+@app.route('/change_active', methods=['GET', 'POST'])
+def change_active():
+
+    print "----- entering change active"
+    uf_id = request.args.get('uf_id')
+    print uf_id
+    user_manage_feeds.update_is_active(uf_id)
+
+    print 'finished change_active.'
+
+    return jsonify(success=True)
+
+
+@app.route('/change_view', methods=['POST'])
+def change_view():
+
+    user = g.user
+    print 'user: ', user.nickname, user.id
+    user_manage_feeds.changeview(user)
+
+    print "done! changeview!"
+
+    return jsonify(success=True)
+
+
 @app.route('/starred_only', methods=['POST'])
 def only_starred():
 
@@ -233,29 +256,3 @@ def only_starred():
     return False
 
 
-
-# this json hook crap needs to be moved to a different file.
-@app.route('/change_view', methods=['POST'])
-def change_view():
-
-    user = g.user
-    print 'user: ', user.nickname, user.id
-    user_manage_feeds.changeview(user)
-
-    print "done! changeview!"
-
-    return jsonify(success=True)
-
-
-@app.route('/get_user_subs', methods=['GET'])
-def get_user_subs():
-    print 'getting user subs and cats'
-    user = g.user
-    sub_list = user_manage_feeds.get_user_feeds(user)
-    cats = sub_list['cat_list']
-    feed_data = sub_list['feed_data']
-    cats = [str(x) for x in (sorted(cats))]
-
-    print "categories loaded and sorted from get request.."
-
-    return jsonify(subs=feed_data, cats=cats, success=True)
