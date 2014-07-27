@@ -1,18 +1,14 @@
 from flask import *
-from flask import render_template, flash, redirect, session, url_for, request, g  # , jsonify
-from flask.ext.login import login_user, logout_user, current_user  # , login_required
+from flask import render_template, flash, redirect, session, url_for, request, g
+from flask.ext.login import login_user, logout_user, current_user
 from feedeater import flaskapp
 from feedeater import lm, oid
-from feedeater.display.forms import LoginForm, AddFeedForm
+from feedeater.display.forms import LoginForm
 from feedeater.config import configs as c
-from feedeater.database.models import User  # , ROLE_USER, Entry, UserEntry
+from feedeater.database.models import User
 from feedeater.controller import user_manage_feeds, manage_users
 from hashlib import md5
-#from flask import Markup
-#import sys
-#from feedeater.controller import FeedGetter
 
-# This module should handle the main rendering as well as login/out and authorization
 
 basedir = c.get('basedir')
 app = Blueprint('index', __name__, static_folder=basedir+'/display/static',
@@ -21,17 +17,15 @@ app = Blueprint('index', __name__, static_folder=basedir+'/display/static',
 
 @app.before_request
 def before_request():
-    print "\n\n\n- NEW MAIN.PY REQUEST:"
+    print "NEW MAIN.PY REQUEST:",
     g.user = current_user
     print 'user:    ', g.user
 
 
-@lm.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+#####
+# Functions for main page building:
+#####
 
-
-# @login_required
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index/', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
@@ -41,13 +35,8 @@ def build_index(page=1):
     g.page = page
     user = g.user
 
-    print 'user info: .......................'
-    print dir(user)
-
     form = LoginForm(request.form)
     login_form = LoginForm()
-
-    # add_feed_form = AddFeedForm(csrf_enabled=False)  # this should maybe be true... :/
 
     if user is None or not g.user.is_authenticated():
         user = user_manage_feeds.get_guest_user()
@@ -61,16 +50,22 @@ def build_index(page=1):
                            user=user, form=form,
                            providers=flaskapp.config['OPENID_PROVIDERS'],
                            login_form=login_form,
-                           # add_feed_form=add_feed_form,
                            prefs=1)
 
 
-# this function is now handling login via js request:
+#####
+# Functions for handling user login:
+#####
+
+@lm.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+
 @app.route('/f_login', methods=['GET', 'POST'])
 @oid.loginhandler
 def f_login():
     print 'attempting to login now...'
-
     url = request.form["url"]
     return oid.try_login(url, ask_for=['nickname', 'email'])
 
