@@ -5,16 +5,11 @@
 
   <head> {% include 'head.html' %} </head>
 
-{% if form.errors.openid %}
-  <body onload="show_login()">
-{% else %}
+
 
 {% raw %}
 <body ng-app="FeedEaterApp" key-bindings="">
 {% endraw %}
-
-{% endif %}
-
 
 
   {% raw %}

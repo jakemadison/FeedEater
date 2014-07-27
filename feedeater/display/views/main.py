@@ -3,7 +3,6 @@ from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user
 from feedeater import flaskapp
 from feedeater import lm, oid
-from feedeater.display.forms import LoginForm
 from feedeater.config import configs as c
 from feedeater.database.models import User
 from feedeater.controller import user_manage_feeds, manage_users
@@ -35,9 +34,6 @@ def build_index(page=1):
     g.page = page
     user = g.user
 
-    form = LoginForm(request.form)
-    login_form = LoginForm()
-
     if user is None or not g.user.is_authenticated():
         user = user_manage_feeds.get_guest_user()
         login_user(user)
@@ -47,9 +43,8 @@ def build_index(page=1):
     # with either json, or render, this should actually be returning the user_entry table joined with entry
     # so we get a full list of user entries, tags, categories, stars, etc.
     return render_template("index.html", title='Home',
-                           user=user, form=form,
+                           user=user,
                            providers=flaskapp.config['OPENID_PROVIDERS'],
-                           login_form=login_form,
                            prefs=1)
 
 
