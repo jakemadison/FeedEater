@@ -1,6 +1,6 @@
 from flask import *
-from flask import flash, redirect, url_for, request, g, jsonify  # render_template, session,
-from flask.ext.login import current_user  # login_user, logout_user, , login_required
+from flask import flash, redirect, url_for, request, g, jsonify
+from flask.ext.login import current_user
 from feedeater.config import configs as c
 from feedeater.controller import user_manage_feeds
 
