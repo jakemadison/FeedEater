@@ -18,20 +18,54 @@ app = Blueprint('entries', __name__, static_folder=basedir+'/display/static',
                 template_folder=basedir+'/display/templates')
 
 
-# this module requires a "recalculate entries" function which will need to take into account
-# which categories are active, which page we are currently on.. ah crap that'll be fun..
-# how do you recalculate a paging function? are we going to have to manually put
-# together a paging sql query?
-
-
 @app.before_request
 def before_request():
-
     print "\n\n\nNEW ENTRIES REQUEST: "
     g.user = current_user
-    # print g.user.nickname, g.user.id
 
 
+#####
+# Functions for all entries:
+#####
+
+@app.route('/recalculate_entries', methods=['POST', 'GET'])
+def recalculate_entries():
+
+    print "recalculating entries...."
+    user = g.user
+    page = int(request.args.get('page_id', None))
+
+    if page is None:
+        page = 1
+
+    print 'page: ', page
+    g.page = page
+
+    entries, pager, total_records = user_manage_feeds.recalculate_entries(user, page)
+    prefs = user_manage_feeds.get_user_prefs(user)
+
+    return jsonify(success=True, e=entries, compressed_view=prefs, pager=pager, total_records=total_records)
+
+
+@app.route('/get_unread_count', methods=['GET'])
+def unread_count():
+
+    user = g.user
+
+    # Ok, so currently this is just using "feed_id", I probably actually want to send "uf_id"
+
+    feed_id = request.args.get('feed', '', type=int)
+    print feed_id
+
+    result = user_manage_feeds.get_unread_count(feed_id, user)
+    print result
+
+    return jsonify(success=True, count=result)
+
+
+#####
+# Functions for single entries:
+#####
 
 @app.route('/tags', methods=['POST'])
 def change_tags():
@@ -67,45 +101,6 @@ def toggle_star():
     return jsonify({"result": result})
 
 
-@app.route('/recalculate_entries', methods=['POST', 'GET'])
-def recalculate_entries():
-
-    # time.sleep(5)
-
-    print "recalculating entries...."
-    user = g.user
-
-    if user.id is None:
-        pass
-
-    print 'do I need to even pass in user?', user.id
-    page = int(request.args.get('page_id', None))
-
-    if page is None:
-        page = 1
-
-    print 'page: ', page
-    g.page = page
-
-    print request
-
-    entries, pager, total_records = user_manage_feeds.recalculate_entries(user, page)
-    prefs = user_manage_feeds.get_user_prefs(user)
-
-    print prefs
-    print pager
-
-    return jsonify(success=True, e=entries, compressed_view=prefs, pager=pager, total_records=total_records)
-
-
-@app.route('/sleep_data', methods=['POST'])
-def sleep_data():
-
-    print "sleeeeeeep, data"
-    time.sleep(5)
-    return jsonify(success=True)
-
-
 @app.route('/mark_as_read', methods=['POST'])
 def markAsRead():
     user = g.user
@@ -114,25 +109,10 @@ def markAsRead():
 
     user_manage_entries.mark_entry_read(entry_id, user.id)
 
-
     return jsonify(success=True)
 
 
 
-@app.route('/get_unread_count', methods=['GET'])
-def unread_count():
-
-    user = g.user
-
-    # Ok, so currently this is just using "feed_id", I probably actually want to send "uf_id"
-
-    feed_id = request.args.get('feed', '', type=int)
-    print feed_id
-
-    result = user_manage_feeds.get_unread_count(feed_id, user)
-    print result
-
-    return jsonify(success=True, count=result)
 
 
 
