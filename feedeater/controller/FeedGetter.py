@@ -1,13 +1,9 @@
 from getfeeds import feed_request
 from feedeater.database.models import Feed
-from storefeeds import add_entry  # , store_feed_data
+from storefeeds import add_entry
 import concurrent.futures
 import Queue
-#import time
 
-# I need a function to pull existing feeds here.. but for now:
-# also need a function (DB proc?) to remove feeds when there are zero subs
-# that will all be handled by display object though
 
 fin_q = []
 len_feeds = 0
@@ -20,11 +16,10 @@ def get_all_feeds():
     get_feeds = Feed.query.all()
     feeds = []
 
-    for each in get_feeds:  # this could probably be a list comp..
+    for each in get_feeds:
         print 'retrieving subscribed feed from DB: ', each.feed_url
         feeds.append(each.feed_url)
 
-    # feeds = ['http://feeds.nationalgeographic.com/ng/photography/photo-of-the-day/']
     return feeds
 
 
@@ -42,14 +37,14 @@ def main(feed_list=None):
         feed_list = get_all_feeds()  # this needs to be changed to fit feed_id in as well.
 
     def c_store():
-        # time.sleep(30)
+
         kill = False
 
         while True:
 
             # this seems a little hacky..
             if all(each.done() for each in p_futures):
-                print "DONE DONE DONE DONE"
+                print "future is DONE"
                 kill = True
 
             if kill and res_q.empty():  # you can only quit when all your work is done
@@ -60,16 +55,12 @@ def main(feed_list=None):
                 pass
 
             else:
-                # if item['meta']:
-                    # store_feed_data(item['meta']) #this should not be separate. put it in add_entry()
                 print "   grabbing item", "size: ", res_q.qsize()
-                add_entry(item)  # add feed_id here...?
+                add_entry(item)
                 print '...done storing'
-                # fin_q.append(item)
 
+                # When done storing, add item to "finished queue"
                 fin_q.append(item['posts'][0]['feed_id'])
-                # print dir(item)
-                #When done storing, add item to "finished queue"
                 #A different polling view can then grab everything off of the 'finished' queue
 
     def p_call(f):
@@ -79,21 +70,19 @@ def main(feed_list=None):
         print res_q.qsize()
 
     #TODO: move this to configs file:
-    # optimize network-bound producer pool here
+    # optimize network-bound producer pool here:
     p_pool = 10  # 5
     p_exec = concurrent.futures.ThreadPoolExecutor(max_workers=p_pool)
     p_futures = [p_exec.submit(p_call, feed) for feed in feed_list]
 
-
-
     # p_futures = [p_exec.submit(lambda f: res_q.put(feed_request(f, get_meta=False)), feed) for feed in feed_list]
 
-     # optimize DB/IO-bound consumer pool here
-    c_pool = 10  # apparently sqllite is okay with multiple connections?
+     # optimize DB/IO-bound consumer pool here:
+    c_pool = 10  # even SQLite can do concurrency!
+
     c_exec = concurrent.futures.ThreadPoolExecutor(max_workers=c_pool)
     c_futures = [c_exec.submit(c_store) for e in range(c_pool)]  # start a consumer instance for every worker
 
-    print dir(p_futures[0])
     print "just return to caller now..."
 
     # wait for all producer futures to finish:
