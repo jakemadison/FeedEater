@@ -3,7 +3,6 @@
 import FeedGetter
 from feedeater.database.models import User, UserFeeds, Feed, Entry, UserEntryTags, UserEntry, UserPrefs
 from feedeater import db
-# from feedeater.debugger import debugging_suite as ds
 import getfeeds
 import storefeeds
 import parsenewfeed
@@ -613,8 +612,6 @@ if __name__ == "__main__":
 
     # use this to update feeds for now:
 
-
-
     # apply_feed_category(u, "Cats", 4)
     # apply_feed_category(u, "Pics", 1)
     # apply_feed_category(u, "Pics", 5)
@@ -622,8 +619,6 @@ if __name__ == "__main__":
     # apply_feed_category(u, "Programming", 6)
     #apply_feed_category(u, None, 3)
 
-
     # some feeds to add:
     # https://explosm.net/comics/3489/
-    # http://theoatmeal.com/
-    #
+    # http://theoatmeal.com
