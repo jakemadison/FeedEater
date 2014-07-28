@@ -1,22 +1,17 @@
-import FeedGetter
-from feedeater.database.models import User, UserFeeds, Feed, Entry, UserEntryTags, UserEntry, UserPrefs
+from feedeater.database.models import UserFeeds, Entry, UserEntry
 from feedeater import db
-import getfeeds
-import storefeeds
-import parsenewfeed
-from feedeater.config import configs as c
-from feedeater.display.views import custom_filters
-from feedeater.database import models
 
 db_session = db.session
 
 
 def mark_entry_read(entryid, userid):
-    print entryid, userid
 
-    # check for existence of user_feed_entry for user/entryid combo
-    # if exists, make unread = False
-    # if doesn't exist, make new record with unread=False
+    """ check for existence of user_feed_entry for user/entryid combo
+     if exists, make unread = False
+     if doesn't exist, make new record with unread=False"""
+
+    print 'marking as read',
+    print entryid, userid
 
     current_state = db_session.query(UserEntry).filter(UserFeeds.userid == userid,
                                                    UserEntry.entryid == entryid,

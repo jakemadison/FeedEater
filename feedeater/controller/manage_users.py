@@ -1,11 +1,6 @@
-from feedeater.database.models import User, ROLE_USER  # ,UserFeeds, Feed, Entry, UserEntryTags, UserEntry, UserPrefs
+from feedeater.database.models import User, ROLE_USER
 from feedeater import db
-# from feedeater.debugger import debugging_suite as ds
-#import getfeeds
-#import storefeeds
-#import parsenewfeed
-#from feedeater.config import configs as c
-#import FeedGetter
+
 
 db_session = db.session
 
@@ -22,12 +17,3 @@ def add_user(resp):
     db.session.add(user)
     db.session.commit()
 
-
-
-    # preferences now has a check which will create the pref record
-    # when required.  So i think I can just comment this out..
-    # Ah, this is why the other bug:
-    # user = db_session.query.filter(User.email == resp.email).first()
-    # prefs = UserPrefs({"userid": user.id})
-    # db_session.add(prefs)
-    # db_session.commit()

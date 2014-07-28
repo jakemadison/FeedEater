@@ -16,15 +16,9 @@ db_session = db.session
 
 def get_unread_count(feed_id, user):
 
-    # first just get the uf_id
-
-    # uf_res = db_session.query(UserFeeds).filter(UserFeeds.userid == user.id, UserFeeds.feedid == feed_id).first()
-    # uf_id = uf_res.id
+    print 'getting unread count for feed: {0}, user_id: {1}'.format(feed_id, user.id)
 
     entry_count = db_session.query(Entry).filter(Entry.feed_id == feed_id).count()
-    # qry = qry.outerjoin(UserEntry, UserEntry.entryid == Entry.id)
-    # qry = qry.filter
-
 
     # to get an unread count, need count of total,
     # count of "read" and subtract.  remember, userEntry is only created on demand
@@ -35,10 +29,8 @@ def get_unread_count(feed_id, user):
     # left join user_feed_entry ufe on ufe.entryid = e.id
     # where uf.userid = 3 and (ufe.unread = 1 or ufe.unread is null)
 
-    # print feed_id
+    print 'count: ', entry_count
     return entry_count
-
-
 
 
 def recalculate_entries(user, p, only_star=False):
@@ -46,10 +38,7 @@ def recalculate_entries(user, p, only_star=False):
     # i need to add a bit of logic here that checks current page, length of entries, and
     # if no entries are going to be drawn, redirect us somewhere.. last page of them maybe
 
-    # feed_list = []
     final_list = []
-    # cat_list = []
-
 
     per_page = int(c['POSTS_PER_PAGE'])
     page = int(p)
@@ -366,37 +355,37 @@ def get_user_feeds(user=None):
     return [q.feed_url for q in feed_list]
 
 
-def test_get_entires(user):
-    qry = db_session.query(User, UserFeeds, Entry, UserEntry)
-    qry.filter(Entry.feed_id == UserFeeds.feedid,
-                         UserFeeds.userid == user.id,
-                         UserEntry.userid == user.id, UserEntry.entryid == Entry.id,
-                         UserFeeds.is_active == 1).order_by(Entry.published.desc())
-    return qry
+# def test_get_entires(user):
+#     qry = db_session.query(User, UserFeeds, Entry, UserEntry)
+#     qry.filter(Entry.feed_id == UserFeeds.feedid,
+#                          UserFeeds.userid == user.id,
+#                          UserEntry.userid == user.id, UserEntry.entryid == Entry.id,
+#                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
+#     return qry
 
 
-def get_user_entry_records(user, entry_list):
-
-    entry_records = []
-
-    for each in entry_list.items:
-        result = each.get_user_entry_records(user.id)
-
-        if result["status"]:
-            entry_records.append(result["query"])
-
-        else:
-            try:
-                db_session.add(result["record"])
-
-            except Exception, e:
-                print str(e)
-
-            else:
-                db_session.commit()
-                entry_records.append(result["record"])
-
-    print "these are the recorddddds: ", entry_records
+# def get_user_entry_records(user, entry_list):
+#
+#     entry_records = []
+#
+#     for each in entry_list.items:
+#         result = each.get_user_entry_records(user.id)
+#
+#         if result["status"]:
+#             entry_records.append(result["query"])
+#
+#         else:
+#             try:
+#                 db_session.add(result["record"])
+#
+#             except Exception, e:
+#                 print str(e)
+#
+#             else:
+#                 db_session.commit()
+#                 entry_records.append(result["record"])
+#
+#     print "these are the recorddddds: ", entry_records
 
 
     # qry = UserEntry.query.filter(UserEntry.entryid == entry_list.id)
@@ -404,32 +393,33 @@ def get_user_entry_records(user, entry_list):
 
 
 
-def get_user_entries(user):
-
-    #this needs to return a query object so we can paginate results
-    try:
-
-        # query_result = Entry.query.order_by(Entry.published.desc())
-
-        # qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
-        #                  UserFeeds.userid == User.id,
-        #                  UserFeeds.is_active == 1).order_by(Entry.published.desc())
-
-
-        qry = Entry.query.order_by(Entry.published.desc())
-
-        # qry = db_session.query(User, UserFeeds, Entry)
-        # qry = qry.filter(Entry.feed_id == UserFeeds.feedid,
-        #                  UserFeeds.userid == User.id,
-        #                  UserFeeds.is_active == 1).order_by(Entry.published.desc())
-
-    except Exception, e:
-        print 'errrror with getting entries..'
-        print str(e)
-
-    else:
-        print qry
-        return qry
+# def get_user_entries(user):
+#
+#     print 'running get_user_entries function for user, ', user.id
+#     #this needs to return a query object so we can paginate results
+#     try:
+#
+#         # query_result = Entry.query.order_by(Entry.published.desc())
+#
+#         # qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
+#         #                  UserFeeds.userid == User.id,
+#         #                  UserFeeds.is_active == 1).order_by(Entry.published.desc())
+#
+#
+#         qry = Entry.query.order_by(Entry.published.desc())
+#
+#         # qry = db_session.query(User, UserFeeds, Entry)
+#         # qry = qry.filter(Entry.feed_id == UserFeeds.feedid,
+#         #                  UserFeeds.userid == User.id,
+#         #                  UserFeeds.is_active == 1).order_by(Entry.published.desc())
+#
+#     except Exception, e:
+#         print 'errrror with getting entries..'
+#         print str(e)
+#
+#     else:
+#         print qry
+#         return qry
 
 
 def single_active(user, ufid):
@@ -492,8 +482,6 @@ def toggle_category(user, cat):
         db_session.rollback()
 
 
-
-
 def update_is_active(uf_id):
     try:
         print uf_id
@@ -504,7 +492,6 @@ def update_is_active(uf_id):
 
         elif existing.is_active == False:
             active = True
-
 
         db_session.query(UserFeeds).filter_by(id=uf_id).update(
             {
@@ -519,25 +506,25 @@ def update_is_active(uf_id):
         db_session.rollback()
 
 
-def update_users_feeds(u):
-
-    # select title from feed f join userfeeds uf on f.id = uf.id
-
-    try:
-        user_record = db.session.query(User).filter(User.nickname == u.nickname).first()
-        subs = db_session.query(UserFeeds).filter(UserFeeds.userid == user_record.id).all()
-
-    except Exception, e:
-        print 'DB error retrieving user feeds'
-        print str(e)
-
-    else:
-        subs_list = [x.feedid for x in subs]
-
-        print subs_list
-        user_feeds = db_session.query(Feed).filter(Feed.id == subs_list).all()
-        feed_list = [x.title for x in user_feeds]
-        FeedGetter.main(feed_list)
+# def update_users_feeds(u):
+#
+#     # select title from feed f join userfeeds uf on f.id = uf.id
+#
+#     try:
+#         user_record = db.session.query(User).filter(User.nickname == u.nickname).first()
+#         subs = db_session.query(UserFeeds).filter(UserFeeds.userid == user_record.id).all()
+#
+#     except Exception, e:
+#         print 'DB error retrieving user feeds'
+#         print str(e)
+#
+#     else:
+#         subs_list = [x.feedid for x in subs]
+#
+#         print subs_list
+#         user_feeds = db_session.query(Feed).filter(Feed.id == subs_list).all()
+#         feed_list = [x.title for x in user_feeds]
+#         FeedGetter.main(feed_list)
 
 
 def apply_feed_category(category, ufid, remove=False):
@@ -561,8 +548,6 @@ def apply_feed_category(category, ufid, remove=False):
 
 
 def get_user_prefs(user):
-
-    c_view = None
 
     prefs = db_session.query(UserPrefs).filter_by(userid=user.id)
     x = prefs.first()
@@ -595,13 +580,6 @@ def changeview(user):
     db_session.commit()
 
     return
-
-
-
-
-def get_user_categories(user):
-    # categories = db_session.query(UserFeeds).filter_by(userid=user.id)
-    pass
 
 
 def get_progress():

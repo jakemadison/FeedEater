@@ -5,6 +5,10 @@ from feedeater.config import configs
 
 def get_feed_meta(url):
 
+    """I'm not entirely sure this function ever actually runs."""
+
+    print 'running get_feed_meta function'
+
     try:
         res = feedparser.parse(url, configs.get('User-Agent'))
 
@@ -30,14 +34,10 @@ def get_feed_meta(url):
         return meta
 
 
-
-
 def feed_request(f, get_meta=False):
 
     url = f['url']
     feed_id = f['feed_id']
-    # feed_id = 0
-    # url = f
 
     def time_parser(time_str, update_time=False):
         """
@@ -74,8 +74,6 @@ def feed_request(f, get_meta=False):
 
     if res:
 
-        # print res.feed, res.status, res.version
-
         posts = []
         # print 'length of entries: {0}'.format(len(res['entries']))
         # there needs to be a "if length entries > 0 here
@@ -85,8 +83,6 @@ def feed_request(f, get_meta=False):
             post = None
 
             try:
-                # print 'receiving post: {0}'.format(entry.get("title"))
-                # print 'getting post....{0}'.format(entry.get("title", "No title").encode('utf-8')).strip("\n")[:70]
                 post = {
                     "feed_id": feed_id,
                     "title": entry.get("title", "No title"),
@@ -106,7 +102,6 @@ def feed_request(f, get_meta=False):
 
         meta = None
         if get_meta:
-
             try:
                 meta = {
                     "feed_title": res['channel'].get('title', "no feed title"),

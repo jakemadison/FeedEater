@@ -5,19 +5,14 @@ db_session = db.session
 
 # TODO: incorporate some damn exception catching already
 
-# Okay, the structure of this has been confused because of dev scaffolding
 # basically, the logic should go: user -> feedlist -> feed -> entries
 # every entry has a feed, every feed has a user, (via feedlist assoc. table)
 # update times are feed specific, tags are feedlist specific
-
 
 # this whole thing is (making a session?) doing a full transaction on each entry.
 # that is HUGELY slowing down overall performance.  look into flush()?
 # maybe when concurrency on the DB side is brought into the picture.
 # also, context manager, a la: http://docs.sqlalchemy.org/en/latest/orm/session.html, pretty slick.
-
-def get_feed_id(feed_url):
-    pass
 
 
 def store_feed_data(meta):
@@ -29,8 +24,7 @@ def store_feed_data(meta):
     print '===================> storing meta_data in feed table', title, site
 
     # check for existing in feed table:
-    existing = db_session.query(models.Feed).filter(models.Feed.feed_url == feed_url).first()  # all() returns list.
-    # can I return id here?
+    existing = db_session.query(models.Feed).filter(models.Feed.feed_url == feed_url).first()
 
     if existing:
         # check for changes to existing meta_data (feed title, description, etc)
@@ -62,23 +56,13 @@ def store_feed_data(meta):
                                subscribers=1,
                                description=description)
 
-        db_session.add(new_feed)  # does this return the ID of the feed??
+        db_session.add(new_feed)
 
         #TODO: this isn't going to work, except on adding of new feeds.
         # this needs to be moved somewhere else, check for feed id, and use that
         # to throw at entry to get correct feed_id.
 
         db_session.commit()
-
-
-    # either way, add association to userfeed table if doesn't exist on userfeed table already, that is..
-    #
-    # which means that this function needs userinfo...
-    # which actually, should be handled a level above...?
-
-
-def store_user_feeds(feed, user=None):
-    print "storing user-feed assoc. for ", feed
 
 
 def add_entry(entries, update_entries=False):
@@ -112,15 +96,12 @@ def add_entry(entries, update_entries=False):
                                 "feed_id": entry.get("feed_id")
                             })
 
-                        # logger.debug("Updating entry with id: {0}".format(entry.get("id")))
-
                     except Exception, e:
                         print 'errrror with existing'
                         print str(e)
                         db_session.rollback()
 
-            else:  # why are content and description storing the same information in all feeds?
-
+            else:
                 print 'new entry detected...'
                 # okay, so for this one, we need to pass a full feed object to "source" instead
                 # of setting feed_id manually...
@@ -136,10 +117,7 @@ def add_entry(entries, update_entries=False):
                     feed_id=entry.get("feed_id")
                 )
 
-
-                # logger.debug(u"Adding new entry with id: {0}".format(entry.get("id")))
                 db_session.add(new_entry)
-                # db_session.commit()
 
         except Exception, e:
             db_session.rollback()

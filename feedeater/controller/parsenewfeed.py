@@ -2,10 +2,10 @@ import feedfinder
 __author__ = 'jakemadison'
 
 
-# on success, this now returns a feed object, instead of just the URL
+# on success, this returns a feed object, instead of just the URL
 def parsefeed(url):
 
-    """instead of rolling own, this just uses feedfinder now.  Let's keep this function as a hook though
+    """this just attaches to feedfinder.  Let's keep this function as a hook though
     to add more functionality down the line: eg, multiple results per feed_find"""
 
     try:
