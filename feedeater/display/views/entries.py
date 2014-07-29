@@ -69,7 +69,7 @@ def change_tags():
     print tag_text, tag_id
 
     if g.user.is_authenticated():
-        tags = user_manage_feeds.change_user_tags(user)
+        tags = user_manage_entries.change_user_tags(user)
     else:
         return redirect(request.args.get('next') or url_for('index'))
 
@@ -86,7 +86,7 @@ def toggle_star():
 
     # right.. so before i made the decision to only add an entry when needed..
 
-    result = user_manage_feeds.change_star_state(user, entryid)
+    result = user_manage_entries.change_star_state(user, entryid)
 
     print result
 

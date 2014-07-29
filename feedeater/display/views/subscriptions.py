@@ -3,6 +3,7 @@ from flask import flash, redirect, url_for, request, g, jsonify
 from flask.ext.login import current_user
 from feedeater.config import configs as c
 from feedeater.controller import user_manage_feeds
+from feedeater.controller import user_manage_entries
 
 basedir = c.get('basedir')
 app = Blueprint('subscriptions', __name__, static_folder=basedir+'/display/static',
@@ -21,6 +22,7 @@ def before_blueprint_request():
 
 @app.route('/refreshfeeds', methods=['POST', 'GET'])
 def ref_feeds():
+    print 'ref_feeds view function active'
     user = g.user
     user_manage_feeds.main(user)
 
@@ -234,7 +236,7 @@ def change_view():
 
     user = g.user
     print 'user: ', user.nickname, user.id
-    user_manage_feeds.changeview(user)
+    user_manage_entries.changeview(user)
 
     print "done! changeview!"
 

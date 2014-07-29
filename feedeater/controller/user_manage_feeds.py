@@ -1,5 +1,3 @@
-# this module deals with adding, removing, updating user feeds.
-# it will be called by front end actions
 import FeedGetter
 from feedeater.database.models import User, UserFeeds, Feed, Entry, UserEntryTags, UserEntry, UserPrefs
 from feedeater import db
@@ -13,7 +11,14 @@ from feedeater.database import models
 db_session = db.session
 
 
+#####
+# Functions for reading subscription states:
+#####
+
 def get_unread_count(feed_id, user):
+
+    """get the number of unread entries in the feed.  Currently only returning
+       the total count of all entries in the feed."""
 
     print 'getting unread count for feed: {0}, user_id: {1}'.format(feed_id, user.id)
 
@@ -33,6 +38,10 @@ def get_unread_count(feed_id, user):
 
 
 def recalculate_entries(user, p, only_star=False):
+
+    """given a user and page (optionally, starred only) recalculate the entries to be displayed.
+       It would be worth having this look forward/backward an extra page to speed up page-change,
+       since this is an expensive function."""
 
     # i need to add a bit of logic here that checks current page, length of entries, and
     # if no entries are going to be drawn, redirect us somewhere.. last page of them maybe
@@ -131,62 +140,89 @@ def recalculate_entries(user, p, only_star=False):
     return final_list, pager_indicator, total_records
 
 
-def change_user_tags(user, entries):
+def get_progress():
 
-    return {'taglist': 1}
+    """get the current progress of feeds refresh"""
+
+    print "is this actually going to work??", FeedGetter.fin_q
+    return FeedGetter.fin_q
 
 
-def change_star_state(user, entryid):
+def get_user_feeds(user=None):
 
-    # this function is a boolean.. so it shouldn't care what the state originally was
-    # it can be state agnostic.  same with the front end.  it only needs to know if
-    # toggle at the back was successful or not
-    current_state = db_session.query(UserEntry).filter(UserFeeds.userid == user.id,
-                                                       UserEntry.entryid == entryid,
-                                                       UserEntry.userfeedid == UserFeeds.id).first()
+    """get all feeds the user is subscribed to"""
 
-    if current_state is None:
-        print "no userEntry found, adding a new one..."
+    feed_list = []
+    #feed_data = {}
+    final_list = []
+    cat_list = []
+    u_table, uf_table, f_table = (None, None, None)
 
-        entry = db_session.query(Entry).filter(Entry.id == entryid).first()
-        uf_id = db_session.query(UserFeeds).filter(UserFeeds.userid == user.id,
-                                                   UserFeeds.feedid == entry.feed_id).first().id
+    if user:
+        qry = db_session.query(User, UserFeeds, Feed)
+        qry = qry.filter(Feed.id == UserFeeds.feedid, UserFeeds.userid == User.id)
 
-        new_user_entry = UserEntry(entryid, user.id, userfeedid=uf_id, starred=True, unread=True)
-        db_session.add(new_user_entry)
-        db_session.commit()
-        return True
+        for each in qry.filter(User.id == user.id).all():
+            u_table, uf_table, f_table = each
 
-    qry = db_session.query(UserEntry).filter(UserEntry.id == current_state.id)
+            unread_count = get_unread_count(uf_table.feedid, user)
 
-    # okay... if this line doesn't exist, we need to create a new one.
+            # add user_feed tag/category/star data here in dictionary:
+            feed_data = {'title': f_table.title, 'url': f_table.feed_url,
+                         'desc': f_table.description, 'active': uf_table.is_active,
+                         'uf_id': uf_table.id, 'feed_id': uf_table.feedid,
+                         'category': uf_table.category, 'count': unread_count}
+            final_list.append(feed_data)
 
-    # this should actually check if it exists, and add record if not.
-    # which is a higher function that should be shared with change/add user tags
+            cat_list.append(uf_table.category)
+            feed_list.append(f_table.feed_url)  # is this actually being used at all??
 
-    # my entire model here for stars is bogus.  Tags and stars probably need to be separate tables
-    # sigh.. one entry can have many tags per client, but each entry can only have a single star state (per client)
-    if current_state:
-        print "yes"
-        if current_state.starred:
+        cat_list = set(cat_list)
 
-            print "was", current_state.starred
+        if not uf_table:
+            pass
 
-            qry.update({"starred": False})
-            db_session.commit()
 
-        else:
-            print current_state.starred
-            qry.update({"starred": True})
-            db_session.commit()
+        final_res = {'user_id': user.id, 'feed_data': final_list, 'cat_list': cat_list}
 
-        return True
+        # print final_res
+
+        return final_res
 
     else:
-        return False
+        feed_list = Feed.query.all()
 
+    return [q.feed_url for q in feed_list]
+
+
+def get_user_prefs(user):
+
+    """get user feed preferences. Currently only compressed vs uncompressed view"""
+
+    prefs = db_session.query(UserPrefs).filter_by(userid=user.id)
+    x = prefs.first()
+
+    if x is None:
+        new_prefs = models.UserPrefs(userid=user.id)
+        db_session.add(new_prefs)
+        db_session.commit()
+        c_view = 0
+
+    else:
+        c_view = x.compressed_view
+
+    return c_view
+
+
+#####
+# Functions for adding/removing subscriptions:
+#####
 
 def add_user_feed(user, feed):
+
+    """add a new feed to a user's subscription list.  Check to see if we already have
+       the feed and its entries (because of another user, possible).  Otherwise,
+       go get everything for the feed."""
 
     def associate_feed_with_user():
 
@@ -263,6 +299,10 @@ def add_user_feed(user, feed):
 
 
 def remove_user_feed(user, uf_id):
+
+    """remove a user's feed from their subscriptions list.
+       keep the feed and entries, as other users might be subscribed too"""
+
     print user
     print uf_id
     print "success!"
@@ -286,142 +326,39 @@ def remove_user_feed(user, uf_id):
         return "feed_id not found"
 
 
-def get_guest_feeds():
-    # qry = db_session.query(Feed)
-    # qry.filter(Feed.id < 3)
-    final_res = {'feed_data': [{'url': u'http://ancientpeoples.tumblr.com/rss',
-                                'desc': u'A blog about everything in the Ancient World, run \
-                                by history students and graduates from different fields.',
-                                'title': u'Ancient Peoples'},
-                               {'url': u'http://xkcd.com/rss.xml',
-                                'desc': u'xkcd.com: A webcomic of romance and math humor.',
-                                'title': u'xkcd.com'}],
-                 'user_id': 1}
+#####
+# Functions for changing subscription attributes:
+#####
 
-    return final_res
+def apply_feed_category(category, ufid, remove=False):
 
+    """set/change a feed's category"""
 
-def get_guest_user():
-    qry = db_session.query(User).filter(User.email == 'guest@noemail.com')
-    u = qry.first()
-    print u, dir(u), u.nickname
-    return u
+    print category
 
+    if remove:
+        return False  # remove category for user/feed combination
 
+    # otherwise, apply category to feedid for user
+    try:
+        active_row = db_session.query(UserFeeds).filter_by(id=ufid)
+        active_row.update({"category": category})
+        db_session.commit()
 
-def get_user_feeds(user=None):
-
-    feed_list = []
-    #feed_data = {}
-    final_list = []
-    cat_list = []
-    u_table, uf_table, f_table = (None, None, None)
-
-    if user:
-        qry = db_session.query(User, UserFeeds, Feed)
-        qry = qry.filter(Feed.id == UserFeeds.feedid, UserFeeds.userid == User.id)
-
-        for each in qry.filter(User.id == user.id).all():
-            u_table, uf_table, f_table = each
-
-            unread_count = get_unread_count(uf_table.feedid, user)
-
-            # add user_feed tag/category/star data here in dictionary:
-            feed_data = {'title': f_table.title, 'url': f_table.feed_url,
-                         'desc': f_table.description, 'active': uf_table.is_active,
-                         'uf_id': uf_table.id, 'feed_id': uf_table.feedid,
-                         'category': uf_table.category, 'count': unread_count}
-            final_list.append(feed_data)
-
-            cat_list.append(uf_table.category)
-            feed_list.append(f_table.feed_url)  # is this actually being used at all??
-
-        cat_list = set(cat_list)
-
-        if not uf_table:
-            pass
-
-
-        final_res = {'user_id': user.id, 'feed_data': final_list, 'cat_list': cat_list}
-
-        # print final_res
-
-        return final_res
+    except Exception, e:
+        return "failed", str(e)
 
     else:
-        feed_list = Feed.query.all()
-
-    return [q.feed_url for q in feed_list]
+        return "success"
 
 
-# def test_get_entires(user):
-#     qry = db_session.query(User, UserFeeds, Entry, UserEntry)
-#     qry.filter(Entry.feed_id == UserFeeds.feedid,
-#                          UserFeeds.userid == user.id,
-#                          UserEntry.userid == user.id, UserEntry.entryid == Entry.id,
-#                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
-#     return qry
-
-
-# def get_user_entry_records(user, entry_list):
-#
-#     entry_records = []
-#
-#     for each in entry_list.items:
-#         result = each.get_user_entry_records(user.id)
-#
-#         if result["status"]:
-#             entry_records.append(result["query"])
-#
-#         else:
-#             try:
-#                 db_session.add(result["record"])
-#
-#             except Exception, e:
-#                 print str(e)
-#
-#             else:
-#                 db_session.commit()
-#                 entry_records.append(result["record"])
-#
-#     print "these are the recorddddds: ", entry_records
-
-
-    # qry = UserEntry.query.filter(UserEntry.entryid == entry_list.id)
-
-
-
-
-# def get_user_entries(user):
-#
-#     print 'running get_user_entries function for user, ', user.id
-#     #this needs to return a query object so we can paginate results
-#     try:
-#
-#         # query_result = Entry.query.order_by(Entry.published.desc())
-#
-#         # qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
-#         #                  UserFeeds.userid == User.id,
-#         #                  UserFeeds.is_active == 1).order_by(Entry.published.desc())
-#
-#
-#         qry = Entry.query.order_by(Entry.published.desc())
-#
-#         # qry = db_session.query(User, UserFeeds, Entry)
-#         # qry = qry.filter(Entry.feed_id == UserFeeds.feedid,
-#         #                  UserFeeds.userid == User.id,
-#         #                  UserFeeds.is_active == 1).order_by(Entry.published.desc())
-#
-#     except Exception, e:
-#         print 'errrror with getting entries..'
-#         print str(e)
-#
-#     else:
-#         print qry
-#         return qry
-
+#####
+# Functions for changing subscriptions displayed:
+#####
 
 def single_active(user, ufid):
+
+    """turn on a single feed, turn off all other feeds"""
 
     try:
         db_session.query(UserFeeds).filter_by(userid=user.id).update(
@@ -444,6 +381,8 @@ def single_active(user, ufid):
 
 def all_active(user):
 
+    """turn on all feeds"""
+
     try:
         db_session.query(UserFeeds).filter_by(userid=user.id).update(
             {
@@ -459,6 +398,9 @@ def all_active(user):
 
 
 def toggle_category(user, cat):
+
+    """turn an entire category on if any single feed in that category is set to off
+       if all feeds in that category are on, turn the whole category off"""
 
     try:
         qry = db_session.query(UserFeeds).filter_by(userid=user.id, category=cat)
@@ -482,6 +424,9 @@ def toggle_category(user, cat):
 
 
 def update_is_active(uf_id):
+
+    """switch between active and inactive for a single feed"""
+
     try:
         print uf_id
         existing = db_session.query(UserFeeds).filter_by(id=uf_id).first()
@@ -505,87 +450,9 @@ def update_is_active(uf_id):
         db_session.rollback()
 
 
-# def update_users_feeds(u):
-#
-#     # select title from feed f join userfeeds uf on f.id = uf.id
-#
-#     try:
-#         user_record = db.session.query(User).filter(User.nickname == u.nickname).first()
-#         subs = db_session.query(UserFeeds).filter(UserFeeds.userid == user_record.id).all()
-#
-#     except Exception, e:
-#         print 'DB error retrieving user feeds'
-#         print str(e)
-#
-#     else:
-#         subs_list = [x.feedid for x in subs]
-#
-#         print subs_list
-#         user_feeds = db_session.query(Feed).filter(Feed.id == subs_list).all()
-#         feed_list = [x.title for x in user_feeds]
-#         FeedGetter.main(feed_list)
-
-
-def apply_feed_category(category, ufid, remove=False):
-
-    print category
-
-    if remove:
-        return False  # remove category for user/feed combination
-
-    # otherwise, apply category to feedid for user
-    try:
-        active_row = db_session.query(UserFeeds).filter_by(id=ufid)
-        active_row.update({"category": category})
-        db_session.commit()
-
-    except Exception, e:
-        return "failed", str(e)
-
-    else:
-        return "success"
-
-
-def get_user_prefs(user):
-
-    prefs = db_session.query(UserPrefs).filter_by(userid=user.id)
-    x = prefs.first()
-
-    if x is None:
-        new_prefs = models.UserPrefs(userid=user.id)
-        db_session.add(new_prefs)
-        db_session.commit()
-        c_view = 0
-
-    else:
-        c_view = x.compressed_view
-
-    return c_view
-
-
-def changeview(user):
-
-    print 'changeview activated!'
-    print "attempting to change view state for user: ", user.nickname, "id: ", user.id
-
-    current_state = db_session.query(UserPrefs).filter_by(userid=user.id).first()
-
-    if current_state.compressed_view:
-        db_session.query(UserPrefs).filter_by(userid=user.id).update({"compressed_view": False})
-
-    else:
-        db_session.query(UserPrefs).filter_by(userid=user.id).update({"compressed_view": True})
-
-    db_session.commit()
-
-    return
-
-
-def get_progress():
-    print "is this actually going to work??", FeedGetter.fin_q
-    return FeedGetter.fin_q
-
-
+#####
+# Main Function:
+#####
 
 def main(user):
     xx = get_user_feeds(user)
@@ -604,21 +471,4 @@ def main(user):
 if __name__ == "__main__":
     u = User(nickname="jmadison", email="jmadison@quotemedia.com", role=0, id=1)
     main(u)
-    # get_user_entries(u)
 
-#TODO: actually, might just be better to check most recent update and only look at those
-# entries that are actually greater than that time, skipping the rest except for once per day
-# check... hmmm
-
-    # use this to update feeds for now:
-
-    # apply_feed_category(u, "Cats", 4)
-    # apply_feed_category(u, "Pics", 1)
-    # apply_feed_category(u, "Pics", 5)
-    # apply_feed_category(u, "Programming", 7)
-    # apply_feed_category(u, "Programming", 6)
-    #apply_feed_category(u, None, 3)
-
-    # some feeds to add:
-    # https://explosm.net/comics/3489/
-    # http://theoatmeal.com

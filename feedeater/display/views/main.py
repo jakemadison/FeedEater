@@ -35,7 +35,7 @@ def build_index(page=1):
     user = g.user
 
     if user is None or not g.user.is_authenticated():
-        user = user_manage_feeds.get_guest_user()
+        user = manage_users.get_guest_user()
         login_user(user)
 
     g.hash = md5(user.email).hexdigest()

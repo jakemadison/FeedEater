@@ -7,8 +7,7 @@ db_session = db.session
 
 def add_user(resp):
 
-    # some auths contain a nick, some don't.
-    # if they don't, use first segment of email:
+    # some auths contain a nick, some don't, use first portion of email if not
     nickname = resp.nickname
     if nickname is None or nickname == "":
         nickname = resp.email.split('@')[0]
@@ -17,3 +16,9 @@ def add_user(resp):
     db.session.add(user)
     db.session.commit()
 
+
+def get_guest_user():
+    qry = db_session.query(User).filter(User.email == 'guest@noemail.com')
+    u = qry.first()
+    print u, dir(u), u.nickname
+    return u
