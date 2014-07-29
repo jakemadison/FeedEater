@@ -9,20 +9,6 @@ fin_q = []
 len_feeds = 0
 
 
-def get_all_feeds():
-    # might refactor out this wrapper.  it's not really doing much right now...
-
-    #TODO: expand logic here to query based on logged in user and/or update time or whatever.
-    get_feeds = Feed.query.all()
-    feeds = []
-
-    for each in get_feeds:
-        print 'retrieving subscribed feed from DB: ', each.feed_url
-        feeds.append(each.feed_url)
-
-    return feeds
-
-
 def main(feed_list=None):
 
     """this function should ONLY deal with queue management between get and store functions"""
@@ -34,7 +20,7 @@ def main(feed_list=None):
     # kill = False
 
     if not feed_list:
-        feed_list = get_all_feeds()  # this needs to be changed to fit feed_id in as well.
+        return False
 
     def c_store():
 
@@ -42,7 +28,6 @@ def main(feed_list=None):
 
         while True:
 
-            # this seems a little hacky..
             if all(each.done() for each in p_futures):
                 print "future is DONE"
                 kill = True
@@ -59,7 +44,8 @@ def main(feed_list=None):
                 add_entry(item)
                 print '...done storing'
 
-                # When done storing, add item to "finished queue"
+                # When done storing, add feed_id to "finished queue"
+                #TODO: can we make this user_feedid instead of feedid?
                 fin_q.append(item['posts'][0]['feed_id'])
                 #A different polling view can then grab everything off of the 'finished' queue
 
@@ -77,7 +63,7 @@ def main(feed_list=None):
 
     # p_futures = [p_exec.submit(lambda f: res_q.put(feed_request(f, get_meta=False)), feed) for feed in feed_list]
 
-     # optimize DB/IO-bound consumer pool here:
+    # optimize DB/IO-bound consumer pool here:
     c_pool = 10  # even SQLite can do concurrency!
 
     c_exec = concurrent.futures.ThreadPoolExecutor(max_workers=c_pool)
@@ -97,9 +83,36 @@ def main(feed_list=None):
     print "fin_q: ", fin_q
 
 
+def get_all_feeds():
+    """retrieve all feeds subscribed to by all users"""
+
+    get_feeds = Feed.query.all()
+    feeds = []
+
+    for each in get_feeds:
+        print 'retrieving subscribed feed from DB: ', each.feed_url
+        feeds.append(each.feed_url)
+
+    return feeds
+
+
+def update_all_feeds():
+    try:
+        feed_list = get_all_feeds()
+        print 'feedlist: ', feed_list
+        main(feed_list)
+    except Exception, e:
+        print 'exception ahoy!', str(e)
+        return 1
+    else:
+        return 0
+
+
 if __name__ == "__main__":
 
+    import sys
     # put all cron-based stuff here, ie. all feeds for all subscribed users
     # this is entry point for running backend cron updates daily
-    main()
+    ret_code = update_all_feeds()
+    sys.exit(ret_code)
 
