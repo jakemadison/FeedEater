@@ -4,13 +4,12 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
 
     var current_paging = {'has_next': false, 'has_prev': false};
     var entries = {};
+    var subscriptions = {};
     var user_preferences = {"compressed": false};
-
     var progress_data = {'total_entry_count': 0, 'current_offset': 0, 'page_len': 0};
 
-
+    ///////
     //public methods:
-
 
     //messageBar methods:
     var checkProgress = function() {
@@ -28,7 +27,6 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     };
 
 
-
     //toolbar methods:
     var getUserPreferences = function() {
       return user_preferences;
@@ -43,7 +41,6 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         return(promise.then(handleRefreshSuccess));
 
     };
-
 
     var addFeed = function(url) {
         console.log("addFeed service with url: ", url);
@@ -93,7 +90,16 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
 
     };
 
+
     //Feed Methods:
+
+    var getSubs = function() {
+        var responsePromise = $http.get("/get_user_subs", {params: {
+            }});
+
+        return(responsePromise.then(handleSubUpdate))
+    };
+
     var unsubscribeFeed = function(feed_id) {
       var promise = $http({
           method: 'POST',
@@ -105,7 +111,6 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
       return(promise.then(handleAddFeedResult))
 
     };
-
 
     var toggleFeed = function(feed_id) {
         console.log('toggleFeed method of makeRequest function running');
@@ -156,7 +161,6 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     };
 
 
-
     //Pager Methods:
     var notifyPageChange = function() {
         console.log('i am firing a feedChange broadcast because of the pager!');
@@ -172,13 +176,29 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     };
 
     var getUpdatedEntries = function() {
+        //these are initialized on page load, so this getter should be available at any time
+        //to controllers that want it.
         console.log('getting updated entries');
         return entries;
+    };
+
+    var getUfIds = function() {
+        var uf_ids = [];
+      for (var i=0; i<subscriptions.subs.length; i++) {
+        uf_ids.push(subscriptions.subs[i].uf_id);
+      }
+        return uf_ids;
+
     };
 
 
 
     //private methods:
+    function handleSubUpdate(result){
+        subscriptions = result.data;
+        return subscriptions;
+    }
+
     function handleAddFeedResult(result) {
         console.log("addFeed/remove result happened!");
         console.log("result: ", result);
@@ -235,7 +255,9 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         requestSubUpdate: requestSubUpdate,
         checkProgress: checkProgress,
         unsubscribeFeed: unsubscribeFeed,
-        markAsRead: markAsRead
+        markAsRead: markAsRead,
+        getUfIds: getUfIds,
+        getSubs: getSubs
 
     });
 

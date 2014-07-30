@@ -156,6 +156,8 @@ fControllers.controller("ToolbarCtrl", ['$scope', '$modal', '$timeout', 'makeReq
 
     $scope.refreshFeeds = function() {
       console.log("refreshFeeds activated, page: ", PAGE_ID);
+      var uf_ids = makeRequest.getUfIds();
+      console.log(uf_ids);
 
         makeRequest.refreshFeeds()
         .then(function(){
@@ -183,6 +185,8 @@ fControllers.controller("ToolbarCtrl", ['$scope', '$modal', '$timeout', 'makeReq
     $scope.successMessage = false;
     $scope.messageText = '';
 
+
+    //if multiple feeds are returned, display modal to choose which one:
     $scope.modal_many_feeds = function() {
 
         var modalInstance = $modal.open({
@@ -206,6 +210,8 @@ fControllers.controller("ToolbarCtrl", ['$scope', '$modal', '$timeout', 'makeReq
         };
     };
 
+
+    //sending notifications to the user
     $scope.userNotifications = function(result) {
         console.log("controller received: ", result);
         switch (result.category){
@@ -283,17 +289,10 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
     $scope.subData = {};
 
     $scope.subData.getSubs = function() {
-        var responsePromise = $http.get("/get_user_subs", {params: {
-            }});
-
-        responsePromise.success(function(data, status, headers, config) {
-            $scope.subData.fromServer = data;
-            console.log(data);
-        });
-
-        responsePromise.error(function(data, status, headers, config) {
-            alert("AJAX failed!");
-        });
+        makeRequest.getSubs()
+            .then(function(data) {
+               $scope.subData.fromServer = data;
+            });
     };
 
 
@@ -324,8 +323,6 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
         return result;
 
     };
-
-
 
     $scope.subData.toggleFeed = function(userFeedId) {
 

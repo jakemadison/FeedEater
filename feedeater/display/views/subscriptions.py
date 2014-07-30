@@ -36,7 +36,7 @@ def get_progress():
     print "made it to get_progress"
 
     fin_list = user_manage_feeds.get_progress()
-    feed_len = user_manage_feeds.get_user_feeds(user)
+    feed_len = user_manage_feeds.get_user_feeds(user)  # this should just come in as uf_id parameters in the call
 
     print len(feed_len['feed_data'])
 
