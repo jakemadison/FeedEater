@@ -22,6 +22,10 @@ def before_blueprint_request():
 
 @app.route('/refreshfeeds', methods=['POST', 'GET'])
 def ref_feeds():
+
+    # this should take list of uf_ids and feed_ids, and refresh based on that.
+    # That should make it so we can skip get_feeds(user) and query the DB directly on those.
+
     print 'ref_feeds view function active'
     user = g.user
     user_manage_feeds.main(user)
@@ -31,21 +35,11 @@ def ref_feeds():
 
 @app.route('/get_progress', methods=['GET'])
 def get_progress():
-
-    user = g.user
     print "made it to get_progress"
 
+    # returns a list of currently done feed_ids.
     fin_list = user_manage_feeds.get_progress()
-    feed_len = user_manage_feeds.get_user_feeds(user)  # this should just come in as uf_id parameters in the call
-
-    print len(feed_len['feed_data'])
-
-    if len(fin_list) >= len(feed_len['feed_data']):
-        done = True
-    else:
-        done = False
-
-    return jsonify(fin=fin_list, done=done)
+    return jsonify(fin=fin_list)
 
 
 @app.route('/get_user_subs', methods=['GET'])

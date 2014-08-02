@@ -45,8 +45,8 @@ def main(feed_list=None):
                 print '...done storing'
 
                 # When done storing, add feed_id to "finished queue"
-                #TODO: can we make this user_feedid instead of feedid?
                 fin_q.append(item['posts'][0]['feed_id'])
+
                 #A different polling view can then grab everything off of the 'finished' queue
 
     def p_call(f):

@@ -143,9 +143,7 @@ def recalculate_entries(user, p, only_star=False):
 def get_progress():
 
     """get the current progress of feeds refresh.  returns the list of
-       feeds which have finished updating"""
-
-    # this might have problems with two users initiating a refresh at the same time:
+       feeds (feed_ids) which have finished updating"""
 
     return FeedGetter.fin_q
 
@@ -463,7 +461,6 @@ def main(user):
     print 'xx:', xx
 
     for f in xx['feed_data']:
-
         unit = {'feed_id': f['feed_id'], 'url': f['url']}
         send_feed.append(unit)
 

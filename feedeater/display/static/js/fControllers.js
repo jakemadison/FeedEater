@@ -4,6 +4,7 @@ var fControllers = angular.module('fControllers', ['ngSanitize']);
 fControllers.controller("messagebarCtrl", ['$scope', '$http', '$timeout', 'makeRequest',
                                                 function($scope, $timeout, $http, makeRequest){
 
+    $scope.animated = false;
 
     $scope.min_bar = false;
 
@@ -38,8 +39,12 @@ fControllers.controller("messagebarCtrl", ['$scope', '$http', '$timeout', 'makeR
     //progress bar stuff:
     $scope.bar = {'progress': 100, 'remaining': 0};
 
+
+    //listener for regular entries changing:
     $scope.$on('progressbarUpdate', function(e, data) {
        console.log("received progressbarupdate notice", data);
+
+
 
         var portion = (parseInt(PAGE_ID))*data.page_len;
         var left_section = (portion/data.total_entry_count)*100;
@@ -64,6 +69,17 @@ fControllers.controller("messagebarCtrl", ['$scope', '$http', '$timeout', 'makeR
         //100 - left side = right side
         //
 
+    });
+
+    $scope.$on('refreshUpdate', function(e, data) {
+       console.log("progressbar receieved refresh update", data);
+
+        $scope.animated = true;
+
+        var portion = (data.current_fin.length/data.feed_ids.length)*100;  //percentage done
+        var remains = 100 - portion;
+        $scope.bar.progress = portion;
+        $scope.bar.remaining = remains;
     });
 
 
@@ -156,11 +172,13 @@ fControllers.controller("ToolbarCtrl", ['$scope', '$modal', '$timeout', 'makeReq
 
     $scope.refreshFeeds = function() {
       console.log("refreshFeeds activated, page: ", PAGE_ID);
-      var uf_ids = makeRequest.getUfIds();
-      console.log(uf_ids);
+      var feed_ids = makeRequest.getFeedIds();
+      console.log('controller says feed ids are: ', feed_ids);
 
         makeRequest.refreshFeeds()
         .then(function(){
+                //this should fire when the response back from server is that refresh has started
+                //from here, we should start the polling of done, update progressbar, etc.
                 console.log("refresh feeds completed! Let's update Entries!");
             });
 

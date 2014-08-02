@@ -1,10 +1,11 @@
 var eServices = angular.module('eServices', []);
 
-eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootScope) {
+eServices.factory('makeRequest', ['$http', '$rootScope', '$timeout', function($http, $rootScope, $timeout) {
 
     var current_paging = {'has_next': false, 'has_prev': false};
     var entries = {};
     var subscriptions = {};
+    var feed_ids = [];
     var user_preferences = {"compressed": false};
     var progress_data = {'total_entry_count': 0, 'current_offset': 0, 'page_len': 0};
 
@@ -14,16 +15,32 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
     //messageBar methods:
     var checkProgress = function() {
 
-        var promise = $http({
-           method: 'GET',
+        var current_fin = [];
+        var poller = function() {$http({
+            method: 'GET',
             url: '/get_progress'
-        });
+            }).then(function(response) {
+                console.log(response.data);
+                current_fin = response.data.fin;
 
-        return promise.then(
-            function(data) {
-              return data;
+                $rootScope.$broadcast('refreshUpdate',
+                    {current_fin: current_fin, feed_ids: feed_ids});  // send refresh update to progressbar
+                                                                      // and sub controllers
+                if (current_fin.length!==feed_ids.length) {
+                    $timeout(poller, 1000);
+                }
+                else {
+                    $rootScope.$broadcast('refreshDone');  //notify sub and progressbar refresh is done
+                    allFeeds();
+                }
+            });
+        };
+
+        poller();
+
+        return {
+              current_fin: current_fin
             }
-        );
     };
 
 
@@ -182,20 +199,33 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         return entries;
     };
 
-    var getUfIds = function() {
-        var uf_ids = [];
-      for (var i=0; i<subscriptions.subs.length; i++) {
-        uf_ids.push(subscriptions.subs[i].uf_id);
-      }
-        return uf_ids;
-
+    var getFeedIds = function() {
+        return feed_ids;
     };
 
 
 
     //private methods:
+
+    function manageProgress() {
+        //this function should repeatedly poll server progress
+        //check fin_q vs users feeds until they match
+        //send updates to progressbar and sub_ctrl controller
+        //and then wrap everything up when done.
+        checkProgress();
+
+    }
+
+
+
+
+    //Success Handlers:
     function handleSubUpdate(result){
         subscriptions = result.data;
+        feed_ids = [];
+        for (var i=0; i < subscriptions.subs.length; i++) {
+            feed_ids.push(subscriptions.subs[i].feed_id);
+        }
         return subscriptions;
     }
 
@@ -207,13 +237,19 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
 
     function handleRefreshSuccess() {
         console.log("refresh has been successful!");
-        $rootScope.$broadcast("feedChange");
-        $rootScope.$broadcast("entryRefreshInit")
+        console.log("current feed_ids: ", feed_ids);
+
+        // polling service should start here.
+        manageProgress();
+
+        $rootScope.$broadcast("feedChange");  //notify entry controller to update entries
+        $rootScope.$broadcast("entryRefreshInit") //notify progressbar of refresh
     }
 
     function handleFeedSuccess(data) {
         console.log('i am firing a feedChange broadcast!');
         $rootScope.$broadcast("feedChange");
+
         return data.data;
     }
 
@@ -256,7 +292,7 @@ eServices.factory('makeRequest', ['$http', '$rootScope', function($http, $rootSc
         checkProgress: checkProgress,
         unsubscribeFeed: unsubscribeFeed,
         markAsRead: markAsRead,
-        getUfIds: getUfIds,
+        getFeedIds: getFeedIds,
         getSubs: getSubs
 
     });
