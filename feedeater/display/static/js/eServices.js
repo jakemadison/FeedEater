@@ -31,6 +31,9 @@ eServices.factory('makeRequest', ['$http', '$rootScope', '$timeout', function($h
                 }
                 else {
                     $rootScope.$broadcast('refreshDone');  //notify sub and progressbar refresh is done
+
+                    //all feeds should optionally take a page number, so that this sets back to
+                    //page 1 on refresh of feeds.
                     allFeeds();
                 }
             });
@@ -242,8 +245,8 @@ eServices.factory('makeRequest', ['$http', '$rootScope', '$timeout', function($h
         // polling service should start here.
         manageProgress();
 
-        $rootScope.$broadcast("feedChange");  //notify entry controller to update entries
-        $rootScope.$broadcast("entryRefreshInit") //notify progressbar of refresh
+        //$rootScope.$broadcast("feedChange");  //notify entry controller to update entries
+        //$rootScope.$broadcast("entryRefreshInit") //notify progressbar of refresh
     }
 
     function handleFeedSuccess(data) {
