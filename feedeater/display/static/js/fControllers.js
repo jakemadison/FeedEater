@@ -437,6 +437,9 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', function($scope, 
         console.log('this is page id: ');
         console.log(PAGE_ID);
         PAGE_ID = parseInt(PAGE_ID) + amount;
+
+        //switch to next/prev page worth of entries
+
         makeRequest.notifyPageChange();
         $("html, body").animate({ scrollTop: 0 }, "fast");  // this might get annoying..
     };

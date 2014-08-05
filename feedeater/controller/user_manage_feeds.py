@@ -37,34 +37,10 @@ def get_unread_count(feed_id, user):
     return entry_count
 
 
-def recalculate_entries(user, p, only_star=False):
-
-    """given a user and page (optionally, starred only) recalculate the entries to be displayed.
-       It would be worth having this look forward/backward an extra page to speed up page-change,
-       since this is an expensive function."""
-
-    # i need to add a bit of logic here that checks current page, length of entries, and
-    # if no entries are going to be drawn, redirect us somewhere.. last page of them maybe
-
-    final_list = []
-
-    per_page = int(c['POSTS_PER_PAGE'])
-    page = int(p)
-
-    print '----> current page:', page, '----> posts per page:', per_page
-
-    pager_indicator = {"has_prev": None, "has_next": None}
-
-    start_pos = ((page-1)*per_page)
-    end_pos = start_pos + per_page
-
-    if start_pos == 0:
-        pager_indicator["has_prev"] = False
-    else:
-        pager_indicator["has_prev"] = True
-
-    print start_pos, end_pos
-
+#####
+# Functions for recalculating entries:
+#####
+def _generate_calculation_query(user, only_star):
     # get all feed entries for user where UserFeeds.id in active_list
     # okay, so really this should be the only query used everywhere
     # and then we should pull things like "cat list" out of this giant, ugly thing
@@ -99,18 +75,30 @@ def recalculate_entries(user, p, only_star=False):
 
     qry = qry.order_by(Entry.published.desc())
 
-    total_records = qry.count()
-    print "count of records: ", total_records
+    return qry
 
-    if total_records > end_pos:
-        pager_indicator["has_next"] = True
-    else:
-        pager_indicator["has_next"] = False
 
-    #
-    #
-    # Okay, so to expand logic here, this needs to be start_page-1page, and end_pos+1page
-    for each in qry[start_pos:end_pos]:
+def _generate_start_end_pos(page, p, n, current, per_page, pager_indicator):
+    if current:
+        # determine main page start and end and set pager_indicator accordingly,
+        # assuming we are generating entries for the main page
+        start_pos = ((page-1)*per_page)
+        end_pos = start_pos + per_page
+
+        if start_pos == 0:
+            pager_indicator["has_prev"] = False
+        else:
+            pager_indicator["has_prev"] = True
+
+        print start_pos, end_pos
+
+    return start_pos, end_pos, pager_indicator
+
+
+def _generate_entry_list(qry, start, end):
+    final_list = []
+
+    for index, each in enumerate(qry[start:end]):
 
         u_table, uf_table, f_table, e_table, ufe_table = each
 
@@ -139,7 +127,47 @@ def recalculate_entries(user, p, only_star=False):
 
         final_list.append(entry_data)
 
-    return final_list, pager_indicator, total_records
+    return final_list
+
+
+def recalculate_entries(user, page_id, only_star=False, p=False, n=False, current=True):
+
+    """given a user and page (optionally, starred only) recalculate the entries to be displayed.
+       It would be worth having this look forward/backward an extra page to speed up page-change,
+       since this is an expensive function."""
+
+    # init stuff:
+    per_page = int(c['POSTS_PER_PAGE'])
+    page = int(page_id)
+    print '----> current page:', page, '----> posts per page:', per_page
+    pager_indicator = {"has_prev": None, "has_next": None}
+
+    start_pos, end_pos, pager_indicator = _generate_start_end_pos(page, p, n, current,
+                                                                  per_page, pager_indicator)
+
+    next_page_index = end_pos + per_page
+    prev_page_index = start_pos - per_page
+
+    qry = _generate_calculation_query(user, only_star)
+
+    total_records = qry.count()
+    print "count of records :   ", total_records
+
+    if total_records > end_pos:
+        pager_indicator["has_next"] = True
+    else:
+        pager_indicator["has_next"] = False
+
+    #
+    #
+    # Okay, so to expand logic here, this needs to be start_page-1page, and end_pos+1page
+
+    if prev_page_index < 0:
+        prev_page_index = 0
+
+    final_list = _generate_entry_list(qry, start_pos, end_pos)
+
+    return final_list, pager_indicator, total_records, per_page
 
 
 def get_progress():

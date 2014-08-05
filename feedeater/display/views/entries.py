@@ -33,10 +33,11 @@ def recalculate_entries():
     print 'page: ', page
     g.page = page
 
-    entries, pager, total_records = user_manage_feeds.recalculate_entries(user, page)
+    entries, pager, total_records, per_page = user_manage_feeds.recalculate_entries(user, page)
     prefs = user_manage_feeds.get_user_prefs(user)
 
-    return jsonify(success=True, e=entries, compressed_view=prefs, pager=pager, total_records=total_records)
+    return jsonify(success=True, e=entries, compressed_view=prefs, per_page=per_page,
+                   pager=pager, total_records=total_records)
 
 
 @app.route('/get_unread_count', methods=['GET'])
