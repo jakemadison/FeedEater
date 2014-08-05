@@ -78,21 +78,31 @@ def _generate_calculation_query(user, only_star):
     return qry
 
 
-def _generate_start_end_pos(page, p, n, current, per_page, pager_indicator):
+def _generate_start_end_pos(page, p, n, current, per_page):
     if current:
         # determine main page start and end and set pager_indicator accordingly,
         # assuming we are generating entries for the main page
         start_pos = ((page-1)*per_page)
         end_pos = start_pos + per_page
 
-        if start_pos == 0:
-            pager_indicator["has_prev"] = False
-        else:
-            pager_indicator["has_prev"] = True
-
         print start_pos, end_pos
 
-    return start_pos, end_pos, pager_indicator
+    return start_pos, end_pos
+
+
+def _set_pager_indicator(pager_indicator, start, end, count):
+
+    if start == 0:
+        pager_indicator["has_prev"] = False
+    else:
+        pager_indicator["has_prev"] = True
+
+    if count > end:
+        pager_indicator["has_next"] = True
+    else:
+        pager_indicator["has_next"] = False
+
+    return pager_indicator
 
 
 def _generate_entry_list(qry, start, end):
@@ -142,29 +152,24 @@ def recalculate_entries(user, page_id, only_star=False, p=False, n=False, curren
     print '----> current page:', page, '----> posts per page:', per_page
     pager_indicator = {"has_prev": None, "has_next": None}
 
-    start_pos, end_pos, pager_indicator = _generate_start_end_pos(page, p, n, current,
-                                                                  per_page, pager_indicator)
-
-    next_page_index = end_pos + per_page
-    prev_page_index = start_pos - per_page
-
+    #
+    #put together our query object:
     qry = _generate_calculation_query(user, only_star)
 
     total_records = qry.count()
     print "count of records :   ", total_records
 
-    if total_records > end_pos:
-        pager_indicator["has_next"] = True
-    else:
-        pager_indicator["has_next"] = False
+    #
+    # determine our start and end positions:
+    start_pos, end_pos = _generate_start_end_pos(page, p, n, current, per_page)
 
     #
+    # if we're getting the current page, figure out our pager indicators:
+    if current:
+        pager_indicator = _set_pager_indicator(pager_indicator, start_pos, end_pos, total_records)
+
     #
-    # Okay, so to expand logic here, this needs to be start_page-1page, and end_pos+1page
-
-    if prev_page_index < 0:
-        prev_page_index = 0
-
+    # finally, put together out final list of entries, and return to view:
     final_list = _generate_entry_list(qry, start_pos, end_pos)
 
     return final_list, pager_indicator, total_records, per_page
