@@ -1,4 +1,4 @@
-from feedeater.database.models import UserFeeds, Entry, UserEntry
+from feedeater.database.models import UserFeeds, Entry, UserEntry, UserPrefs
 from feedeater import db
 
 db_session = db.session
@@ -96,7 +96,6 @@ def change_user_tags(user, entries):
 def changeview(user):
 
     """ Alternate between compressed and full view of entries"""
-
 
     print 'changeview activated!'
     print "attempting to change view state for user: ", user.nickname, "id: ", user.id

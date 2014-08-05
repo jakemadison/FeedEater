@@ -64,7 +64,6 @@ def recalculate_entries(user, p, only_star=False):
         pager_indicator["has_prev"] = True
 
     print start_pos, end_pos
-    print user
 
     # get all feed entries for user where UserFeeds.id in active_list
     # okay, so really this should be the only query used everywhere
@@ -108,6 +107,9 @@ def recalculate_entries(user, p, only_star=False):
     else:
         pager_indicator["has_next"] = False
 
+    #
+    #
+    # Okay, so to expand logic here, this needs to be start_page-1page, and end_pos+1page
     for each in qry[start_pos:end_pos]:
 
         u_table, uf_table, f_table, e_table, ufe_table = each
