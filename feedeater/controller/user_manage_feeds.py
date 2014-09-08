@@ -140,11 +140,16 @@ def _generate_entry_list(qry, start, end):
     return final_list
 
 
-def recalculate_entries(user, page_id, only_star=False, p=False, n=False, current=True):
+def recalculate_entries(user, page_id, only_star=False, p=False, n=False,current=True):
 
     """given a user and page (optionally, starred only) recalculate the entries to be displayed.
        It would be worth having this look forward/backward an extra page to speed up page-change,
        since this is an expensive function."""
+
+    # this function should really only take no. entries, and offset, and return that
+    # the front end should be dealing with how it wants to work with the data that's returned
+    # including what do do with the pager indicator.
+    # i guess it needs to also send back the count of total entries, to determine pager has_next
 
     # init stuff:
     per_page = int(c['POSTS_PER_PAGE'])
@@ -152,23 +157,20 @@ def recalculate_entries(user, page_id, only_star=False, p=False, n=False, curren
     print '----> current page:', page, '----> posts per page:', per_page
     pager_indicator = {"has_prev": None, "has_next": None}
 
-    #
     #put together our query object:
     qry = _generate_calculation_query(user, only_star)
 
     total_records = qry.count()
     print "count of records :   ", total_records
 
-    #
-    # determine our start and end positions:
+    # determine our start and end positions of entries:
     start_pos, end_pos = _generate_start_end_pos(page, p, n, current, per_page)
 
-    #
     # if we're getting the current page, figure out our pager indicators:
     if current:
         pager_indicator = _set_pager_indicator(pager_indicator, start_pos, end_pos, total_records)
 
-    #
+    ###
     # finally, put together out final list of entries, and return to view:
     final_list = _generate_entry_list(qry, start_pos, end_pos)
 

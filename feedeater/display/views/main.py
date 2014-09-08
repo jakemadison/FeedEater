@@ -60,9 +60,18 @@ def load_user(id):
 @app.route('/f_login', methods=['GET', 'POST'])
 @oid.loginhandler
 def f_login():
-    print 'attempting to login now...'
-    url = request.form["url"]
-    return oid.try_login(url, ask_for=['nickname', 'email'])
+    print 'I am attempting to login now...'
+    try:
+        url = request.form["url"]
+    except Exception, e:
+        print 'exception exception exception!!!'
+        print str(e)
+        return jsonify({'there were so many errors': str(e)})
+
+    print 'test 2'
+    test = oid.try_login(url, ask_for=['nickname', 'email'])
+    print 'test?', test
+    return test
 
 
 @oid.after_login
