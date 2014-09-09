@@ -7,6 +7,7 @@ from feedeater.config import configs as c
 from feedeater.database.models import User
 from feedeater.controller import user_manage_feeds, manage_users
 from hashlib import md5
+from feedeater.project_utils import log_output
 
 
 basedir = c.get('basedir')
@@ -29,6 +30,7 @@ def before_request():
 @app.route('/index/', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
 @oid.loginhandler
+@log_output
 def build_index(page=1):
 
     g.page = page
