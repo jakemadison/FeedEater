@@ -1,5 +1,8 @@
 
 import time
+import logging
+
+from config import logging_parameters
 
 
 def log_output(f):
@@ -17,3 +20,8 @@ def log_output(f):
         return result
 
     return wrap_function
+
+
+
+def log(message, level='warn'):
+    pass

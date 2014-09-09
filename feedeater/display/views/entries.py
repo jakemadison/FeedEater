@@ -4,7 +4,6 @@ from flask.ext.login import current_user  # , login_user, logout_user, login_req
 from feedeater.config import configs as c
 from feedeater.controller import user_manage_feeds
 from feedeater.controller import user_manage_entries
-from feedeater.project_utils import log_output
 
 basedir = c.get('basedir')
 app = Blueprint('entries', __name__, static_folder=basedir+'/display/static',
@@ -12,7 +11,6 @@ app = Blueprint('entries', __name__, static_folder=basedir+'/display/static',
 
 
 @app.before_request
-@log_output
 def before_request():
     print "\n\n\nNEW ENTRIES REQUEST: "
     g.user = current_user
