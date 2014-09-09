@@ -1,12 +1,13 @@
 __author__ = 'jmadison'
 
+print "\n\n\n-> beginning to load app"
+
 #add project root to PYTHONPATH:
 #apparently this ain't working..
 from os.path import dirname
 from sys import path
 path.append(dirname(dirname(__file__)))
 
-print "so far so good....."
 
 import os.path
 from flask import Flask
@@ -15,11 +16,8 @@ from flask.ext.login import LoginManager
 from flask.ext.openid import OpenID
 from feedeater.config import configs
 
-
-
 basedir = configs.get('basedir')
 
-print 'naaaaam!:::::::', __name__
 print basedir
 
 flaskapp = Flask('feedeater', static_folder=basedir+'/display/static', template_folder=basedir+'/display/templates')
@@ -50,3 +48,4 @@ flaskapp.jinja_env.filters['truncate_title'] = custom_filters.truncate_title
 flaskapp.jinja_env.filters['parse_time'] = custom_filters.parse_time
 flaskapp.jinja_env.filters['url_base'] = custom_filters.url_base
 
+print '--> finished loading app'
