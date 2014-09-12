@@ -8,6 +8,11 @@ from feedeater.database.models import User
 from feedeater.controller import user_manage_feeds, manage_users
 from hashlib import md5
 
+import logging
+from feedeater import setup_logger
+logger = logging.getLogger(__name__)
+setup_logger(logger, logging.DEBUG)
+
 
 basedir = c.get('basedir')
 app = Blueprint('index', __name__, static_folder=basedir+'/display/static',
@@ -16,9 +21,9 @@ app = Blueprint('index', __name__, static_folder=basedir+'/display/static',
 
 @app.before_request
 def before_request():
-    print "NEW MAIN.PY REQUEST:",
+    logger.info("NEW MAIN.PY REQUEST:")
     g.user = current_user
-    print 'user:    ', g.user
+    logger.info('user:    {0}'.format(g.user))
 
 
 #####
@@ -30,6 +35,8 @@ def before_request():
 @oid.loginhandler
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
 def build_index(page=1):
+
+    logger.info('building page.')
 
     g.page = page
     user = g.user
@@ -60,24 +67,21 @@ def load_user(id):
 @app.route('/f_login', methods=['GET', 'POST'])
 @oid.loginhandler
 def f_login():
-    print 'I am attempting to login now...'
+    logger.info('I am attempting to login now...')
     try:
         url = request.form["url"]
     except Exception, e:
-        print 'exception exception exception!!!'
-        print str(e)
+        logger.exception('exception exception exception!!!')
         return jsonify({'there were so many errors': str(e)})
 
-    print 'test 2'
     test = oid.try_login(url, ask_for=['nickname', 'email'])
-    print 'test?', test
     return test
 
 
 @oid.after_login
 def after_login(resp):
 
-    print 'running after_login function now...'
+    logger.info('running after_login function now...')
 
     if resp.email is None or resp.email == "":
         flash('Invalid login. Please try again.')
@@ -87,8 +91,7 @@ def after_login(resp):
 
     # if totally new user:
     if user is None:
-        print resp
-        print dir(resp)
+        logger.debug('response: {0}'.format(resp))
 
         manage_users.add_user(resp)
         user = User.query.filter_by(email=resp.email).first()
@@ -107,7 +110,7 @@ def after_login(resp):
 @app.route('/logout')
 def logout():
     logout_user()
-    print "successful logout for user: ", g.user
+    logger.info("successful logout for user: {0}".format(g.user))
     return redirect(url_for('.build_index'))
 
 

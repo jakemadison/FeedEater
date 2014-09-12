@@ -5,6 +5,12 @@ from feedeater.config import configs as c
 from feedeater.controller import user_manage_feeds
 from feedeater.controller import user_manage_entries
 
+
+import logging
+from feedeater import setup_logger
+logger = logging.getLogger(__name__)
+setup_logger(logger, logging.DEBUG)
+
 basedir = c.get('basedir')
 app = Blueprint('entries', __name__, static_folder=basedir+'/display/static',
                 template_folder=basedir+'/display/templates')
@@ -12,7 +18,7 @@ app = Blueprint('entries', __name__, static_folder=basedir+'/display/static',
 
 @app.before_request
 def before_request():
-    print "\n\n\nNEW ENTRIES REQUEST: "
+    logger.info("NEW ENTRIES REQUEST:")
     g.user = current_user
 
 
@@ -23,14 +29,14 @@ def before_request():
 @app.route('/recalculate_entries', methods=['POST', 'GET'])
 def recalculate_entries():
 
-    print "recalculating entries...."
+    logger.info("recalculating entries....")
     user = g.user
     page = int(request.args.get('page_id', None))
 
     if page is None:
         page = 1
 
-    print 'page: ', page
+    logger.debug('page: {0}'.format(page))
     g.page = page
 
     entries, pager, total_records, per_page = user_manage_feeds.recalculate_entries(user, page)
@@ -48,10 +54,10 @@ def unread_count():
     # Ok, so currently this is just using "feed_id", I probably actually want to send "uf_id"
 
     feed_id = request.args.get('feed', '', type=int)
-    print feed_id
+    logger.debug('feed id: {0}'.format(feed_id))
 
     result = user_manage_feeds.get_unread_count(feed_id, user)
-    print result
+    logger.debug('result: {0}'.format(result))
 
     return jsonify(success=True, count=result)
 
@@ -67,7 +73,7 @@ def change_tags():
     tag_text = request.form['tagtext']
     tag_id = request.form['tagid']
 
-    print tag_text, tag_id
+    logger.info('tag_text: {0}, tag_id: {1}'.format(tag_text, tag_id))
 
     if g.user.is_authenticated():
         tags = user_manage_entries.change_user_tags(user)
@@ -83,13 +89,13 @@ def toggle_star():
     user = g.user
     entryid = request.form['starid']
     entryid = entryid[5:]
-    print entryid
+    logger.debug('entry_id: {0}'.format(entryid))
 
     # right.. so before i made the decision to only add an entry when needed..
 
     result = user_manage_entries.change_star_state(user, entryid)
 
-    print result
+    logger.debug('result: {0}'.format(result))
 
     return jsonify({"result": result})
 
@@ -98,7 +104,7 @@ def toggle_star():
 def markAsRead():
     user = g.user
     entry_id = request.form['entry_id']
-    print 'marking entry: {e} as read for user: {u}'.format(e=entry_id, u=user.nickname)
+    logger.info('marking entry: {e} as read for user: {u}'.format(e=entry_id, u=user.nickname))
 
     user_manage_entries.mark_entry_read(entry_id, user.id)
 

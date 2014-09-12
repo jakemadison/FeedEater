@@ -5,6 +5,12 @@ from feedeater.config import configs as c
 from feedeater.controller import user_manage_feeds
 from feedeater.controller import user_manage_entries
 
+
+import logging
+from feedeater import setup_logger
+logger = logging.getLogger(__name__)
+setup_logger(logger, logging.DEBUG)
+
 basedir = c.get('basedir')
 app = Blueprint('subscriptions', __name__, static_folder=basedir+'/display/static',
                 template_folder=basedir+'/display/templates')
@@ -12,7 +18,7 @@ app = Blueprint('subscriptions', __name__, static_folder=basedir+'/display/stati
 
 @app.before_request
 def before_blueprint_request():
-    print "NEW SUBSCRIPTIONS.PY REQUEST"
+    logger.info("NEW SUBSCRIPTIONS.PY REQUEST")
     g.user = current_user
 
 
@@ -26,7 +32,7 @@ def ref_feeds():
     # this should take list of uf_ids and feed_ids, and refresh based on that.
     # That should make it so we can skip get_feeds(user) and query the DB directly on those.
 
-    print 'ref_feeds view function active'
+    logger.info('ref_feeds view function active')
     user = g.user
     user_manage_feeds.main(user)
 
@@ -35,7 +41,7 @@ def ref_feeds():
 
 @app.route('/get_progress', methods=['GET'])
 def get_progress():
-    print "made it to get_progress"
+    logger.debug("made it to get_progress")
 
     # returns a list of currently done feed_ids.
     fin_list = user_manage_feeds.get_progress()
@@ -44,14 +50,14 @@ def get_progress():
 
 @app.route('/get_user_subs', methods=['GET'])
 def get_user_subs():
-    print 'getting user subs and cats'
+    logger.info('getting user subs and cats')
     user = g.user
     sub_list = user_manage_feeds.get_user_feeds(user)
     cats = sub_list['cat_list']
     feed_data = sub_list['feed_data']
     cats = [str(x) for x in (sorted(cats))]
 
-    print "categories loaded and sorted from get request.."
+    logger.info("categories loaded and sorted from get request..")
 
     return jsonify(subs=feed_data, cats=cats, success=True)
 
@@ -66,16 +72,16 @@ def add_feed():
     # this could be a lot smarter.  What if user is already subscribed to one of the feeds returned
     # in a multiple feed response scenario?
 
-    print "........]]]]] add_feed has been activated"
+    logger.info("...add_feed has been activated")
 
     user = g.user
 
     try:
         data = request.form["url"]
-        print '...............', data
+        logger.debug('......data: {0}'.format(data))
 
     except Exception, e:
-        print e
+        logger.exception('error')
         return jsonify(msg="add_feed failure")
 
     # this doesn't check for bad input..
@@ -121,22 +127,23 @@ def add_feed():
 @app.route('/changecat', methods=['POST'])
 def change_cats():
 
-    print "++++++++++++++++++++++++"
+    logger.info('changing category')
+
     cat_old = request.form['current_cat_name']
     cat_new = request.form['cat_new']
     uf_id = request.form['uf_id']
-    print cat_old
-    print cat_new
-    print uf_id
+    logger.debug('cat old: {0}, cat new: {1}, uf_id: {2}'.format(cat_old, cat_new, uf_id))
+
     result = user_manage_feeds.apply_feed_category(cat_new, uf_id, remove=False)
-    print result
+    logger.debug('result: {0}'.format(result))
+
     flash(result, "info")
     return redirect(url_for('/'))
 
 
 @app.route('/unsubscribe', methods=['POST'])
 def unsubscribe():
-    print "removing feed from user_feeds"
+    logger.info("removing feed from user_feeds")
 
     user = g.user
     feedid = request.form['ufid']
@@ -156,7 +163,7 @@ def unsubscribe():
         msg = "I'm not sure what happened there.."
         category = "error"
 
-    print "finished removing feed"
+    logger.info("finished removing feed")
 
     return jsonify(msg=msg, category=category, f=None)
 
@@ -168,32 +175,32 @@ def unsubscribe():
 @app.route('/togglecategory', methods=['POST', 'GET'])
 def toggle_category():
 
-    print 'entering toggle_category function'
+    logger.info('entering toggle_category function')
     user = g.user
-    print user
+    logger.debug('user: {0}'.format(user))
 
     cat = request.args.get('catname', None)
 
-    print 'this is category: ', cat
+    logger.debug('this is category: {0}'.format(cat))
 
     if not cat:
-        print 'I do not have a category for some reason'
+        logger.warn('I do not have a category for some reason')
         return jsonify(success=False)
 
     all_on = user_manage_feeds.toggle_category(user, cat)
 
-    print 'done toggling category'
+    logger.info('done toggling category')
     return jsonify(success=True, all=all_on)
 
 
 @app.route('/onefeedonly', methods=['GET'])
 def one_feed_only():
-    print 'changing to one feed only'
+    logger.info('changing to one feed only')
 
     uf_id = request.args.get('uf_id', None)
 
     if not uf_id:
-        print 'i failed to get an Id!'
+        logger.warn('i failed to get an Id!')
         return jsonify(success=False)
 
     user = g.user
@@ -205,7 +212,7 @@ def one_feed_only():
 @app.route('/allfeeds', methods=['GET'])
 def show_all_feeds():
 
-    print "entered all feeds function"
+    logger.info("entered all feeds function")
     user = g.user
     user_manage_feeds.all_active(user)
 
@@ -215,12 +222,12 @@ def show_all_feeds():
 @app.route('/change_active', methods=['GET', 'POST'])
 def change_active():
 
-    print "----- entering change active"
+    logger.info("----- entering change active")
     uf_id = request.args.get('uf_id')
-    print uf_id
+    logger.debug('uf_id: {0}'.format(uf_id))
     user_manage_feeds.update_is_active(uf_id)
 
-    print 'finished change_active.'
+    logger.info('finished change_active.')
 
     return jsonify(success=True)
 
@@ -229,11 +236,10 @@ def change_active():
 def change_view():
 
     user = g.user
-    print 'user: ', user.nickname, user.id
+    logger.debug('user: {0} - {1}'.format(user.nickname, user.id))
     user_manage_entries.changeview(user)
 
-    print "done! changeview!"
-
+    logger.info("done! changeview!")
     return jsonify(success=True)
 
 
