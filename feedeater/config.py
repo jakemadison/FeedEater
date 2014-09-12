@@ -49,8 +49,6 @@ db_session = scoped_session(sessionmaker(autocommit=False,
 Model = declarative_base()
 Model.query = db_session.query_property()
 
-logging_parameters = {'log_level': 'debug'}
-
 
 # this needs to be done to properly register metadata!!!
 # import database.models  # this is breaking on import db name... circ imports?
