@@ -9,7 +9,8 @@ from feedeater.controller import user_manage_entries
 import logging
 from feedeater import setup_logger
 logger = logging.getLogger(__name__)
-setup_logger(logger, logging.DEBUG)
+setup_logger(logger)
+logger.setLevel(logging.DEBUG)
 
 basedir = c.get('basedir')
 app = Blueprint('subscriptions', __name__, static_folder=basedir+'/display/static',

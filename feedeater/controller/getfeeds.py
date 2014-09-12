@@ -6,7 +6,8 @@ from feedeater.config import configs
 import logging
 from feedeater import setup_logger
 logger = logging.getLogger(__name__)
-setup_logger(logger, logging.DEBUG)
+setup_logger(logger)
+logger.setLevel(logging.DEBUG)
 
 
 def get_feed_meta(url):

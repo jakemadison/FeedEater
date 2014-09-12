@@ -7,7 +7,8 @@ db_session = db.session
 import logging
 from feedeater import setup_logger
 logger = logging.getLogger(__name__)
-setup_logger(logger, logging.DEBUG)
+setup_logger(logger)
+logger.setLevel(logging.DEBUG)
 
 # TODO: incorporate some damn exception catching already
 

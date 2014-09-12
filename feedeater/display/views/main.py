@@ -11,7 +11,8 @@ from hashlib import md5
 import logging
 from feedeater import setup_logger
 logger = logging.getLogger(__name__)
-setup_logger(logger, logging.DEBUG)
+setup_logger(logger)
+logger.setLevel(logging.DEBUG)
 
 
 basedir = c.get('basedir')

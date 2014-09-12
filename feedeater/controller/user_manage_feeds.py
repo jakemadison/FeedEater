@@ -13,7 +13,8 @@ db_session = db.session
 import logging
 from feedeater import setup_logger
 logger = logging.getLogger(__name__)
-setup_logger(logger, logging.DEBUG)
+setup_logger(logger)
+logger.setLevel(logging.INFO)
 
 
 #####
@@ -25,7 +26,7 @@ def get_unread_count(feed_id, user):
     """get the number of unread entries in the feed.  Currently only returning
        the total count of all entries in the feed."""
 
-    logger.info('getting unread count for feed: {0}, user_id: {1}'.format(feed_id, user.id))
+    logger.debug('getting unread count for feed: {0}, user_id: {1}'.format(feed_id, user.id))
 
     entry_count = db_session.query(Entry).filter(Entry.feed_id == feed_id).count()
 
@@ -38,7 +39,7 @@ def get_unread_count(feed_id, user):
     # left join user_feed_entry ufe on ufe.entryid = e.id
     # where uf.userid = 3 and (ufe.unread = 1 or ufe.unread is null)
 
-    logger.info('count: {0}'.format(entry_count))
+    logger.debug('count: {0}'.format(entry_count))
     return entry_count
 
 
