@@ -3,6 +3,12 @@ from feedeater.database import models
 from feedeater import db
 db_session = db.session
 
+
+import logging
+from feedeater import setup_logger
+logger = logging.getLogger(__name__)
+setup_logger(logger, logging.DEBUG)
+
 # TODO: incorporate some damn exception catching already
 
 # basically, the logic should go: user -> feedlist -> feed -> entries
@@ -21,7 +27,9 @@ def store_feed_data(meta):
     feed_url = meta["feed_url"]
     site = meta["feed_original_site"]
     description = meta["feed_description"]
-    print '===================> storing meta_data in feed table', title, site
+
+    logger.info('storing meta_data in feed table')
+    logger.debug('{0} - {1}'.format(title, site))
 
     # check for existing in feed table:
     existing = db_session.query(models.Feed).filter(models.Feed.feed_url == feed_url).first()
@@ -31,7 +39,9 @@ def store_feed_data(meta):
         # this might be a candidate to remove to only cron jobs to speed everything up
         try:
             if existing.feed_site != site or existing.description != description or existing.title != title:
-                print "\n>>>>>>>>>>>>>>>>>>>>>>>update information.. updating DB"
+
+                logger.info("\n>>updated information.. updating DB")
+
                 db_session.query(models.Feed).filter_by(id=existing.id).update(
                                 {
                                     "title": title,
@@ -41,15 +51,16 @@ def store_feed_data(meta):
                 db_session.commit()
 
             else:
-                print "\n>>>>>>>>>>>>>>>>>>>>>>>no changes in feed detected.. don't even worry about it."
+                logger.info("\n>>no changes in feed detected.. don't even worry about it.")
 
         except Exception, e:  # this should be a less general exception..
-            print '>>>>>>error!!!!!'
-            print str(e)
+            logger.exception('>>>>>>error!!!!! rolling back db transaction.')
+
             db_session.rollback()
 
     else:
-        print "------------>>>no record found for ", feed_url, site
+        logger.debug(">>>no record found for {0}, {1}".format(feed_url, site))
+
         new_feed = models.Feed(feed_url=feed_url,
                                title=title,
                                feed_site=site,
@@ -80,8 +91,6 @@ def add_entry(entries, update_entries=False):
                 return
 
             if stored_ent:
-                # print 'old entry detected....', stored_ent.title, stored_ent.id
-
                 if update_entries:
                     try:
                         db_session.query(models.Entry).filter_by(id=stored_ent.id).update(
@@ -97,12 +106,11 @@ def add_entry(entries, update_entries=False):
                             })
 
                     except Exception, e:
-                        print 'errrror with existing'
-                        print str(e)
+                        logger.exception('error with existing rolling back db transaction.')
                         db_session.rollback()
 
             else:
-                print 'new entry detected...'
+                logger.debug('new entry detected...')
                 # okay, so for this one, we need to pass a full feed object to "source" instead
                 # of setting feed_id manually...
 
@@ -120,9 +128,8 @@ def add_entry(entries, update_entries=False):
                 db_session.add(new_entry)
 
         except Exception, e:
+            logger.exception('ERROR!!, rolling back DB')
             db_session.rollback()
-            print 'ERROR!!'
-            print str(e)
 
     db_session.commit()
 

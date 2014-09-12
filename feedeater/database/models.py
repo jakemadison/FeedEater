@@ -5,13 +5,19 @@ from sqlalchemy.orm import backref, relationship, query
 from feedeater import db
 from hashlib import md5
 
+import logging
+from feedeater import setup_logger
+logger = logging.getLogger(__name__)
+setup_logger(logger, logging.DEBUG)
+
 Model = db.Model
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
 
 
-print "models imported as", __name__
+logger.info("models imported as >{0}".format(__name__))
+
 
 
 ## Macro Level Data:
@@ -188,25 +194,18 @@ class User(Model):
 
     def get_entries_new(self):
 
-        print "----------------------------------------------running get entries new!!!"
+        logger.info('running get_entries_new')
+
         print "where the hell am I getting: ", self.id, "from????"
         qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
                          UserFeeds.userid == self.id,
                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
 
-
-
         # qry = query(Entry, UserEntry).outerjoin(UserEntry, Entry.id == UserEntry.entryid).filter(Entry.feed_id == UserFeeds.feedid,
         #                          UserFeeds.userid == User.id,
         #                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
 
-        # print '----------------', qry.first()
-
-        # print '_______________', dir(qry.first())
-
-
         return qry
-
 
     def get_userentries(self):
 
@@ -277,4 +276,4 @@ class UserEntryTags(Model):
 
 
 
-print "done loading models.py!"
+logger.info('done loading models.py!')

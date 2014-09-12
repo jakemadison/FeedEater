@@ -1,6 +1,24 @@
 __author__ = 'jmadison'
 
-print "\n\n\n-> beginning to load app"
+print '\n\n\n\n'
+import logging
+
+
+def setup_logger(logger_instance, level):
+
+    if logger.handlers:  # prevents the loading of duplicate handlers/log output
+        return
+
+    logger_instance.setLevel(level)
+    ch = logging.StreamHandler()
+    formatter = logging.Formatter('(%(asctime)s: %(name)s: %(levelname)s): %(message)s')
+    ch.setFormatter(formatter)
+    logger_instance.addHandler(ch)
+
+
+logger = logging.getLogger(__name__)
+setup_logger(logger, logging.DEBUG)
+logger.info('completed logger config.  beginning to load application.')
 
 #add project root to PYTHONPATH:
 #apparently this ain't working..
@@ -18,7 +36,7 @@ from feedeater.config import configs
 
 basedir = configs.get('basedir')
 
-print basedir
+logger.debug('basedir is '+ basedir)
 
 flaskapp = Flask('feedeater', static_folder=basedir+'/display/static', template_folder=basedir+'/display/templates')
 flaskapp.config.from_object('feedeater.config')
@@ -48,4 +66,4 @@ flaskapp.jinja_env.filters['truncate_title'] = custom_filters.truncate_title
 flaskapp.jinja_env.filters['parse_time'] = custom_filters.parse_time
 flaskapp.jinja_env.filters['url_base'] = custom_filters.url_base
 
-print '--> finished loading app'
+logger.info('finished loading app.')

@@ -3,21 +3,27 @@ import feedparser
 from feedeater.config import configs
 
 
+import logging
+from feedeater import setup_logger
+logger = logging.getLogger(__name__)
+setup_logger(logger, logging.DEBUG)
+
+
 def get_feed_meta(url):
 
     """I'm not entirely sure this function ever actually runs."""
 
-    print 'running get_feed_meta function'
+    logger.info('running get_feed_meta function')
 
     try:
         res = feedparser.parse(url, configs.get('User-Agent'))
 
     except Exception, e:
-        print str(e)
+        logger.exception('error!')
         return False
 
     if res:
-        print res.feed, res.status, res.version
+        logger.debug('{0}, {1}, {2}'.format(res.feed, res.status, res.version))
 
     try:
         meta = {
@@ -27,8 +33,8 @@ def get_feed_meta(url):
             "feed_description": res['channel'].get('description', "no description available")
         }
     except Exception, e:
-        print str(e)
-        print '!!!!!!!!!!'
+        logger.exception(str(e))
+        logger.exception('!!!!!!!!!!')
 
     else:
         return meta
@@ -70,7 +76,7 @@ def feed_request(f, get_meta=False):
     try:
         res = feedparser.parse(url, configs.get('User-Agent'))
     except Exception, e:
-        print str(e)
+        logger.exception('error!')
 
     if res:
 
@@ -94,8 +100,7 @@ def feed_request(f, get_meta=False):
                     "content": entry.get("content", [{}])[0].get("value", entry.get("description", "")),
                 }
             except Exception, e:
-                print str(e)
-                print '!!!!!!'
+                logger.exception('error!')
                 continue
 
             posts.append(post)
@@ -111,8 +116,7 @@ def feed_request(f, get_meta=False):
                     "feed_id": feed_id
                 }
             except Exception, e:
-                print str(e)
-                print '!!!!!!!!!!'
+                logger.exception('error!!')
 
         feed_data = {"parse_obj": res, "posts": posts, "meta": meta}
         return feed_data

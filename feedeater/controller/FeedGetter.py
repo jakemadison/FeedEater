@@ -4,6 +4,12 @@ from storefeeds import add_entry
 import concurrent.futures
 import Queue
 
+import logging
+from feedeater import setup_logger
+logger = logging.getLogger(__name__)
+setup_logger(logger, logging.DEBUG)
+
+
 
 fin_q = []
 len_feeds = 0
@@ -14,7 +20,8 @@ def main(feed_list=None):
     """this function should ONLY deal with queue management between get and store functions"""
 
     fin_q[:] = []
-    print "fin_q at start", fin_q
+
+    logger.debug("fin_q: {0}".format(fin_q))
 
     res_q = Queue.Queue()
     # kill = False
@@ -40,9 +47,10 @@ def main(feed_list=None):
                 pass
 
             else:
-                print "   grabbing item", "size: ", res_q.qsize()
+                logger.debug("grabbing item "+"size: {0}".format(res_q.qsize()))
                 add_entry(item)
-                print '...done storing'
+
+                logger.debug('...done storing')
 
                 # When done storing, add feed_id to "finished queue"
                 fin_q.append(item['posts'][0]['feed_id'])
@@ -50,10 +58,10 @@ def main(feed_list=None):
                 #A different polling view can then grab everything off of the 'finished' queue
 
     def p_call(f):
-        print " Putting Item",
+        logger.debug('Putting Item')
         res_q.put(feed_request(f, get_meta=False))
-        print " net request done", "size: ",
-        print res_q.qsize()
+        logger.info(" net request done", "size: {0}".format(res_q.qsize()))
+
 
     #TODO: move this to configs file:
     # optimize network-bound producer pool here:
@@ -69,7 +77,7 @@ def main(feed_list=None):
     c_exec = concurrent.futures.ThreadPoolExecutor(max_workers=c_pool)
     c_futures = [c_exec.submit(c_store) for e in range(c_pool)]  # start a consumer instance for every worker
 
-    print "just return to caller now..."
+    logger.debug("just return to caller now...")
 
     # wait for all producer futures to finish:
     # concurrent.futures.wait(p_futures)  # it's probably this one that's stopping stuff.
@@ -79,8 +87,8 @@ def main(feed_list=None):
 
     # wait for consumers to wrap up pending jobs: (if we want to block, that is)
     #concurrent.futures.wait(c_futures)
-    print "done!!!!"
-    print "fin_q: ", fin_q
+    logger.debug("done!!!!")
+    logger.info("fin_q: {0}".format(fin_q))
 
 
 def get_all_feeds():
@@ -90,7 +98,7 @@ def get_all_feeds():
     feeds = []
 
     for each in get_feeds:
-        print 'retrieving subscribed feed from DB: ', each.feed_url
+        logger.info('retrieving subscribed feed from DB: {0}'.format(each.feed_url))
         feeds.append(each.feed_url)
 
     return feeds
@@ -99,10 +107,11 @@ def get_all_feeds():
 def update_all_feeds():
     try:
         feed_list = get_all_feeds()
-        print 'feedlist: ', feed_list
+        logger.debug('feedlist: {0}'.format(feed_list))
         main(feed_list)
     except Exception, e:
-        print 'exception ahoy!', str(e)
+        logger.exception('exception!!!', str(e))
+
         return 1
     else:
         return 0

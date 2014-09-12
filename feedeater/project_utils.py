@@ -1,16 +1,17 @@
 
 import time
 import logging
-
-from config import logging_parameters
+# from config import logging_parameters
 
 
 def log_output(f):
 
     def wrap_function(*args, **kwargs):
 
-        start = time.time()
+        def test_function():
+            print "test function active"
 
+        start = time.time()
         spacer = (' '*20) + '}} '
 
         print spacer, '(entering function ', f.__name__, 'with args: ', args, 'kwargs: ', kwargs,')'
@@ -23,5 +24,3 @@ def log_output(f):
 
 
 
-def log(message, level='warn'):
-    pass

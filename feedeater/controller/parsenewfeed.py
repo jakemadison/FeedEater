@@ -1,6 +1,10 @@
 import feedfinder
 __author__ = 'jakemadison'
 
+import logging
+from feedeater import setup_logger
+logger = logging.getLogger(__name__)
+setup_logger(logger, logging.DEBUG)
 
 # on success, this returns a feed object, instead of just the URL
 def parsefeed(url):
@@ -9,24 +13,20 @@ def parsefeed(url):
     to add more functionality down the line: eg, multiple results per feed_find"""
 
     try:
-        print 'using feed finder'
+        logger.info('using feed finder')
         res = feedfinder.feeds(url)
         feed_len = len(res)
 
         if res:
-            print '#', feed_len, 'feeds found: ',
-            for each in res:
-                print each,
-            print
-
+            logger.info('{0} feeds found: {1}'.format(feed_len, res))
             return res, feed_len
 
         else:
-            print "no results found..."
+            logger.warn("no results found...")
             return False, 0
 
     except Exception, e:
-        print "error!", str(e)
+        logger.exception("error!")
         return False
 
 
@@ -35,4 +35,4 @@ u = 'seriously.dontusethiscode.com'
 u = 'http://blog.yimmyayo.com/'
 if __name__ == '__main__':
     x = parsefeed(u)
-    print 'final:', x
+    logger.debug('final: {0}'.format(x))

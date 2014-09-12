@@ -27,8 +27,8 @@ def before_request():
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index/', methods=['GET', 'POST'])
-@app.route('/index/<int:page>', methods=['GET', 'POST'])
 @oid.loginhandler
+@app.route('/index/<int:page>', methods=['GET', 'POST'])
 def build_index(page=1):
 
     g.page = page

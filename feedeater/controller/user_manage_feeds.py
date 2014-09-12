@@ -10,6 +10,11 @@ from feedeater.database import models
 
 db_session = db.session
 
+import logging
+from feedeater import setup_logger
+logger = logging.getLogger(__name__)
+setup_logger(logger, logging.DEBUG)
+
 
 #####
 # Functions for reading subscription states:
@@ -20,7 +25,7 @@ def get_unread_count(feed_id, user):
     """get the number of unread entries in the feed.  Currently only returning
        the total count of all entries in the feed."""
 
-    print 'getting unread count for feed: {0}, user_id: {1}'.format(feed_id, user.id)
+    logger.info('getting unread count for feed: {0}, user_id: {1}'.format(feed_id, user.id))
 
     entry_count = db_session.query(Entry).filter(Entry.feed_id == feed_id).count()
 
@@ -33,7 +38,7 @@ def get_unread_count(feed_id, user):
     # left join user_feed_entry ufe on ufe.entryid = e.id
     # where uf.userid = 3 and (ufe.unread = 1 or ufe.unread is null)
 
-    print 'count: ', entry_count
+    logger.info('count: {0}'.format(entry_count))
     return entry_count
 
 
@@ -60,7 +65,7 @@ def _generate_calculation_query(user, only_star):
 
     # ah crap. does this need to be a left join on UserEntry?
     qry = db_session.query(User, UserFeeds, Feed, Entry, UserEntry)
-    print 'query done, filter/joining'
+    logger.debug('query done, filter/joining')
 
     qry = qry.filter(UserFeeds.userid == User.id)
     qry = qry.filter(Feed.id == UserFeeds.feedid)
@@ -85,7 +90,7 @@ def _generate_start_end_pos(page, p, n, current, per_page):
         start_pos = ((page-1)*per_page)
         end_pos = start_pos + per_page
 
-        print start_pos, end_pos
+        logger.debug('start_pos {0}, end_pos{1}'.format(start_pos, end_pos))
 
     return start_pos, end_pos
 
@@ -140,7 +145,7 @@ def _generate_entry_list(qry, start, end):
     return final_list
 
 
-def recalculate_entries(user, page_id, only_star=False, p=False, n=False,current=True):
+def recalculate_entries(user, page_id, only_star=False, p=False, n=False, current=True):
 
     """given a user and page (optionally, starred only) recalculate the entries to be displayed.
        It would be worth having this look forward/backward an extra page to speed up page-change,
@@ -154,14 +159,14 @@ def recalculate_entries(user, page_id, only_star=False, p=False, n=False,current
     # init stuff:
     per_page = int(c['POSTS_PER_PAGE'])
     page = int(page_id)
-    print '----> current page:', page, '----> posts per page:', per_page
+    logger.debug('----> current page: {0} ----> posts per page: {1}'.format(page, per_page))
     pager_indicator = {"has_prev": None, "has_next": None}
 
     #put together our query object:
     qry = _generate_calculation_query(user, only_star)
 
     total_records = qry.count()
-    print "count of records :   ", total_records
+    logger.debug("count of records :  {0}".format(total_records))
 
     # determine our start and end positions of entries:
     start_pos, end_pos = _generate_start_end_pos(page, p, n, current, per_page)
@@ -190,7 +195,7 @@ def get_user_feeds(user=None):
     """get all feeds the user is subscribed to"""
 
     feed_list = []
-    #feed_data = {}
+
     final_list = []
     cat_list = []
     u_table, uf_table, f_table = (None, None, None)
@@ -219,10 +224,7 @@ def get_user_feeds(user=None):
         if not uf_table:
             pass
 
-
         final_res = {'user_id': user.id, 'feed_data': final_list, 'cat_list': cat_list}
-
-        # print final_res
 
         return final_res
 
@@ -270,9 +272,9 @@ def add_user_feed(user, feed):
             db_session.commit()
 
         except Exception, e:
-            print "error associating feed!"
-            print str(e)
+            logger.exception("error associating feed! rolling back DB")
             db_session.rollback()
+
             return {'message': "error_adding_feed", 'data': False}
 
         else:
@@ -289,21 +291,22 @@ def add_user_feed(user, feed):
         if feeds_len > 1:
             return {'message': 'multiple_feeds_found', 'data': returned_feed}
 
-        print "found valid rss", returned_feed
+        logger.info("found valid rss: {0}".format(returned_feed))
         returned_feed = returned_feed[0]
 
     else:
+        logger.warn('no feed found for that url')
         return {'message': 'no_feed_found', 'data': False}
 
     # check to see if this feed already exist in user table
     exists = db_session.query(Feed).filter_by(feed_url=returned_feed).first()
 
     if exists:
-        print "feed already exists in feed table"
+        logger.info("feed already exists in feed table")
         already_associated = db_session.query(UserFeeds).filter_by(feedid=exists.id, userid=user.id).first()
 
         if already_associated:
-            print "this feed is already associated with the current user {0}".format(user.nickname)
+            logger.info("this feed is already associated with the current user: {0}".format(user.nickname))
             return {'message': "already_associated", 'data': False}
 
         else:
@@ -313,7 +316,7 @@ def add_user_feed(user, feed):
             return {'message': result, 'data': False}
 
     else:
-        print "totally new feed, adding everything"
+        logger.info("totally new feed, adding everything")
 
         get_result = getfeeds.get_feed_meta(returned_feed)
         print get_result
@@ -340,9 +343,7 @@ def remove_user_feed(user, uf_id):
     """remove a user's feed from their subscriptions list.
        keep the feed and entries, as other users might be subscribed too"""
 
-    print user
-    print uf_id
-    print "success!"
+    logger.debug('removing feed for {0}, ufid = {1}'.format(user, uf_id))
 
     remove = db_session.query(UserFeeds).filter_by(id=uf_id).first()
 
@@ -352,7 +353,7 @@ def remove_user_feed(user, uf_id):
             db_session.commit()
 
         except Exception, e:
-            print "error deleting feed", str(e)
+            logger.exception("error deleting feed.  rolling back DB")
             db_session.rollback()
             return "error_deleting_feed"
 
@@ -371,7 +372,7 @@ def apply_feed_category(category, ufid, remove=False):
 
     """set/change a feed's category"""
 
-    print category
+    logger.debug('category: {0}'.format(category))
 
     if remove:
         return False  # remove category for user/feed combination
@@ -411,8 +412,7 @@ def single_active(user, ufid):
         db_session.commit()
 
     except Exception, e:
-        print 'errrror with existing is_active record'
-        print str(e)
+        logger.exception('errrror with existing is_active record. rolling back DB')
         db_session.rollback()
 
 
@@ -429,8 +429,7 @@ def all_active(user):
         db_session.commit()
 
     except Exception, e:
-        print 'errrror with existing is_active record'
-        print str(e)
+        logger.exception('errrror with existing is_active record. rolling back DB')
         db_session.rollback()
 
 
@@ -455,8 +454,7 @@ def toggle_category(user, cat):
         return all_on
 
     except Exception, e:
-        print 'errrror with existing is_active record'
-        print str(e)
+        logger.exception('errrror with existing is_active record. rolling back db')
         db_session.rollback()
 
 
@@ -482,8 +480,7 @@ def update_is_active(uf_id):
         db_session.commit()
 
     except Exception, e:
-        print 'errrror with existing is_active record'
-        print str(e)
+        logger.exception('errrror with existing is_active record. rolling back db')
         db_session.rollback()
 
 
@@ -495,7 +492,7 @@ def main(user):
     xx = get_user_feeds(user)
     send_feed = []
 
-    print 'xx:', xx
+    logger.debug('xx: {0}'.format(xx))
 
     for f in xx['feed_data']:
         unit = {'feed_id': f['feed_id'], 'url': f['url']}
