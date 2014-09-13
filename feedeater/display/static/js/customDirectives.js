@@ -1,6 +1,7 @@
 var customDirectives = angular.module('FeedEaterApp');
 
 
+//this should be useless now:
 customDirectives.directive('keyBindings', function() {
 
     return {
@@ -38,6 +39,12 @@ customDirectives.directive('keyBindings', function() {
 });
 
 
+
+//this directive controls activating scroll.
+//i think to get up/down to work, we'll need to keep global track
+//of offset (current entry from list of entries)
+
+//this whole function should get changed.  There should always be an active entry.
 customDirectives.directive('scrollActive', function($window, $document) {
 
     return {

@@ -1,16 +1,47 @@
 var eServices = angular.module('eServices', []);
 
 eServices.factory('makeRequest', ['$http', '$rootScope', '$timeout', function($http, $rootScope, $timeout) {
+    //this factory deals with holding client "state": entries, preferences, progress and the like
+    //so that controllers can access when needed.
+    //It also has functions for communicating with the DB.
+
 
     var current_paging = {'has_next': false, 'has_prev': false};
     var entries = {};
     var subscriptions = {};
     var feed_ids = [];
     var user_preferences = {"compressed": false};
+
+    //used for progress bar and entry scrolling:
     var progress_data = {'total_entry_count': 0, 'current_offset': 0, 'page_len': 0};
+
 
     ///////
     //public methods:
+
+    //entry/offset services:
+    var getProgress = function() {
+        //return the current #entries/page
+        //and our current offset.
+
+        return {
+            'progress': progress_data
+        }
+    };
+
+    var setOffset = function(change) {
+
+      var predicted_result = progress_data.current_offset + change;
+
+      if (predicted_result >= 0 && predicted_result <= progress_data.page_len) {
+            progress_data.current_offset = predicted_result;
+      }
+
+        console.log(progress_data);
+    };
+
+
+
 
     //messageBar methods:
     var checkProgress = function() {
@@ -296,11 +327,16 @@ eServices.factory('makeRequest', ['$http', '$rootScope', '$timeout', function($h
         unsubscribeFeed: unsubscribeFeed,
         markAsRead: markAsRead,
         getFeedIds: getFeedIds,
-        getSubs: getSubs
+        getSubs: getSubs,
+
+        //entry scrolling:
+        getProgress: getProgress,
+        setOffset: setOffset
 
     });
 
 }]);
+
 
 
 

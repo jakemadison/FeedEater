@@ -438,7 +438,9 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys',
        description: 'Move backward one page.',
        callback: function() {
            console.log('left pressed');
-           if ($scope.pager.has_prev) {
+
+           //pager is coming back undefined in some cases:
+           if (typeof($scope.pager) != "undefined" && $scope.pager.has_prev) {
                $scope.pager_functions.advance_page(-1);
            }
        }
@@ -449,14 +451,29 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys',
        description: 'Move forward one page.',
        callback: function() {
            console.log('right pressed');
-           if ($scope.pager.has_next) {
+           if (typeof($scope.pager) != "undefined" && $scope.pager.has_next) {
                $scope.pager_functions.advance_page(1);
            }
        }
     });
 
+    hotkeys.add({
+       combo: 'down',
+       description: 'Move to next entry',
+        callback: function() {
+            console.log('down was pressed');
+            $scope.pager_functions.advance_entry(1);
+        }
+    });
 
-
+    hotkeys.add({
+       combo: 'up',
+       description: 'Move to previous entry',
+        callback: function() {
+            console.log('up was pressed');
+            $scope.pager_functions.advance_entry(-1);
+        }
+    });
 
 
     $scope.pager_functions = {};
@@ -474,6 +491,17 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys',
     };
 
 
+    $scope.pager_functions.advance_entry = function(amount){
+        console.log('advance entry active with amount: ', amount);
+        makeRequest.setOffset(amount);
+
+        var progress = makeRequest.getProgress();
+        console.log('total number of entries on page: ', progress.progress.page_len);
+        console.log('current offset on page: ', progress.progress.current_offset);
+    };
+
+
+
     //listeners:
     $scope.$on('pagerUpdated', function() {
         console.log('i detected that the pager was updated!');
@@ -481,6 +509,10 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys',
     });
 
 
+
+
+
+    //this should be useless now:
     $scope.$on('keypress', function(e, type){
         console.log("detected keypress: ", type);
 
