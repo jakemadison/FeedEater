@@ -7,8 +7,6 @@ customDirectives.directive('keyBindings', function() {
         restrict: "A",
         link: function(scope, element, attrs) {
 
-
-
             console.log('called outside', element);
             element.bind("keyup", function(event){
 

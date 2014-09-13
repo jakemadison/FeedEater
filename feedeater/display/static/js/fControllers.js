@@ -428,7 +428,36 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
 }]);
 
 
-fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', function($scope, makeRequest){
+fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys',
+                                                function($scope, makeRequest, hotkeys){
+
+
+    //define hotkey events:
+    hotkeys.add({
+       combo: 'left',
+       description: 'Move backward one page.',
+       callback: function() {
+           console.log('left pressed');
+           if ($scope.pager.has_prev) {
+               $scope.pager_functions.advance_page(-1);
+           }
+       }
+    });
+
+    hotkeys.add({
+       combo: 'right',
+       description: 'Move forward one page.',
+       callback: function() {
+           console.log('right pressed');
+           if ($scope.pager.has_next) {
+               $scope.pager_functions.advance_page(1);
+           }
+       }
+    });
+
+
+
+
 
     $scope.pager_functions = {};
 
