@@ -42,7 +42,7 @@ def ref_feeds():
 
 @app.route('/get_progress', methods=['GET'])
 def get_progress():
-    logger.debug("made it to get_progress")
+    # logger.debug("made it to get_progress")
 
     # returns a list of currently done feed_ids.
     fin_list = user_manage_feeds.get_progress()

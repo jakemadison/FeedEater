@@ -8,7 +8,7 @@ import logging
 from feedeater import setup_logger
 logger = logging.getLogger(__name__)
 setup_logger(logger)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 
 
@@ -37,7 +37,7 @@ def main(feed_list=None):
         while True:
 
             if all(each.done() for each in p_futures):
-                print "future is DONE"
+                logger.debug("future is DONE")
                 kill = True
 
             if kill and res_q.empty():  # you can only quit when all your work is done
@@ -48,7 +48,7 @@ def main(feed_list=None):
                 pass
 
             else:
-                logger.debug("grabbing item "+"size: {0}".format(res_q.qsize()))
+                logger.debug("grabbing item size: {0}".format(res_q.qsize()))
                 add_entry(item)
 
                 logger.debug('...done storing')
@@ -61,7 +61,7 @@ def main(feed_list=None):
     def p_call(f):
         logger.debug('Putting Item')
         res_q.put(feed_request(f, get_meta=False))
-        logger.info(" net request done", "size: {0}".format(res_q.qsize()))
+        logger.debug(" net request done size: {0}".format(res_q.qsize()))
 
 
     #TODO: move this to configs file:
