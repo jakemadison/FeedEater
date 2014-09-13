@@ -1,4 +1,4 @@
-<div class="entry_container" ng-controller="EntriesCtrl">
+<div class="entry_container" ng-controller="EntriesCtrl" id="scrollTopId">
 
 <!-- our 'no entries' popup: -->
     <div class="col-md-8-2 no_entry_alert" ng-show="no_entries">
@@ -9,7 +9,9 @@
 <!-- loop over our entries: -->
 
     <div ng-repeat="entry in myData.fromServer.e">
-        <div class="feedid{{ entry.feed_id }} entry_list" entryId="{{entry.entry_id}}">
+        <div class="feedid{{ entry.feed_id }} entry_list" entryId="{{entry.entry_id}}"
+                <!-- here, but unique index (maybe generate on list return id = -->
+
             <div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">
                 <h3 ng-class="{'title_unread_entry': entry.entry_unread, 'title_read_entry': !entry.entry_unread}">
                     <b><a  href="{{entry.entry_link}}" target="_blank"

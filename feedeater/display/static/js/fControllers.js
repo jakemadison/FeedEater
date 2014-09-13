@@ -513,20 +513,16 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
 
         //testscroll is firing.. scrolltop is firing..
         //but the promise is never returning.
-      var scrollpromise = $document.scrollTop(0, 1000);
-          console.log('continuing...', scrollpromise);
 
 
-      scrollpromise.then(function() {
-        console.log('You just scrolled to the top!');
-    },
-      function(err) {
-          console.log('I failed :<');
-          console.log(err);
+        var someElement = angular.element(document.getElementById('scrollTopId'));
+        $document.scrollToElement(someElement, 50, 2000);
+        //for the scroll, just scroll to object by ID.
+        //the id of the one we're looking for is either going to be
+        //the current offset minus one or the current offset plus one
+        //when we get there, change the active state, change current offset
 
-      });
 
-        console.log(scrollpromise)
 
     };
 

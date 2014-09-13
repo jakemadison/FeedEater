@@ -78,6 +78,8 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
     var startTime = null;
     var el = this;
 
+    //this is why the damn thing was failing: cancel happens on scroll,
+    //and our deferred gets rejected:
     var cancelOnEvents = 'scroll mousedown mousewheel touchmove keydown';
     var cancelScrollAnimation = function($event) {
       if (!$event || $event.which > 0) {
@@ -152,9 +154,6 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
       return el.scrollLeft;
     },
     scrollTop: function(value, duration, easing) {
-
-        //NOTE:
-        console.log('i think scrollTop is running now...')
 
       if(angular.isNumber(value)) {
         return this.scrollTo(this.scrollTop(), value, duration, easing);
