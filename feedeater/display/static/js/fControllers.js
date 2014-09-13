@@ -428,8 +428,8 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
 }]);
 
 
-fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys',
-                                                function($scope, makeRequest, hotkeys){
+fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$document',
+                                                function($scope, makeRequest, hotkeys, $document){
 
 
     //define hotkey events:
@@ -463,6 +463,7 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys',
         callback: function() {
             console.log('down was pressed');
             $scope.pager_functions.advance_entry(1);
+//            testScroll();
         }
     });
 
@@ -476,6 +477,18 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys',
     });
 
 
+    hotkeys.add({
+       combo: 'w',
+       description: 'test',
+        callback: function() {
+            console.log('w was pressed');
+            $scope.pager_functions.advance_entry(1);
+            testScroll();
+        }
+    });
+
+
+
     $scope.pager_functions = {};
 
     $scope.pager_functions.advance_page = function(amount) {
@@ -487,8 +500,37 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys',
         //switch to next/prev page worth of entries
 
         makeRequest.notifyPageChange();
-        $("html, body").animate({ scrollTop: 0 }, "fast");  // this might get annoying..
+//        $("html, body").animate({ scrollTop: 0 }, "fast");  // this might get annoying..
+
+
     };
+
+
+    var testScroll = function() {
+
+        console.log('testScroll acitve');
+
+
+        //testscroll is firing.. scrolltop is firing..
+        //but the promise is never returning.
+      var scrollpromise = $document.scrollTop(0, 1000);
+          console.log('continuing...', scrollpromise);
+
+
+      scrollpromise.then(function() {
+        console.log('You just scrolled to the top!');
+    },
+      function(err) {
+          console.log('I failed :<');
+          console.log(err);
+
+      });
+
+        console.log(scrollpromise)
+
+    };
+
+
 
 
     $scope.pager_functions.advance_entry = function(amount){

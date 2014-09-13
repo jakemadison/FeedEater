@@ -54,8 +54,6 @@ customDirectives.directive('scrollActive', function($window, $document) {
 
             var $target = uiScrollfixTarget && uiScrollfixTarget.$element || angular.element($window);
 
-
-
             function onScroll() {
 
               var id = scope.$eval(attrs['scrollActive']).id;
