@@ -29,7 +29,13 @@ eServices.factory('makeRequest', ['$http', '$rootScope', '$timeout', function($h
         }
     };
 
-    var setOffset = function(change) {
+    var setOffset = function(change, direct) {
+
+      if (direct === true){
+          progress_data.current_offset = change;
+          return;
+      }
+
 
       var predicted_result = progress_data.current_offset + change;
 

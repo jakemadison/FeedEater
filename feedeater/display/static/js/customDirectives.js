@@ -68,6 +68,7 @@ customDirectives.directive('scrollActive', function($window, $document) {
 //                console.log('offset: ', offset, (top-300), bottom);
 
                 if (!elm.hasClass('reading_entry') && (offset+300) > top && (offset+300) < bottom) {
+//                if (!elm.hasClass('reading_entry') && (offset+60) > top && (offset+60) < bottom) {
                     elm.addClass('reading_entry');
 
                     if (unread === true) {
