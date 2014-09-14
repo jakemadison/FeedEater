@@ -501,6 +501,7 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
 
         makeRequest.notifyPageChange();
 //        $("html, body").animate({ scrollTop: 0 }, "fast");  // this might get annoying..
+        testScroll();
 
 
     };
@@ -516,7 +517,15 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
 
 
         var someElement = angular.element(document.getElementById('scrollTopId'));
-        $document.scrollToElement(someElement, 50, 2000);
+        var scrollPromise = $document.scrollToElement(someElement, 50, 2000);
+
+        scrollPromise.then(function() {
+           console.log('complete');
+        }, function() {
+                console.log('failed');
+            }
+        );
+
         //for the scroll, just scroll to object by ID.
         //the id of the one we're looking for is either going to be
         //the current offset minus one or the current offset plus one

@@ -80,11 +80,15 @@ angular.module('duScroll.scrollHelpers', ['duScroll.requestAnimation'])
 
     //this is why the damn thing was failing: cancel happens on scroll,
     //and our deferred gets rejected:
-    var cancelOnEvents = 'scroll mousedown mousewheel touchmove keydown';
+//    var cancelOnEvents = 'scroll mousedown mousewheel touchmove keydown';
+    var cancelOnEvents = 'scroll mousedown mousewheel touchmove';
     var cancelScrollAnimation = function($event) {
       if (!$event || $event.which > 0) {
         el.unbind(cancelOnEvents, cancelScrollAnimation);
         cancelAnimation(scrollAnimation);
+
+          console.log('rejecting deferred & killing promise. Event: ', $event);
+
         deferred.reject();
         scrollAnimation = null;
       }
