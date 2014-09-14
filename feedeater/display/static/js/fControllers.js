@@ -501,7 +501,9 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
         makeRequest.notifyPageChange();
         makeRequest.setOffset(0, true);
 //        $("html, body").animate({ scrollTop: 0 }, "fast");  // this might get annoying..
-        scrollToTop();  //could probably just use scrollToElement to first element here
+//        scrollToTop();  //could probably just use scrollToElement to first element here
+          scrollToEntry(0);
+
     };
 
     var scrollToTop = function() {
