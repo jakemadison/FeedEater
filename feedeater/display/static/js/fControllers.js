@@ -482,8 +482,7 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
        description: 'test',
         callback: function() {
             console.log('w was pressed');
-            $scope.pager_functions.advance_entry(1);
-            testScroll();
+            scrollToTop();
         }
     });
 
@@ -501,41 +500,21 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
 
         makeRequest.notifyPageChange();
 //        $("html, body").animate({ scrollTop: 0 }, "fast");  // this might get annoying..
-        testScroll();
-
-
+        scrollToTop();
     };
 
-
-    var testScroll = function() {
-
-        console.log('testScroll acitve');
-
-
-        //testscroll is firing.. scrolltop is firing..
-        //but the promise is never returning.
-
-
-        var someElement = angular.element(document.getElementById('scrollTopId'));
-        var scrollPromise = $document.scrollToElement(someElement, 50, 2000);
-
-        scrollPromise.then(function() {
-           console.log('complete');
-        }, function() {
-                console.log('failed');
-            }
-        );
+    var scrollToTop = function() {
+        console.log('scrollToTop active');
+//        var someElement = angular.element(document.getElementById('scrollTopId'));
+        $document.scrollTopAnimated(0,1000).then(function() {console.log('complete');},
+                                                 function() {console.log('failed');} );
 
         //for the scroll, just scroll to object by ID.
         //the id of the one we're looking for is either going to be
         //the current offset minus one or the current offset plus one
         //when we get there, change the active state, change current offset
 
-
-
     };
-
-
 
 
     $scope.pager_functions.advance_entry = function(amount){
@@ -545,6 +524,21 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
         var progress = makeRequest.getProgress();
         console.log('total number of entries on page: ', progress.progress.page_len);
         console.log('current offset on page: ', progress.progress.current_offset);
+
+
+        //there's a stupid exception being thrown here and weird behaviour on
+        //offset == page_len || offset == 0 to fix up.
+        scrollToEntry(progress.progress.current_offset);
+    };
+
+
+    var scrollToEntry = function(entryId) {
+
+      var elementTarget = 'offsetId' + entryId.toString();
+      console.log('scrollToEntry active with ID: ', elementTarget, entryId);
+
+       var scrollTarget = angular.element(document.getElementById(elementTarget));
+       $document.scrollToElement(scrollTarget, 60, 500);
     };
 
 

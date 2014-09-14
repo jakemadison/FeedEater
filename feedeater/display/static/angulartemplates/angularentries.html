@@ -10,7 +10,7 @@
 
     <div ng-repeat="entry in myData.fromServer.e">
         <div class="feedid{{ entry.feed_id }} entry_list" entryId="{{entry.entry_id}}"
-                <!-- here, but unique index (maybe generate on list return id = -->
+                id="offsetId{{$index}}">
 
             <div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">
                 <h3 ng-class="{'title_unread_entry': entry.entry_unread, 'title_read_entry': !entry.entry_unread}">
