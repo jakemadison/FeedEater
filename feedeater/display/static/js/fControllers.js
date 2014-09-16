@@ -476,7 +476,6 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
         }
     });
 
-
     hotkeys.add({
        combo: 'w',
        description: 'test',
@@ -485,8 +484,6 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
             scrollToTop();
         }
     });
-
-
 
     $scope.pager_functions = {};
 
