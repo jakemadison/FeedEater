@@ -1,49 +1,7 @@
 var customDirectives = angular.module('FeedEaterApp');
 
 
-//this should be useless now:
-customDirectives.directive('keyBindings', function() {
-
-    return {
-        restrict: "A",
-        link: function(scope, element, attrs) {
-
-            console.log('called outside', element);
-            element.bind("keyup", function(event){
-
-                // check if we are in an input thing and don't change page if so:
-                if ($(".input_thing").is(":focus")) {
-                    return;
-                }
-
-                scope.$apply(function() {
-
-                    switch (event.which) {
-
-                        case 37:
-                            console.log('left was pressedddd');
-                            scope.$broadcast('keypress', 'left');
-                            event.preventDefault();
-                            break;
-                        case 39:
-                            console.log('right was pressed');
-                            scope.$broadcast('keypress', 'right');
-                            event.preventDefault();
-                            break;
-                    }
-
-                });
-            })
-        }
-    }
-});
-
-
-
-//this directive controls activating scroll.
-//i think to get up/down to work, we'll need to keep global track
-//of offset (current entry from list of entries)
-
+//this directive controls how scroll activates read/unread state:
 //this whole function should get changed.  There should always be an active entry.
 customDirectives.directive('scrollActive', function($window, $document) {
 

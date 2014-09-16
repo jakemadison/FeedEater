@@ -500,23 +500,15 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
 
         makeRequest.notifyPageChange();
         makeRequest.setOffset(0, true);
-//        $("html, body").animate({ scrollTop: 0 }, "fast");  // this might get annoying..
-//        scrollToTop();  //could probably just use scrollToElement to first element here
           scrollToEntry(0);
-
     };
 
+
+    //this might not be necessary anymore, but let's keep it for the time being:
     var scrollToTop = function() {
         console.log('scrollToTop active');
-//        var someElement = angular.element(document.getElementById('scrollTopId'));
         $document.scrollTopAnimated(0,1000).then(function() {console.log('complete');},
                                                  function() {console.log('failed');} );
-
-        //for the scroll, just scroll to object by ID.
-        //the id of the one we're looking for is either going to be
-        //the current offset minus one or the current offset plus one
-        //when we get there, change the active state, change current offset
-
     };
 
 
@@ -550,23 +542,6 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
     $scope.$on('pagerUpdated', function() {
         console.log('i detected that the pager was updated!');
         $scope.pager = makeRequest.getPager();
-    });
-
-
-
-
-
-    //this should be useless now:
-    $scope.$on('keypress', function(e, type){
-        console.log("detected keypress: ", type);
-
-        if (type === "left" && $scope.pager.has_prev) {
-            $scope.pager_functions.advance_page(-1);
-        }
-        else if (type === "right" && $scope.pager.has_next) {
-            $scope.pager_functions.advance_page(1);
-        }
-
     });
 
 
