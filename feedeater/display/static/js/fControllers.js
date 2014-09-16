@@ -537,7 +537,6 @@ fControllers.controller("PagerCtrl", ['$scope', 'makeRequest', 'hotkeys', '$docu
     };
 
 
-
     //listeners:
     $scope.$on('pagerUpdated', function() {
         console.log('i detected that the pager was updated!');

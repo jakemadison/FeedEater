@@ -1,5 +1,8 @@
 var eServices = angular.module('eServices', []);
 
+
+//services desperately need to get refactored.
+
 eServices.factory('makeRequest', ['$http', '$rootScope', '$timeout', function($http, $rootScope, $timeout) {
     //this factory deals with holding client "state": entries, preferences, progress and the like
     //so that controllers can access when needed.
