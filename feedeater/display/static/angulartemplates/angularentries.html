@@ -13,10 +13,12 @@
                 id="offsetId{{$index}}">
 
             <div class="col-md-8-2" xmlns="http://www.w3.org/1999/html">
-                <h3 ng-class="{'title_unread_entry': entry.entry_unread, 'title_read_entry': !entry.entry_unread}">
-                    <b><a  href="{{entry.entry_link}}" target="_blank"
+                <h3 ng-class="{'title_unread_entry': entry.entry_unread,
+                'title_read_entry': !entry.entry_unread}" >
+
+                    <b><a href="{{entry.entry_link}}" target="_blank"
                data-toggle="tooltip" data-original-title="{{entry.entry_title}}"
-                class="entry_title"
+                class="entry_title" id="title{{ entry.entry_id }}"
                 title="{{entry.entry_title}}">{{entry.entry_title}}</a></b></h3>
 
                 <div class="tags">

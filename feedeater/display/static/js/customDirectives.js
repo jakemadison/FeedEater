@@ -14,8 +14,13 @@ customDirectives.directive('scrollActive', function($window, $document) {
 
             function onScroll() {
 
+              // get entry id/unread/title id from directive params:
               var id = scope.$eval(attrs['scrollActive']).id;
               var unread = scope.$eval(attrs['scrollActive']).unread;
+              var titleElement = angular.element(document.getElementById('title'+id));
+
+              console.log('title'+id, "\n", titleElement);
+
 
               var top = elm[0].offsetTop;
               var bottom = top + elm[0].offsetHeight;
@@ -25,21 +30,26 @@ customDirectives.directive('scrollActive', function($window, $document) {
 
 //                console.log('offset: ', offset, (top-300), bottom);
 
+                //if our element is not currently being read, and it's in our reading threshold
+                //add the "reading entry" class:
                 if (!elm.hasClass('reading_entry') && (offset+300) > top && (offset+300) < bottom) {
-//                if (!elm.hasClass('reading_entry') && (offset+60) > top && (offset+60) < bottom) {
-                    elm.addClass('reading_entry');
 
+//              if (!elm.hasClass('reading_entry') && (offset+60) > top && (offset+60) < bottom) {
+
+                    elm.addClass('reading_entry');
+                    titleElement.addClass('reading_title');
+
+
+                    //also, if entry was unread, fire off a mark as read for the id:
                     if (unread === true) {
                         scope.$apply("markAsRead("+id+")");  //this is ugly...
                     }
-
-
-
-
                 }
 
+                //otherwise, if we were reading it and are outside of threshold now, remove "reading" state:
                 else if (elm.hasClass('reading_entry') && ((offset+300) < top) || (offset+300) > bottom) {
                     elm.removeClass('reading_entry');
+                    titleElement.removeClass('reading_title');
                  }
             }
 

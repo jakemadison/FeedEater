@@ -287,6 +287,11 @@ img {
     color: #000000;
 }
 
+.reading_title {
+    color: #96A71E;
+    opacity: 1;
+}
+
 .msgbarmin {
     background-color: #eeeeee;
 }
