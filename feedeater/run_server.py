@@ -5,4 +5,4 @@
 #     print e
 
 from feedeater import flaskapp
-flaskapp.run(debug=True)
+flaskapp.run(debug=True, port=5001)
