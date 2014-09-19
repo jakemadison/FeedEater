@@ -19,7 +19,7 @@ customDirectives.directive('scrollActive', function($window, $document) {
               var unread = scope.$eval(attrs['scrollActive']).unread;
               var titleElement = angular.element(document.getElementById('title'+id));
 
-              console.log('title'+id, "\n", titleElement);
+//              console.log('title'+id, "\n", titleElement);
 
 
               var top = elm[0].offsetTop;
