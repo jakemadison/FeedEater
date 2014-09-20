@@ -1,34 +1,23 @@
 <!DOCTYPE html>
 
-<!--this is the actual index page in use: -->
 <html lang="en">
 
-
-  <head> {% include 'head.html' %} </head>
-
-
+<head> {% include 'head.html' %} </head>
 
 {% raw %}
-<!--<body ng-app="FeedEaterApp" key-bindings="">-->
 <body ng-app="FeedEaterApp">
-{% endraw %}
 
-
-  {% raw %}
    <div ng-controller="messagebarCtrl"
-                ng-include src="'/static/angulartemplates/angularmessagebar.html'"></div>
-    {% endraw %}
-
+        ng-include src="'/static/angulartemplates/angularmessagebar.html'">
+   </div>
 
 <!--main content: -->
 <!-- Subscription toolbar & List of Subscribed feeds: -->
-
-{% raw %}
 <div class='sidebar'>
     <div id="subscription_list" class="col-sm-4"  xmlns="http://www.w3.org/1999/html">
 
         <div ng-controller="ToolbarCtrl"
-                ng-include src="'/static/angulartemplates/angularsubtoolbar.html'"></div>
+             ng-include src="'/static/angulartemplates/angularsubtoolbar.html'"></div>
 
         <div id='sub_list' ng-controller='SubCtrl'>
             <div ng-include src="'/static/angulartemplates/angularsubs.html'"></div>
@@ -39,8 +28,8 @@
 
 
 <!--Actual Entry content: -->
-    <div class="container"> <!--was class="container"-->
-        <div class="row">
+<div class="container"> <!--was class="container"-->
+    <div class="row">
             <!--here's an idea.. what if this progress bar was (during rest periods) an indicator of how many
             unread posts there are? or just your progress through all posts...?
 
@@ -54,34 +43,25 @@
                 <!--</div>-->
                 <!--</div>-->
 
-            {% raw %}
-                <div id='content'>
-                    <div ng-include src="'/static/angulartemplates/angularentries.html'"></div>
-                </div>
-            {% endraw %}
-
-
-            </div>
-
-                {% raw %}
-                <div class="col-md-8-2 paging_div" ng-controller='PagerCtrl'>
-                    <div ng-include src="'/static/angulartemplates/angularpager.html'"></div>
-                </div>
-                {% endraw %}
-
-        <hr>
-
+{% raw %}
+        <div id='content'>
+            <div ng-include src="'/static/angulartemplates/angularentries.html'"></div>
         </div>
-
     </div>
 
 
-<!--</div>-->
+    <div class="col-md-8-2 paging_div" ng-controller='PagerCtrl'>
+        <div ng-include src="'/static/angulartemplates/angularpager.html'"></div>
+    </div>
+{% endraw %}
+
+    <hr>
+</div>
+
 
 <div class="foot">
     {% include 'footer.html' %}
 </div>
-
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -96,17 +76,8 @@
             });
         </script>
 
-
-
-        <!--ATTEMPTING REMOVAL OF SCRIPTS
-        <script src="../static/js/utilities.js"></script>
-        <script src="../static/js/entries.js"></script>
-        <script src="../static/js/subscriptions.js"></script> -->
-
         <!--log in still being used: this should get phased out at some point and put
         into a proper controller -->
         <script src="../static/js/login.js"></script>
-
   </body>
-
 </html>
