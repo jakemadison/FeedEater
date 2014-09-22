@@ -20,7 +20,6 @@ ROLE_ADMIN = 1
 logger.info("models imported as >{0}".format(__name__))
 
 
-
 ## Macro Level Data:
 # all entries for all subscribed feeds
 class Entry(Model):
@@ -37,8 +36,10 @@ class Entry(Model):
     link = Column(String(1024))
     remote_id = Column(String(1024))
 
-    def __init__(self, feed_id=None, published=None, updated=None, title=None, content=None, description=None,
+    def __init__(self, feed_id=None, published=None, updated=None,
+                 title=None, content=None, description=None,
                  link=None, remote_id=None,):
+
         self.feed_id = feed_id
         self.published = published
         self.updated = updated
@@ -48,11 +49,11 @@ class Entry(Model):
         self.link = link
         self.remote_id = remote_id
 
-    def json_entry(self):
-        result = {"id": self.id, "feed_id": self.feed_id, "published": self.published,
-                  "updated": self.updated, "title": self.title, "content": self.content,
-                  "description": self.description, "link": self.link, "remote_id": self.remote_id}
-        return result
+    # def json_entry(self):
+    #     result = {"id": self.id, "feed_id": self.feed_id, "published": self.published,
+    #               "updated": self.updated, "title": self.title, "content": self.content,
+    #               "description": self.description, "link": self.link, "remote_id": self.remote_id}
+    #     return result
 
     def get_user_cat(self, userid):
 
@@ -76,28 +77,26 @@ class Entry(Model):
         else:
             return {"status": True, "query": qry.first()}
 
-
-
-    def get_user_star(self, userid):
-        # print "star says current user is: ", userid
-
-        qry = UserEntry.query.filter(UserEntry.entryid == self.id,
-                                     UserEntry.userfeedid == UserFeeds.id,
-                                     UserFeeds.userid == userid).first()
-
-        # print qry
-        # print "starred is probably:", qry.starred
-
-        if qry is None:
-            return False
-
-        else:
-            return qry.starred
-
+    # def get_user_star(self, userid):
+    #     # print "star says current user is: ", userid
+    #
+    #     qry = UserEntry.query.filter(UserEntry.entryid == self.id,
+    #                                  UserEntry.userfeedid == UserFeeds.id,
+    #                                  UserFeeds.userid == userid).first()
+    #
+    #     # print qry
+    #     # print "starred is probably:", qry.starred
+    #
+    #     if qry is None:
+    #         return False
+    #
+    #     else:
+    #         return qry.starred
 
 
 # list of active feeds from all active subscribers
 class Feed(Model):
+
     __tablename__ = "feed"
 
     id = Column('id', Integer, primary_key=True)
@@ -181,17 +180,16 @@ class User(Model):
         qry = self.query.filter(self.id == uid).first()
         return qry
 
+    # def get_avatar(self, size):
+    #     return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
+    #
 
-    def get_avatar(self, size):
-        return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
-
-
-    def get_entries(self):
-
-        # this needs to change to only get active entries
-        # probably move this to user_feeds and do a join there.
-        query_result = Entry.query.order_by(Entry.published.desc())
-        return query_result
+    # def get_entries(self):
+    #
+    #     # this needs to change to only get active entries
+    #     # probably move this to user_feeds and do a join there.
+    #     query_result = Entry.query.order_by(Entry.published.desc())
+    #     return query_result
 
     def get_entries_new(self):
 
@@ -202,7 +200,8 @@ class User(Model):
                          UserFeeds.userid == self.id,
                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
 
-        # qry = query(Entry, UserEntry).outerjoin(UserEntry, Entry.id == UserEntry.entryid).filter(Entry.feed_id == UserFeeds.feedid,
+        # qry = query(Entry, UserEntry).outerjoin(UserEntry,
+        # Entry.id == UserEntry.entryid).filter(Entry.feed_id == UserFeeds.feedid,
         #                          UserFeeds.userid == User.id,
         #                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
 
