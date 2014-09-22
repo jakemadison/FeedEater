@@ -12,7 +12,6 @@ parser.add_argument('-v', '--verbose', help='Increase verbosity of logging (curr
 args = parser.parse_args()
 
 # Room for more command line options here.  Debug?
-
 from feedeater import flaskapp
 
 try:
