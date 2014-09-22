@@ -239,6 +239,7 @@ def get_user_prefs(user):
 
     """get user feed preferences. Currently only compressed vs uncompressed view"""
 
+    #prefs need to be expanded here:
     prefs = db_session.query(UserPrefs).filter_by(userid=user.id)
     x = prefs.first()
 
