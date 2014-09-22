@@ -7,7 +7,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Launch FeedEater Application')
 parser.add_argument('-p', '--port', help='Specify Port Number', required=False, default=5000)
 parser.add_argument('-v', '--verbose', help='Increase verbosity of logging (currently does nothing)',
-                    required=False, default=5000)
+                    required=False)
 
 args = parser.parse_args()
 
