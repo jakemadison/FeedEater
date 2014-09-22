@@ -191,32 +191,32 @@ class User(Model):
     #     query_result = Entry.query.order_by(Entry.published.desc())
     #     return query_result
 
-    def get_entries_new(self):
-
-        logger.info('running get_entries_new')
-
-        print "where the hell am I getting: ", self.id, "from????"
-        qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
-                         UserFeeds.userid == self.id,
-                         UserFeeds.is_active == 1).order_by(Entry.published.desc())
+    # def get_entries_new(self):
+    #
+    #     logger.info('running get_entries_new')
+    #
+    #     print "where the hell am I getting: ", self.id, "from????"
+    #     qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
+    #                      UserFeeds.userid == self.id,
+    #                      UserFeeds.is_active == 1).order_by(Entry.published.desc())
 
         # qry = query(Entry, UserEntry).outerjoin(UserEntry,
         # Entry.id == UserEntry.entryid).filter(Entry.feed_id == UserFeeds.feedid,
         #                          UserFeeds.userid == User.id,
         #                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
 
-        return qry
-
-    def get_userentries(self):
-
-        qry = Entry.query.filter(UserFeeds.userid == self.id,  # get subscriptions associated with user
-                                 Entry.feed_id == UserFeeds.feedid,  # only get entries that user subs to
-                                 UserFeeds.is_active == 1  # get only active ones
-                                 )
-        #qry.outerjoin(UserEntry, Entry.id == UserEntry.entryid, User.id == UserEntry.userid)
-        qry.join(UserFeeds, (UserFeeds.userid == User.id))
-        qry.order_by(Entry.published.desc())
-        return qry
+        # return qry
+    #
+    # def get_userentries(self):
+    #
+    #     qry = Entry.query.filter(UserFeeds.userid == self.id,  # get subscriptions associated with user
+    #                              Entry.feed_id == UserFeeds.feedid,  # only get entries that user subs to
+    #                              UserFeeds.is_active == 1  # get only active ones
+    #                              )
+    #     #qry.outerjoin(UserEntry, Entry.id == UserEntry.entryid, User.id == UserEntry.userid)
+    #     qry.join(UserFeeds, (UserFeeds.userid == User.id))
+    #     qry.order_by(Entry.published.desc())
+    #     return qry
 
 
     # following are required by Flask-Login:
