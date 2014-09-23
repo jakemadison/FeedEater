@@ -1,5 +1,8 @@
-import feedfinder
+from __future__ import print_function
+# import feedfinder
+import feedfinder_new
 __author__ = 'jakemadison'
+
 
 import logging
 from feedeater import setup_logger
@@ -15,7 +18,8 @@ def parsefeed(url):
 
     try:
         logger.info('using feed finder')
-        res = feedfinder.feeds(url)
+        # res = feedfinder.feeds(url)
+        res = feedfinder_new.feeds(url)
         feed_len = len(res)
 
         if res:
@@ -31,9 +35,55 @@ def parsefeed(url):
         return False
 
 
-u = 'http://seriously.dontusethiscode.com/feed.rss'
-u = 'seriously.dontusethiscode.com'
-u = 'http://blog.yimmyayo.com/'
 if __name__ == '__main__':
-    x = parsefeed(u)
-    logger.debug('final: {0}'.format(x))
+
+
+    # test case for feed finder:
+    u_list = ['http://ancientpeoples.tumblr.com/rss',
+              'http://xkcd.com/rss.xml',
+              'http://www.reddit.com/r/python/.rss',
+              'http://maruthecat.tumblr.com/rss',
+              'http://feeds.nationalgeographic.com/ng/photography/photo-of-the-day/',
+              'http://feeds.feedblitz.com/hackersgonnahack',
+              'http://www.shiningrocksoftware.com/?feed=rss2',
+              'http://seriously.dontusethiscode.com/feed.rss',
+              'http://blog.yimmyayo.com/rss',
+              'http://dearcoquette.com/rss',
+                'http://www.reddit.com/r/flask/.rss',
+                'http://www.reddit.com/r/pygame/.rss',
+                'http://lukauskas.co.uk/feed.xml',
+                'http://feeds.feedburner.com/TheMouseVsThePython',
+                'http://www.parisdailyphoto.com/feeds/posts/default',
+                'http://cabinporn.com/rss',
+                'http://candide.tumblr.com/rss',
+                'http://www.rsspect.com/rss/asw.xml',
+                'http://www.smbc-comics.com/rss.php',
+                'http://www.penny-arcade.com/rss.xml',
+                'http://rsspect.com/rss/qwantz.xml',
+                'http://feeds.feedburner.com/oatmealfeed',
+                'http://howstuffworks.tumblr.com/rss',
+                'http://skeletorislove.tumblr.com/rss',
+                'http://syruptrap.ca/feed/',
+                'http://pythonthusiast.pythonblogs.com/230_pythonthusiast/feeds/rss20',
+                'http://acmonette.com/feeds/all.atom.xml',
+                'http://westcoastmountainmouse.wordpress.com/feed/',
+                'http://www.reddit.com/r/Python/.rss',
+                'http://pyvideo.org/video/rss',
+                'http://www.reddit.com/r/index.rss',
+                'http://xkcd.com/atom.xml',
+                'http://vancouver.en.craigslist.ca/search/jjj?query=python&s=0&format=rss',
+                'http://www.reddit.com/r/shittyprogramming/.rss',
+                'http://www.thestranger.com/seattle/Rss.xml',
+                'http://www.thestranger.com/seattle/Rss.xml?category=oid%3A258',
+                'http://danielmarin.naukas.com/feed/',
+                'http://www.businesscat.happyjar.com/feed/',
+                'http://www.businesscat.happyjar.com/comic/coffee/feed/',
+                'http://www.businesscat.happyjar.com/feed/atom/',
+                'http://digthattreasure.blogspot.com/feeds/posts/default?alt=rss',
+                'http://nancyl3ticia.tumblr.com/rss.xml']
+
+    for u in u_list:
+        x = parsefeed(u)
+        print('final: {0}'.format(x))
+
+    print('done.')
