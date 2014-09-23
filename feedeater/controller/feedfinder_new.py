@@ -46,6 +46,7 @@ except ImportError:
 import lxml.html
 import chardet
 
+
 def feeds(url):
     """
     Tries to find feeds
