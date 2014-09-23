@@ -252,14 +252,14 @@ def _get(url):
     except request.URLError as e:
         print('URL Error:', e.reason, url)
         return ''
-
+    #this doesn't exist in 2.7:
+    # except ConnectionResetError as e:
+    #     print('Connection Error:', e.reason, url)
+    #     return ''
     except SocketError as e:
         if e.errno != errno.ECONNRESET:
             raise  # Not error we are looking for
         print('Connection Error:', str(e), url)   # Handle error here.
         return ''
 
-    #this doesn't exist in 2.7:
-    # except ConnectionResetError as e:
-    #     print('Connection Error:', e.reason, url)
-    #     return ''
+
