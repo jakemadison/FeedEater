@@ -43,6 +43,10 @@ except ImportError:
     import urllib2 as request
     import urlparse as parse
 
+
+from socket import error as SocketError
+import errno
+
 import lxml.html
 import chardet
 
@@ -248,6 +252,14 @@ def _get(url):
     except request.URLError as e:
         print('URL Error:', e.reason, url)
         return ''
-    except ConnectionResetError as e:
-        print('Connection Error:', e.reason, url)
+
+    except SocketError as e:
+        if e.errno != errno.ECONNRESET:
+            raise  # Not error we are looking for
+        print('Connection Error:', str(e), url)   # Handle error here.
         return ''
+
+    #this doesn't exist in 2.7:
+    # except ConnectionResetError as e:
+    #     print('Connection Error:', e.reason, url)
+    #     return ''
