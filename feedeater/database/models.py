@@ -1,12 +1,9 @@
-from sqlalchemy import Column, Integer, String, Text, SmallInteger, DateTime, ForeignKey, Boolean
-from sqlalchemy.orm import backref, relationship, query
-# from datetime import datetime, timedelta
-# import urlparse
+from sqlalchemy import Column, Integer, String, Text, SmallInteger, ForeignKey, Boolean
+from sqlalchemy.orm import backref, relationship
 from feedeater import db
-from hashlib import md5
-
 import logging
 from feedeater import setup_logger
+
 logger = logging.getLogger(__name__)
 setup_logger(logger)
 logger.setLevel(logging.DEBUG)
@@ -49,12 +46,6 @@ class Entry(Model):
         self.link = link
         self.remote_id = remote_id
 
-    # def json_entry(self):
-    #     result = {"id": self.id, "feed_id": self.feed_id, "published": self.published,
-    #               "updated": self.updated, "title": self.title, "content": self.content,
-    #               "description": self.description, "link": self.link, "remote_id": self.remote_id}
-    #     return result
-
     def get_user_cat(self, userid):
 
 
@@ -76,22 +67,6 @@ class Entry(Model):
 
         else:
             return {"status": True, "query": qry.first()}
-
-    # def get_user_star(self, userid):
-    #     # print "star says current user is: ", userid
-    #
-    #     qry = UserEntry.query.filter(UserEntry.entryid == self.id,
-    #                                  UserEntry.userfeedid == UserFeeds.id,
-    #                                  UserFeeds.userid == userid).first()
-    #
-    #     # print qry
-    #     # print "starred is probably:", qry.starred
-    #
-    #     if qry is None:
-    #         return False
-    #
-    #     else:
-    #         return qry.starred
 
 
 # list of active feeds from all active subscribers
@@ -158,8 +133,6 @@ class UserPrefs(Model):
     compressed_view = Column(Boolean, default=False)
 
 
-
-
 # all user accounts registered with the controller
 class User(Model):
 
@@ -179,45 +152,6 @@ class User(Model):
     def get_user(self, uid):
         qry = self.query.filter(self.id == uid).first()
         return qry
-
-    # def get_avatar(self, size):
-    #     return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
-    #
-
-    # def get_entries(self):
-    #
-    #     # this needs to change to only get active entries
-    #     # probably move this to user_feeds and do a join there.
-    #     query_result = Entry.query.order_by(Entry.published.desc())
-    #     return query_result
-
-    # def get_entries_new(self):
-    #
-    #     logger.info('running get_entries_new')
-    #
-    #     print "where the hell am I getting: ", self.id, "from????"
-    #     qry = Entry.query.filter(Entry.feed_id == UserFeeds.feedid,
-    #                      UserFeeds.userid == self.id,
-    #                      UserFeeds.is_active == 1).order_by(Entry.published.desc())
-
-        # qry = query(Entry, UserEntry).outerjoin(UserEntry,
-        # Entry.id == UserEntry.entryid).filter(Entry.feed_id == UserFeeds.feedid,
-        #                          UserFeeds.userid == User.id,
-        #                          UserFeeds.is_active == 1).order_by(Entry.published.desc())
-
-        # return qry
-    #
-    # def get_userentries(self):
-    #
-    #     qry = Entry.query.filter(UserFeeds.userid == self.id,  # get subscriptions associated with user
-    #                              Entry.feed_id == UserFeeds.feedid,  # only get entries that user subs to
-    #                              UserFeeds.is_active == 1  # get only active ones
-    #                              )
-    #     #qry.outerjoin(UserEntry, Entry.id == UserEntry.entryid, User.id == UserEntry.userid)
-    #     qry.join(UserFeeds, (UserFeeds.userid == User.id))
-    #     qry.order_by(Entry.published.desc())
-    #     return qry
-
 
     # following are required by Flask-Login:
     def is_authenticated(self):
