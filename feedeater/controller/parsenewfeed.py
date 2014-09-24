@@ -82,7 +82,8 @@ if __name__ == '__main__':
                 'http://digthattreasure.blogspot.com/feeds/posts/default?alt=rss',
                 'http://nancyl3ticia.tumblr.com/rss.xml']
 
-    for u in u_list:
+    for u in u_list[0:5]:
+        print('testing.... ', u)
         x = parsefeed(u)
         print('final: {0}'.format(x))
 
