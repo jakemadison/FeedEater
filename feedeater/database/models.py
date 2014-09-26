@@ -20,6 +20,7 @@ logger.info("models imported as >{0}".format(__name__))
 ## Macro Level Data:
 # all entries for all subscribed feeds
 class Entry(Model):
+    """The basic model for all entries."""
 
     __tablename__ = "entry"
 
@@ -45,28 +46,6 @@ class Entry(Model):
         self.description = description
         self.link = link
         self.remote_id = remote_id
-
-    def get_user_cat(self, userid):
-
-
-        qry = UserFeeds.query.filter(UserFeeds.feedid == self.id, UserFeeds.userid == userid).first()
-
-        if qry:
-            return qry.category
-        else:
-            return "Uncategorized"
-
-    def get_user_topics(self):
-        pass
-
-    def get_user_entry_records(self, user_id):
-        qry = UserEntry.query.filter(UserEntry.entryid == self.id, UserEntry.userid == user_id)
-
-        if qry.first() is None:
-            return {"status": False, "record": UserEntry(entryid=self.id, userid=user_id)}
-
-        else:
-            return {"status": True, "query": qry.first()}
 
 
 # list of active feeds from all active subscribers
@@ -131,6 +110,8 @@ class UserPrefs(Model):
     userid = Column(Integer, ForeignKey("user.id"))
     posts_per_page = Column(Integer, default=10)
     compressed_view = Column(Boolean, default=False)
+
+    # this doesn't have an init??
 
 
 # all user accounts registered with the controller
