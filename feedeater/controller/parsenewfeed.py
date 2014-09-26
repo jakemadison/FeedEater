@@ -1,6 +1,6 @@
 from __future__ import print_function
-# import feedfinder
-import feedfinder_new
+import feedfinder
+# import feedfinder_new
 __author__ = 'jakemadison'
 
 
@@ -19,8 +19,8 @@ def parsefeed(url):
 
     try:
         logger.info('using feed finder')
-        # res = feedfinder.feeds(url)
-        res = feedfinder_new.feeds(url)
+        res = feedfinder.feeds(url)
+        # res = feedfinder_new.feeds(url)
         feed_len = len(res)
 
         if res:
