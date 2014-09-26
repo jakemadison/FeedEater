@@ -2,11 +2,7 @@ from datetime import datetime, timedelta
 import urlparse
 
 
-# okay... there should be a way I can hook into these from both the jinja template,
-# and from ajax calls
-
-#the template truncate function doesn't quite do what I want it to,
-#plus, I need to hook in ajax calls which come post-jinja filtering
+# custom truncate function.
 def truncate_title(title, amt=50):
 
     if not title:
@@ -25,6 +21,7 @@ def truncate_title(title, amt=50):
     return title
 
 
+# this should probably just get replaced with moment.js
 def parse_time(time):
     parse_date = datetime.fromtimestamp(time)
     now = datetime.now()
