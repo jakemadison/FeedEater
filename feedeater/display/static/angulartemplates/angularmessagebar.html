@@ -84,12 +84,15 @@
             <h1 class="hi_class">Hi, {{nickname}}!</h1>
             <p>Reinventing the wheel for fun, not profit.</p>
 
+
+
 <!--login crap: -->
 <div class="row"  ng-if="role === 1">
     <button class="btn btn-primary btn-lg" ng-hide="!pre_login"
            ng-click="pre_login=false" id="create_acct">Start Feed_Eating &raquo;</button>
 
     <div class="col-md-8 row" id="login_text" ng-show="!pre_login">
+
         <div class="row">
             <h4 style="float:left;">Log in with:</h4>
             <a class="login-btns" role="button" style="cursor: pointer; float:left;"
@@ -97,10 +100,12 @@
                 <img src="../static/img/social_google_box_new.png" height="60px" width="60px">
             </a>
 
-            <a class="login-btns" role="button" style="cursor: pointer; float:left;"
+<!--Not Implemented yet: -->
+   <!--          <a class="login-btns" role="button" style="cursor: pointer; float:left;"
                onclick="fb_login()" id="fb_login">
                 <img src="../static/img/social_facebook_box_blue_new.png" height="60px" width="60px">
-            </a>
+            </a> -->
+
         </div>
     </div>
 </div>
