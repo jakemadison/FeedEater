@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 setup_logger(logger)
 logger.setLevel(logging.DEBUG)
 
+
 # on success, this returns a feed object, instead of just the URL
 def parsefeed(url):
 
@@ -37,6 +38,8 @@ def parsefeed(url):
 
 if __name__ == '__main__':
 
+    import time
+    start_time = time.time()
 
     # test case for feed finder:
     u_list = ['http://ancientpeoples.tumblr.com/rss',
@@ -82,9 +85,9 @@ if __name__ == '__main__':
                 'http://digthattreasure.blogspot.com/feeds/posts/default?alt=rss',
                 'http://nancyl3ticia.tumblr.com/rss.xml']
 
-    for u in u_list[0:5]:
-        print('testing.... ', u)
+    for i, u in enumerate(u_list):
         x = parsefeed(u)
-        print('final: {0}'.format(x))
+        print('{1}/{2} - final: {0}'.format(x, i+1, len(u_list)))
 
+    print("======>  Total execution time in seconds: {0}".format(time.time() - start_time))
     print('Done.')
