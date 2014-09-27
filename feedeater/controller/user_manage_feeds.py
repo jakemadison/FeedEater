@@ -1,3 +1,4 @@
+from __future__ import print_function
 import FeedGetter
 from feedeater.database.models import User, UserFeeds, Feed, Entry, UserEntryTags, UserEntry, UserPrefs
 from feedeater import db
@@ -7,6 +8,7 @@ import parsenewfeed
 from feedeater.config import configs as c
 from feedeater.display.views import custom_filters
 from feedeater.database import models
+from sqlalchemy import or_
 
 db_session = db.session
 
@@ -21,14 +23,15 @@ logger.setLevel(logging.INFO)
 # Functions for reading subscription states:
 #####
 
-def get_unread_count(feed_id, user):
+def get_unread_count(feed_id, user, unread_only=False):
 
     """get the number of unread entries in the feed.  Currently only returning
        the total count of all entries in the feed."""
 
     logger.debug('getting unread count for feed: {0}, user_id: {1}'.format(feed_id, user.id))
 
-    entry_count = db_session.query(Entry).filter(Entry.feed_id == feed_id).count()
+    if not unread_only:
+        entry_count = db_session.query(Entry).filter(Entry.feed_id == feed_id)
 
     # to get an unread count, need count of total,
     # count of "read" and subtract.  remember, userEntry is only created on demand
@@ -39,8 +42,19 @@ def get_unread_count(feed_id, user):
     # left join user_feed_entry ufe on ufe.entryid = e.id
     # where uf.userid = 3 and (ufe.unread = 1 or ufe.unread is null)
 
-    logger.debug('count: {0}'.format(entry_count))
-    return entry_count
+    # done, but this is VERY expensive.
+    else:
+        entry_count = db_session.query(UserFeeds, Entry, UserEntry)
+        entry_count = entry_count.join(Entry, Entry.feed_id == UserFeeds.feedid)
+        entry_count = entry_count.filter(UserFeeds.userid == user.id, Entry.feed_id == feed_id)
+        entry_count = entry_count.outerjoin(UserEntry, UserEntry.entryid == Entry.id)
+        entry_count = entry_count.filter(or_(UserEntry.unread == True, UserEntry.unread == None))
+        print('done final filter or {0}'.format(entry_count.count()))
+
+    final_count = entry_count.count()
+
+    logger.info('count: {0}'.format(final_count))
+    return final_count
 
 
 #####
@@ -321,7 +335,7 @@ def add_user_feed(user, feed):
         logger.info("totally new feed, adding everything")
 
         get_result = getfeeds.get_feed_meta(returned_feed)
-        print get_result
+        print(get_result)
 
         storefeeds.store_feed_data(get_result)
         exists = db_session.query(Feed).filter_by(feed_url=returned_feed).first()
@@ -465,7 +479,7 @@ def update_is_active(uf_id):
     """switch between active and inactive for a single feed"""
 
     try:
-        print uf_id
+        print(uf_id)
         existing = db_session.query(UserFeeds).filter_by(id=uf_id).first()
 
         if existing.is_active == True:
@@ -506,4 +520,8 @@ def main(user):
 if __name__ == "__main__":
     u = User(nickname="jmadison", email="jmadison@quotemedia.com", role=0, id=1)
     main(u)
-
+    #
+    # x = get_unread_count(22, None)
+    #
+    # print(x)
+    # print('done!')
