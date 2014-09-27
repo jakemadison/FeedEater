@@ -28,7 +28,7 @@ def get_unread_count(feed_id, user, unread_only=False):
     """get the number of unread entries in the feed.  Currently only returning
        the total count of all entries in the feed."""
 
-    logger.debug('getting unread count for feed: {0}, user_id: {1}'.format(feed_id, user.id))
+    # logger.debug('getting unread count for feed: {0}, user_id: {1}'.format(feed_id, user.id))
 
     if not unread_only:
         entry_count = db_session.query(Entry).filter(Entry.feed_id == feed_id)
@@ -44,9 +44,14 @@ def get_unread_count(feed_id, user, unread_only=False):
 
     # done, but this is VERY expensive.
     else:
+        if not user:
+            user_id = 3
+        else:
+            user_id = user.id
+
         entry_count = db_session.query(UserFeeds, Entry, UserEntry)
         entry_count = entry_count.join(Entry, Entry.feed_id == UserFeeds.feedid)
-        entry_count = entry_count.filter(UserFeeds.userid == user.id, Entry.feed_id == feed_id)
+        entry_count = entry_count.filter(UserFeeds.userid == user_id, Entry.feed_id == feed_id)
         entry_count = entry_count.outerjoin(UserEntry, UserEntry.entryid == Entry.id)
         entry_count = entry_count.filter(or_(UserEntry.unread == True, UserEntry.unread == None))
         print('done final filter or {0}'.format(entry_count.count()))
@@ -518,10 +523,10 @@ def main(user):
 
 
 if __name__ == "__main__":
-    u = User(nickname="jmadison", email="jmadison@quotemedia.com", role=0, id=1)
-    main(u)
-    #
-    # x = get_unread_count(22, None)
-    #
-    # print(x)
-    # print('done!')
+    # u = User(nickname="jmadison", email="jmadison@quotemedia.com", role=0, id=1)
+    # main(u)
+
+    x = get_unread_count(22, None, unread_only=True)
+
+    print(x)
+    print('done!')
