@@ -94,6 +94,7 @@ class UserFeeds(Model):
     feedid = Column(Integer, ForeignKey("feed.id"))
     is_active = Column(Boolean, default=True)
     category = Column(String(64))
+    unread_count = Column(Integer)
 
     def __init__(self, userid, feedid, is_active=True, category="None"):
         self.feedid = feedid
