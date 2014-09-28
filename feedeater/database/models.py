@@ -111,6 +111,10 @@ class UserPrefs(Model):
     userid = Column(Integer, ForeignKey("user.id"))
     posts_per_page = Column(Integer, default=10)
     compressed_view = Column(Boolean, default=False)
+    hidden_message_bar = Column(Boolean, default=False)
+
+    def __init__(self, userid):
+        self.userid = userid
 
     # this doesn't have an init??
 
