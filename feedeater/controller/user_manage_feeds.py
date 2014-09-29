@@ -227,13 +227,13 @@ def get_user_feeds(user=None):
         for each in qry.filter(User.id == user.id).all():
             u_table, uf_table, f_table = each
 
-            unread_count = get_unread_count(uf_table.feedid, user)
+            # unread_count = get_unread_count(uf_table.feedid, user)
 
             # add user_feed tag/category/star data here in dictionary:
             feed_data = {'title': f_table.title, 'url': f_table.feed_url,
                          'desc': f_table.description, 'active': uf_table.is_active,
                          'uf_id': uf_table.id, 'feed_id': uf_table.feedid,
-                         'category': uf_table.category, 'count': unread_count}
+                         'category': uf_table.category, 'count': uf_table.unread_count}
             final_list.append(feed_data)
 
             cat_list.append(uf_table.category)

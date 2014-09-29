@@ -139,13 +139,13 @@ eServices.factory('makeRequest', ['$http', '$rootScope', '$timeout', function($h
         $rootScope.$broadcast("requestCategoryFeed", category);
     };
 
-    var markAsRead = function(entry_id) {
-        console.log('make request received entry id: ', entry_id);
+    var markAsRead = function(entry_id, feed_id) {
+        console.log('make request received entry id: ', entry_id, feed_id);
         var promise = $http({
           method: 'POST',
           url: '/mark_as_read',
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          data:$.param({entry_id: entry_id})
+          data:$.param({entry_id: entry_id, feed_id: feed_id})
       }); //do we really care if this returns?  could be extra overhead..
         //when this returns as successful, decrement the unread count if unread count > 0
         //it's too expensive to do that server side and recalc unread each time.

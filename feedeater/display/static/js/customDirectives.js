@@ -16,6 +16,7 @@ customDirectives.directive('scrollActive', function($window, $document) {
 
               // get entry id/unread/title id from directive params:
               var id = scope.$eval(attrs['scrollActive']).id;
+              var feed_id = scope.$eval(attrs['scrollActive']).feed_id;
               var unread = scope.$eval(attrs['scrollActive']).unread;
               var titleElement = angular.element(document.getElementById('title'+id));
 
@@ -42,7 +43,7 @@ customDirectives.directive('scrollActive', function($window, $document) {
 
                     //also, if entry was unread, fire off a mark as read for the id:
                     if (unread === true) {
-                        scope.$apply("markAsRead("+id+")");  //this is ugly...
+                        scope.$apply("markAsRead("+id+", "+feed_id+")");  //this is ugly...
                     }
                 }
 

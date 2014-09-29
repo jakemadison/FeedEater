@@ -121,8 +121,8 @@ fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', functi
             });
     };
 
-    $scope.markAsRead = function(id) {
-        makeRequest.markAsRead(id);
+    $scope.markAsRead = function(id, feed_id) {
+        makeRequest.markAsRead(id, feed_id);
 
         //and when complete, probably change the entry object unread status of the entry.
         //loop over entries array and find out e_id; - set to unread-false.

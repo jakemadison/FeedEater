@@ -11,11 +11,27 @@ setup_logger(logger)
 logger.setLevel(logging.DEBUG)
 
 
-def mark_entry_read(entryid, userid):
+def mark_entry_read(entryid, userid, feed_id):
 
-    """ check for existence of user_feed_entry for user/entryid combo
+    """decrement unread_count then check for existence of user_feed_entry for user/entryid combo
      if exists, make unread = False
      if doesn't exist, make new record with unread=False"""
+
+    query = db_session.query(UserFeeds.unread_count, UserFeeds.id)
+    current_count, user_feed_id = query.filter(UserFeeds.userid == userid, UserFeeds.feedid == feed_id).first()
+
+    current_count = int(current_count)
+
+    if current_count and current_count > 0:
+        update_count = current_count - 1
+
+        db_session.query(UserFeeds).filter_by(id=user_feed_id).update(
+            {
+                'unread_count': update_count
+            }
+        )
+
+        db_session.commit()
 
     logger.info('marking as read, entryid: {0}, userid: {1}'.format(entryid, userid))
 

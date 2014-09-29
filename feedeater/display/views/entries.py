@@ -105,9 +105,12 @@ def toggle_star():
 def markAsRead():
     user = g.user
     entry_id = request.form['entry_id']
-    logger.info('marking entry: {e} as read for user: {u}'.format(e=entry_id, u=user.nickname))
+    feed_id = request.form['feed_id']
+    logger.info('marking entry: {e} as read for user: {u}, feed: {f}'.format(e=entry_id,
+                                                                             u=user.nickname,
+                                                                             f=feed_id))
 
-    user_manage_entries.mark_entry_read(entry_id, user.id)
+    user_manage_entries.mark_entry_read(entry_id, user.id, feed_id)
 
     return jsonify(success=True)
 
