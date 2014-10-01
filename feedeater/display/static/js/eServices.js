@@ -150,6 +150,9 @@ eServices.factory('makeRequest', ['$http', '$rootScope', '$timeout', function($h
         //when this returns as successful, decrement the unread count if unread count > 0
         //it's too expensive to do that server side and recalc unread each time.
 
+        console.log('broadcasting unread count update');
+        $rootScope.$broadcast('updateUnreadCount', feed_id);
+
     };
 
 

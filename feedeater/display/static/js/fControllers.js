@@ -137,6 +137,7 @@ fControllers.controller("EntriesCtrl", ['$scope', '$http', 'makeRequest', functi
     };
 
 
+
     $scope.myData.requestCategoryFeed = function(category) {
         console.log('-- request for category initiated, data: ', category);
         makeRequest.requestCategoryFeed(category);
@@ -419,6 +420,22 @@ fControllers.controller("SubCtrl", ['$scope', '$http', 'makeRequest', function($
     $scope.$on("requestSubUpdate", function() {
        console.log("sub update was requested");
         $scope.subData.getSubs();
+    });
+
+    $scope.$on("updateUnreadCount", function(e, feed_id) {
+       console.log('received broadcast for feed id: ', feed_id);
+
+       var sub_array = $scope.subData.fromServer.subs;
+
+        id = parseInt(feed_id);
+
+        for (var i=0; i<sub_array.length; i++) {
+           if (parseInt(sub_array[i].feed_id) == id && parseInt(sub_array[i].count) > 0) {
+                sub_array[i].count -= 1;
+
+           }
+       }
+
     });
 
 
